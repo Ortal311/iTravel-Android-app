@@ -11,7 +11,6 @@ public class MainActivity extends AppCompatActivity {
 
     NavController navCtl;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +20,5 @@ public class MainActivity extends AppCompatActivity {
         navCtl = navHost.getNavController();
 
         NavigationUI.setupActionBarWithNavController(this,navCtl);
-
     }
-
 }

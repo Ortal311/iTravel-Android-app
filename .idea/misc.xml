@@ -3,8 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../layout/custom_preview.xml" value="0.39114583333333336" />
         <entry key="..\:/Users/ortal/AndroidStudioProjects/iTravel/app/src/main/res/layout/fragment_login.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/ortal/AndroidStudioProjects/iTravel/app/src/main/res/layout/fragment_sign_up.xml" value="0.13333333333333333" />
+        <entry key="app/src/main/res/layout/fragment_home_page.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/fragment_post_add.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/fragment_profile_page.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/fragment_sign_up.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/post_list_row.xml" value="0.33489583333333334" />
       </map>
     </option>
   </component>

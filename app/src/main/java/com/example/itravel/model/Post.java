@@ -5,6 +5,8 @@ import java.util.Map;
 
 public class Post {
     final public static String collectionName = "posts";
+
+    String userName;  // Find the connected user
     String title = "";
     String description = "";
     String location = "";
@@ -13,7 +15,8 @@ public class Post {
 
     public Post(){}
 
-    public Post(String title, String description, String location) {
+    public Post(String userName, String title, String description, String location) {
+        this.userName = userName;
         this.title = title;
         this.description = description;
         this.location = location;
@@ -21,10 +24,11 @@ public class Post {
 
 
     public static Post create(Map<String, Object> json) {
+        String userName = (String) json.get("userName");
         String title = (String) json.get("title");
         String description = (String) json.get("description");
         String location = (String) json.get("location");
-        Post post = new Post(title, description, location);
+        Post post = new Post(userName, title, description, location);
         return post;
     }
 
@@ -52,8 +56,17 @@ public class Post {
         this.location = location;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public Map<String, Object> toJson() {
         Map<String, Object> json = new HashMap<>();
+        json.put("userName", userName);
         json.put("title", title );
         json.put("description", description );
         json.put("location", location );

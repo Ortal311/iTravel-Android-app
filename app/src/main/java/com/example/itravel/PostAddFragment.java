@@ -1,11 +1,16 @@
 package com.example.itravel;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -30,15 +35,27 @@ public class PostAddFragment extends Fragment {
     Button saveBtn;
     Button cancelBtn;
     View view;
+
+    String userEmail;
+    String userPassword;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        SharedPreferences sp1 = context.getSharedPreferences("Login", 0);
+        userEmail = sp1.getString("email", null);
+        userPassword = sp1.getString("password", null);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_sign_up, container, false);
+        view =  inflater.inflate(R.layout.fragment_post_add, container, false);
         titleEt = view.findViewById(R.id.addpost_title_show);
         descriptionEt = view.findViewById(R.id.addpost_description_show);
         locationEt = view.findViewById(R.id.addpost_location_show);
-         saveBtn=view.findViewById(R.id.addpost_save_btn);
+        saveBtn=view.findViewById(R.id.addpost_save_btn);
         cancelBtn=view.findViewById(R.id.addpost_cancel_btn);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -46,7 +63,7 @@ public class PostAddFragment extends Fragment {
             public void onClick(View v) {
                 save();
                 //navigate to home page
-                //Navigation.findNavController(v).navigateUp();
+//                Navigation.findNavController(v).navigate(PostAddFragmentDirections.actionPostAddFragmentToHomePageFragment2());
             }
         });
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -59,22 +76,29 @@ public class PostAddFragment extends Fragment {
         return view;
     }
 
-
     private void save(){
-
         saveBtn.setEnabled(false);
         cancelBtn.setEnabled(false);
         String title = titleEt.getText().toString();
         String description = descriptionEt.getText().toString();
         String location = locationEt.getText().toString();
+        User user = new User();
+        Model.instance.getUserByEmail(userEmail, new Model.GetUserByEmail() {
+            @Override
+            public void onComplete(User u) {
+                user.setEmail(u.getEmail());
+                user.setName(u.getName());
+            }
+        });
 
-        Post post = new Post(title,description,location);
+        Log.d("TAG", "User: " + user.getEmail());
+
+        Post post = new Post(user.getName(), title, description, location);
+        user.addNewPost(post);
 
         Model.instance.addPost(post,()->{
             Navigation.findNavController(titleEt).navigateUp();
         });
-
-
     }
 
 }

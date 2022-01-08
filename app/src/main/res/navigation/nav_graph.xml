@@ -20,10 +20,28 @@
         android:id="@+id/signUpFragment"
         android:name="com.example.itravel.SignUpFragment"
         android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up" />
+        tools:layout="@layout/fragment_sign_up" >
+        <action
+            android:id="@+id/action_signUpFragment_to_homePageFragment"
+            app:destination="@id/homePageFragment" />
+    </fragment>
     <fragment
         android:id="@+id/homePageFragment"
         android:name="com.example.itravel.HomePageFragment"
         android:label="fragment_home_page"
-        tools:layout="@layout/fragment_home_page" />
+        tools:layout="@layout/fragment_home_page" >
+        <action
+            android:id="@+id/action_homePageFragment_to_postAddFragment"
+            app:destination="@id/postAddFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/postAddFragment"
+        android:name="com.example.itravel.PostAddFragment"
+        android:label="fragment_post_add"
+        tools:layout="@layout/fragment_post_add" >
+        <action
+            android:id="@+id/action_postAddFragment_to_homePageFragment2"
+            app:destination="@id/homePageFragment"
+            app:popUpTo="@id/homePageFragment" />
+    </fragment>
 </navigation>

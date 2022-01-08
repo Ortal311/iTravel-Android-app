@@ -1,12 +1,15 @@
 package com.example.itravel.model;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class User {
     String name="";
     String email="";
     String password="";
+    List<Post> postList = new LinkedList<Post>();
     //photo ...
     final public static String collectionName= "users";
 
@@ -25,6 +28,7 @@ public class User {
         String email = (String) json.get("email");
         String password = (String) json.get("password");
         User user = new User(name, email, password);
+        List<Post> postList = (List<Post>) json.get("postList");
         return user;
     }
 
@@ -59,7 +63,12 @@ public class User {
         json.put("name", name );
         json.put("email", email );
         json.put("password", password );
+        json.put("postList", postList);
         return json;
+    }
+
+    public void addNewPost(Post post) {
+        this.postList.add(post);
     }
 }
 

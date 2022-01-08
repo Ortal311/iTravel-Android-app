@@ -49,13 +49,13 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 save(inflater);
-            //    Navigation.findNavController(v).navigateUp();
+//                Navigation.findNavController(v).navigate(SignUpFragmentDirections.actionSignUpFragmentToHomePageFragment());
             }
         });
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-           //     Navigation.findNavController(v).navigateUp();
+                Navigation.findNavController(v).navigateUp();
             }
         });
 
@@ -64,7 +64,6 @@ public class SignUpFragment extends Fragment {
 
 
     private void save(LayoutInflater inflater){
-
         saveBtn.setEnabled(false);
         cancelBtn.setEnabled(false);
         String name = nameEt.getText().toString();
@@ -79,7 +78,7 @@ public class SignUpFragment extends Fragment {
         User user = new User(name,email,password);
 
         Model.instance.addUser(user,()->{
-            Navigation.findNavController(nameEt).navigateUp();
+            Navigation.findNavController(nameEt).navigate(SignUpFragmentDirections.actionSignUpFragmentToHomePageFragment());
         });
 
     }

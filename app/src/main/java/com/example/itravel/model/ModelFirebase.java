@@ -35,6 +35,13 @@ public class ModelFirebase {
                 .addOnFailureListener(e -> listener.onComplete());
     }
 
+    public void updateUser(User user, Model.UpdateUserListener listener) {
+        db.collection(User.collectionName).document(user.getEmail())
+                .update("postList", true)
+                .addOnSuccessListener(unused -> listener.onComplete())
+                .addOnFailureListener(e -> listener.onComplete());
+    }
+
     public interface GetAllUsersListener{
         void onComplete(List<User> list);
     }
@@ -60,19 +67,27 @@ public class ModelFirebase {
                 });
     }
     public void getUserByEmail(String userEmail, Model.GetUserByEmail listener) {
-        db.collection(User.collectionName)
-                .document(userEmail)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        User user = null;
-                        if ((task.isSuccessful()) & (task.getResult().getData() != null)) {
-                            user = User.create(task.getResult().getData());
-                        }
-                        listener.onComplete(user);
-                    }
-                });
+        DocumentReference dr = db.collection(User.collectionName).document(userEmail);
+        Task<DocumentSnapshot> task = dr.get();
+
+//        if(task.isSuccessful()){
+//            DocumentSnapshot r = task.getResult();
+//            Map<String, Object> m = r.getData();
+//            User user = User.create(task.getResult().getData());
+//            listener.onComplete(user);
+//            Log.d("TAG", "hrfurhurwhwufhrufhwfwohwuhfuohwohfe");
+//        }
+        dr.get()
+        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                User user = new User();
+                if ((task.isSuccessful()) & (task.getResult().getData() != null)) {
+                    user = User.create(task.getResult().getData());
+                }
+                listener.onComplete(user);
+            }
+        });
     }
 
     public void addPost(Post post, Model.AddPostListener listener){
@@ -81,7 +96,8 @@ public class ModelFirebase {
         Map<String, Object> json = post.toJson();
 
         // Add a new document with a generated ID
-        db.collection(Post.collectionName).document(post.getTitle())
+        db.collection(Post.collectionName)
+                .document(post.getTitle())
                 .set(json)
                 .addOnSuccessListener(unused -> listener.onComplete())
                 .addOnFailureListener(e -> listener.onComplete());
@@ -112,6 +128,26 @@ public class ModelFirebase {
                 });
     }
 
+    public void getAllPostsByUser(User user, GetAllPostsListener listener) {
+        db.collection(Post.collectionName)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        List<Post> list = new LinkedList<Post>();
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+                            for (QueryDocumentSnapshot doc : querySnapshot) {
+                                Post post = Post.create(doc.getData());
+                                if (post != null && post.userName == user.getName())
+                                    list.add(post);
+                            }
+                        }
+                        listener.onComplete(list);
+                    }
+                });
+    }
+
     public void getPostByTitle(String postTitle, Model.GetPostByTitle listener) {
         db.collection(Post.collectionName)
                 .document(postTitle)
@@ -127,10 +163,5 @@ public class ModelFirebase {
                     }
                 });
     }
-
-
-
-
-
 
 }

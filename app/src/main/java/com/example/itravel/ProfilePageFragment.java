@@ -5,8 +5,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -14,21 +14,28 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
 
-public class HomePageFragment extends Fragment {
+import java.util.LinkedList;
+import java.util.List;
+
+
+public class ProfilePageFragment extends Fragment {
+
+    TextView name;
+    ImageView image;
+    ImageButton editBtn;
+    ImageButton addPostBtn;
 
     PostListRvViewModel viewModel;
-    MyAdapter adapter;
+    MyAdapterProfile adapter;
     SwipeRefreshLayout swipeRefresh;
 
-    Button btn;
-
-    @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         viewModel = new ViewModelProvider(this).get(PostListRvViewModel.class);
@@ -38,44 +45,46 @@ public class HomePageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_home_page,container,false);
+        View view = inflater.inflate(R.layout.fragment_profile_page, container, false);
 
-        btn = view.findViewById(R.id.addBtn);
-        btn.setOnClickListener(Navigation.createNavigateOnClickListener(HomePageFragmentDirections.actionHomePageFragmentToPostAddFragment()));
+        name = view.findViewById(R.id.profile_name_tv);
+        image = view.findViewById(R.id.profile_image);
+        editBtn = view.findViewById(R.id.profile_editProfile_btn);
+        addPostBtn = view.findViewById(R.id.profile_addPost_btn);
 
-        swipeRefresh = view.findViewById(R.id.postlist_swiperefresh);
+        // Button's listener
+
+        swipeRefresh = view.findViewById(R.id.profilePage_postlist_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshPostList());
 
-        RecyclerView list = view.findViewById(R.id.postlist_rv);
+        RecyclerView list = view.findViewById(R.id.profilePage_postlist_rv);
         list.setHasFixedSize(true);
-
         list.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new MyAdapter();
+        adapter = new MyAdapterProfile();
         list.setAdapter(adapter);
 
-        adapter.setOnItemClickListener(new OnItemClickListener() {
+        adapter.setOnItemClickListener(new OnItemClickListenerProfile() {
             @Override
             public void onItemClick(View v,int position) {
                 String postTitle = viewModel.getData().getValue().get(position).getTitle();
-               // Navigation.findNavController(v).navigate(StudentListRvFragmentDirections.actionStudentListRvFragmentToStudentDetailsFragment(stId));
-
+                // Navigation.findNavController(v).navigate(StudentListRvFragmentDirections.actionStudentListRvFragmentToStudentDetailsFragment(stId));
             }
         });
-       // setHasOptionsMenu(true);
-        viewModel.getData().observe(getViewLifecycleOwner(), list1 -> refresh());
+
+        viewModel.getData().observe(getViewLifecycleOwner(), posts -> refresh());
+
         swipeRefresh.setRefreshing(Model.instance.getPostListLoadingState().getValue() == Model.PostListLoadingState.loading);
+
         Model.instance.getPostListLoadingState().observe(getViewLifecycleOwner(), postListLoadingState -> {
             if (postListLoadingState == Model.PostListLoadingState.loading){
                 swipeRefresh.setRefreshing(true);
             } else{
                 swipeRefresh.setRefreshing(false);
             }
-
         });
 
         return view;
-
     }
 
     private void refresh() {
@@ -83,11 +92,11 @@ public class HomePageFragment extends Fragment {
         swipeRefresh.setRefreshing(false);
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder{
+    class MyViewHolderProfile extends RecyclerView.ViewHolder{
         TextView titleTv;
         TextView locationTv;
 
-        public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
+        public MyViewHolderProfile(@NonNull View itemView, OnItemClickListenerProfile listener) {
             super(itemView);
             titleTv = itemView.findViewById(R.id.listrow_title_tv);
             locationTv = itemView.findViewById(R.id.listrow_location_tv);
@@ -101,30 +110,31 @@ public class HomePageFragment extends Fragment {
         }
     }
 
-    interface OnItemClickListener{
+    interface OnItemClickListenerProfile{
         void onItemClick(View v,int position);
     }
 
-    class MyAdapter extends RecyclerView.Adapter<MyViewHolder>{
-        OnItemClickListener listener;
-        public void setOnItemClickListener(OnItemClickListener listener){
+    class MyAdapterProfile extends RecyclerView.Adapter<MyViewHolderProfile>{
+        OnItemClickListenerProfile listener;
+        public void setOnItemClickListener(OnItemClickListenerProfile listener){
             this.listener = listener;
         }
 
         @NonNull
         @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public MyViewHolderProfile onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = getLayoutInflater().inflate(R.layout.post_list_row,parent,false);
-            MyViewHolder holder = new MyViewHolder(view,listener);
+            MyViewHolderProfile holder = new MyViewHolderProfile(view, listener);
             return holder;
         }
 
         @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull MyViewHolderProfile holder, int position) {
             Post post = viewModel.getData().getValue().get(position);
             holder.titleTv.setText(post.getTitle());
             holder.locationTv.setText(post.getLocation());
         }
+
         @Override
         public int getItemCount() {
             if(viewModel.getData().getValue() == null){
@@ -134,5 +144,4 @@ public class HomePageFragment extends Fragment {
         }
 
     }
-
 }

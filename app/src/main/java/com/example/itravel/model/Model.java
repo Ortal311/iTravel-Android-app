@@ -20,6 +20,7 @@ public class Model {
     public static final Model instance = new Model();
     ModelFirebase modelFirebase = new ModelFirebase();
     MutableLiveData<List<Post>> postsList = new MutableLiveData<List<Post>>();
+
     public enum PostListLoadingState{
         loading,
         loaded
@@ -46,17 +47,41 @@ public class Model {
         modelFirebase.addUser(user,listener);
     }
 
+    public interface UpdateUserListener{
+        void onComplete();
+    }
+
+    public void updateUser(User user, UpdateUserListener listener){
+        modelFirebase.updateUser(user,listener);
+    }
+
     //posts
     public LiveData<List<Post>> getAll(){
         if (postsList.getValue() == null) { refreshPostList(); };
         return  postsList;
     }
 
+    public LiveData<List<Post>> getAllPostsByUser(User user) {
+        if (postsList.getValue() == null) { refreshPostListByUser(user); };
+        return  postsList;
+    }
+
     public void refreshPostList() {
         postListLoadingState.setValue(PostListLoadingState.loading);
 
-
         modelFirebase.getAllPosts(new ModelFirebase.GetAllPostsListener() {
+            @Override
+            public void onComplete(List<Post> list) {
+                postsList.setValue(list);
+                postListLoadingState.setValue(PostListLoadingState.loaded);
+            }
+        });
+    }
+
+    public void refreshPostListByUser(User user) {
+        postListLoadingState.setValue(PostListLoadingState.loading);
+
+        modelFirebase.getAllPostsByUser(user, new ModelFirebase.GetAllPostsListener() {
             @Override
             public void onComplete(List<Post> list) {
                 postsList.setValue(list);
@@ -73,12 +98,13 @@ public class Model {
     public interface GetUserByEmail {
         void onComplete(User user);
     }
+
     public interface GetPostByTitle {
         void onComplete(Post post);
     }
 
     public User getUserByEmail(String userEmail, GetUserByEmail listener) {
-        modelFirebase.getUserByEmail(userEmail,listener);
+        modelFirebase.getUserByEmail(userEmail, listener);
         return null;
     }
     public User getPostByTitle(String postTitle, GetPostByTitle listener) {
