@@ -140,13 +140,12 @@
         app:layout_constraintStart_toEndOf="@+id/signup_verifypass_tv" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/signup_image_gallery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:src="@android:drawable/ic_menu_gallery"
+        android:src="@android:drawable/ic_menu_camera"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/signup_profilepic_tv"
-        app:layout_constraintTop_toBottomOf="@+id/signup_verifypass_show" />
+        tools:layout_editor_absoluteY="454dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
