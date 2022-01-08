@@ -1,29 +1,34 @@
 package com.example.itravel.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class User {
     String name="";
-    String id ="";
     String email="";
     String password="";
     //photo ...
+    final public static String collectionName= "users";
 
     public User(){
+
     }
 
-    public User(String name,String id, String email, String password) {
+    public User(String name, String email, String password) {
         this.name = name;
-        this.id = id;
         this.email = email;
         this.password = password;
     }
 
-    public String getId() {
-        return id;
+    public static User create(Map<String, Object> json) {
+        String name = (String) json.get("name");
+        String email = (String) json.get("email");
+        String password = (String) json.get("password");
+        User user = new User(name, email, password);
+        return user;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+
 
     public String getName() {
         return name;
@@ -47,6 +52,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Map<String, Object> toJson() {
+        Map<String, Object> json = new HashMap<>();
+        json.put("name", name );
+        json.put("email", email );
+        json.put("password", password );
+        return json;
     }
 }
 
