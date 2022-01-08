@@ -1,66 +1,114 @@
 package com.example.itravel;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SignUpFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.itravel.model.Model;
+import com.example.itravel.model.User;
+
+
 public class SignUpFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public SignUpFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SignUpFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SignUpFragment newInstance(String param1, String param2) {
-        SignUpFragment fragment = new SignUpFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
+    EditText nameEt;
+    EditText emailEt;
+    EditText passwordEt;
+    EditText verifyPasswordEt;
+    //Picture-ADD
+    Button saveBtn;
+    Button cancelBtn;
+    View view;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sign_up, container, false);
+        view =  inflater.inflate(R.layout.fragment_sign_up, container, false);
+        nameEt = view.findViewById(R.id.signup_name_show);
+        emailEt = view.findViewById(R.id.signup_email_show);
+        passwordEt = view.findViewById(R.id.signup_password_show);
+        verifyPasswordEt = view.findViewById(R.id.signup_verifypass_show);
+        saveBtn=view.findViewById(R.id.signup_save_btn);
+        cancelBtn=view.findViewById(R.id.signup_cancel_btn);
+
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                save(inflater);
+            //    Navigation.findNavController(v).navigateUp();
+            }
+        });
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+           //     Navigation.findNavController(v).navigateUp();
+            }
+        });
+
+        return view;
+    }
+
+
+    private void save(LayoutInflater inflater){
+
+        saveBtn.setEnabled(false);
+        cancelBtn.setEnabled(false);
+        String name = nameEt.getText().toString();
+        String email = emailEt.getText().toString();
+        String password = passwordEt.getText().toString();
+        String verifyPassword = verifyPasswordEt.getText().toString();
+        if( !password.equals(verifyPassword)){
+            //popup
+            onButtonShowPopupWindowClick(view, inflater);
+            return;
+        }
+        User user = new User(name,email,password);
+
+        Model.instance.addUser(user,()->{
+            Navigation.findNavController(nameEt).navigateUp();
+        });
+
+    }
+
+    public void onButtonShowPopupWindowClick(View view, LayoutInflater inflater) {
+
+        // inflate the layout of the popup window
+//        LayoutInflater inflater = (LayoutInflater)
+//                getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.popup_window, null);
+
+        // create the popup window
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+        // show the popup window
+        // which view you pass in doesn't matter, it is only used for the window tolken
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+        // dismiss the popup window when touched
+        popupView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                popupWindow.dismiss();
+                return true;
+            }
+        });
     }
 
 }
