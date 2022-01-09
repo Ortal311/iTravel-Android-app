@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#62def8">
+    android:background="#4FA1CA">
 
     <TextView
+        android:id="@+id/popup_text_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -13,7 +13,8 @@
         android:layout_marginTop="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="30dp"
-        android:text="Passwords does not match"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
         android:textSize="22sp" />
 
 </RelativeLayout>

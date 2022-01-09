@@ -58,7 +58,7 @@ public class HomePageFragment extends Fragment {
             @Override
             public void onItemClick(View v,int position) {
                 String postTitle = viewModel.getData().getValue().get(position).getTitle();
-               // Navigation.findNavController(v).navigate(StudentListRvFragmentDirections.actionStudentListRvFragmentToStudentDetailsFragment(stId));
+               Navigation.findNavController(v).navigate(HomePageFragmentDirections.actionHomePageFragmentToPostDetailsFragment(postTitle));
 
             }
         });
