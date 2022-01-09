@@ -6,21 +6,16 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.TextView;
+import android.widget.Spinner;
 
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
@@ -38,6 +33,8 @@ public class PostAddFragment extends Fragment {
 
     String userEmail;
     String userPassword;
+
+    Spinner dropdown;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -57,6 +54,12 @@ public class PostAddFragment extends Fragment {
         locationEt = view.findViewById(R.id.addpost_location_show);
         saveBtn=view.findViewById(R.id.addpost_save_btn);
         cancelBtn=view.findViewById(R.id.addpost_cancel_btn);
+        dropdown = view.findViewById(R.id.addpost_dropdown);
+        String[] itemsDropdown = new String[]{"easy", "medium", "hard"};
+        //There are multiple variations of this, but this is the basic variant.
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, itemsDropdown);
+        //set the spinners adapter to the previously created one.
+        dropdown.setAdapter(adapter);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +100,7 @@ public class PostAddFragment extends Fragment {
         user.addNewPost(post);
 
         Model.instance.addPost(post,()->{
-            Navigation.findNavController(titleEt).navigateUp();
+            Navigation.findNavController(view).navigate(PostAddFragmentDirections.actionPostAddFragmentToHomePageFragment2());
         });
     }
 

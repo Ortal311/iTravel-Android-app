@@ -93,40 +93,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addpost_description_tv" />
 
-    <CheckBox
-        android:id="@+id/addpost_easy_cb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:text="Easy"
-        android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/addpost_difficulty_tv"
-        app:layout_constraintEnd_toStartOf="@+id/addpost_medium_cb"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/addpost_difficulty_tv" />
-
-    <CheckBox
-        android:id="@+id/addpost_medium_cb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Medium"
-        android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/addpost_easy_cb"
-        app:layout_constraintEnd_toStartOf="@+id/addpost_hard_cb"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/addpost_easy_cb" />
-
-    <CheckBox
-        android:id="@+id/addpost_hard_cb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hard"
-        android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/addpost_medium_cb"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/addpost_medium_cb" />
-
     <TextView
         android:id="@+id/addpost_pictures_tv"
         android:layout_width="wrap_content"
@@ -152,30 +118,40 @@
         app:layout_constraintStart_toEndOf="@+id/addpost_pictures_tv"
         app:layout_constraintTop_toBottomOf="@+id/addpost_difficulty_tv" />
 
+    <Spinner
+        android:id="@+id/addpost_dropdown"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="10dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/addpost_difficulty_tv"
+        app:layout_constraintTop_toBottomOf="@+id/addpost_description_show" />
+
     <Button
         android:id="@+id/addpost_save_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="68dp"
+        android:layout_marginBottom="20dp"
         android:backgroundTint="#4FA1CA"
-        android:text="Save"
+        android:text="POST"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/addpost_cancel_btn" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/addpost_cancel_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
         android:backgroundTint="#4FA1CA"
         android:text="CANCEL"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@+id/addpost_save_btn"
         app:layout_constraintEnd_toStartOf="@+id/addpost_save_btn"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

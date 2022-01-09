@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.example.itravel.model.Model;
 import com.example.itravel.model.User;
@@ -33,17 +34,20 @@ public class SignUpFragment extends Fragment {
     Button saveBtn;
     Button cancelBtn;
     View view;
+    TextView popup;
+    View popupView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_sign_up, container, false);
+        view = inflater.inflate(R.layout.fragment_sign_up, container, false);
         nameEt = view.findViewById(R.id.signup_name_show);
         emailEt = view.findViewById(R.id.signup_email_show);
         passwordEt = view.findViewById(R.id.signup_password_show);
         verifyPasswordEt = view.findViewById(R.id.signup_verifypass_show);
-        saveBtn=view.findViewById(R.id.signup_save_btn);
-        cancelBtn=view.findViewById(R.id.signup_cancel_btn);
+        saveBtn = view.findViewById(R.id.signup_save_btn);
+        cancelBtn = view.findViewById(R.id.signup_cancel_btn);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,21 +67,38 @@ public class SignUpFragment extends Fragment {
     }
 
 
-    private void save(LayoutInflater inflater){
+    private void save(LayoutInflater inflater) {
         saveBtn.setEnabled(false);
         cancelBtn.setEnabled(false);
+
         String name = nameEt.getText().toString();
         String email = emailEt.getText().toString();
         String password = passwordEt.getText().toString();
         String verifyPassword = verifyPasswordEt.getText().toString();
-        if( !password.equals(verifyPassword)){
+        popupView = inflater.inflate(R.layout.popup_window, null);
+        popup = popupView.findViewById(R.id.popup_text_tv);
+
+        if (name.equals("") || email.equals("") || password.equals("") || verifyPassword.equals("")) {
             //popup
+            popup.setText("You did not enter all values!");
+            popup.setTextSize(20);
             onButtonShowPopupWindowClick(view, inflater);
+            saveBtn.setEnabled(true);
+            cancelBtn.setEnabled(true);
             return;
         }
-        User user = new User(name,email,password);
+        if (!password.equals(verifyPassword)) {
+            //popup
+            popup.setText("Passwords does not match!");
+            popup.setTextSize(20);
+            onButtonShowPopupWindowClick(view, inflater);
+            saveBtn.setEnabled(true);
+            cancelBtn.setEnabled(true);
+            return;
+        }
+        User user = new User(name, email, password);
 
-        Model.instance.addUser(user,()->{
+        Model.instance.addUser(user, () -> {
             Navigation.findNavController(nameEt).navigate(SignUpFragmentDirections.actionSignUpFragmentToHomePageFragment());
         });
 
@@ -88,7 +109,6 @@ public class SignUpFragment extends Fragment {
         // inflate the layout of the popup window
 //        LayoutInflater inflater = (LayoutInflater)
 //                getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.popup_window, null);
 
         // create the popup window
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -109,5 +129,4 @@ public class SignUpFragment extends Fragment {
             }
         });
     }
-
 }

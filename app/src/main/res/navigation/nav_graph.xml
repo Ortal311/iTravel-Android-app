@@ -33,6 +33,9 @@
         <action
             android:id="@+id/action_homePageFragment_to_postAddFragment"
             app:destination="@id/postAddFragment" />
+        <action
+            android:id="@+id/action_homePageFragment_to_postDetailsFragment"
+            app:destination="@id/postDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/postAddFragment"
@@ -43,5 +46,14 @@
             android:id="@+id/action_postAddFragment_to_homePageFragment2"
             app:destination="@id/homePageFragment"
             app:popUpTo="@id/homePageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/postDetailsFragment"
+        android:name="com.example.itravel.PostDetailsFragment"
+        android:label="fragment_post_details"
+        tools:layout="@layout/fragment_post_details" >
+        <argument
+            android:name="postTitle"
+            app:argType="string" />
     </fragment>
 </navigation>
