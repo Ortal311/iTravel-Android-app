@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PostDetailsFragment">
+    tools:context=".post.PostDetailsFragment">
 
     <TextView
         android:id="@+id/postdetails_title_tv"
@@ -63,17 +63,6 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/postdetails_likes_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="25dp"
-        android:text="Num Likes"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/postdetails_difficulty_tv" />
-
-    <TextView
         android:id="@+id/postdetails_author_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -99,7 +88,7 @@
         android:layout_width="210dp"
         android:layout_height="174dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:src="@drawable/nature"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

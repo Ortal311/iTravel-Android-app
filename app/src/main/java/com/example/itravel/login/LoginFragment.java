@@ -1,6 +1,7 @@
-package com.example.itravel;
+package com.example.itravel.login;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -15,6 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.example.itravel.MainActivity;
+import com.example.itravel.R;
 
 public class LoginFragment extends Fragment {
 
@@ -36,8 +40,8 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        emailEt = view.findViewById(R.id.login_email_show);
-        passwordEt = view.findViewById(R.id.login_password_show);
+        emailEt = view.findViewById(R.id.login_email_et);
+        passwordEt = view.findViewById(R.id.login_password_et);
         loginBtn=view.findViewById(R.id.login_login_btn);
         signupBtn = view.findViewById(R.id.login_signup_btn);
 
@@ -45,10 +49,11 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 saveUser();
-                Navigation.findNavController(v).navigate(LoginFragmentDirections.actionLoginFragmentToHomePageFragment());
+               // Navigation.findNavController(v).navigate(LoginFragmentDirections());
+                 toFeedActivity();  
             }
         });
-        signupBtn.setOnClickListener(Navigation.createNavigateOnClickListener(LoginFragmentDirections.actionLoginFragmentToSignUpFragment()));
+        signupBtn.setOnClickListener(Navigation.createNavigateOnClickListener(LoginFragmentDirections.actionLoginFragment3ToSignUpFragment()));
 
         return view;
     }
@@ -56,5 +61,11 @@ public class LoginFragment extends Fragment {
     public void saveUser() {
         Ed.putString("email", emailEt.getText().toString());
         Ed.commit();
+    }
+
+    private void toFeedActivity() {
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        startActivity(intent);
+        getActivity().finish();
     }
 }

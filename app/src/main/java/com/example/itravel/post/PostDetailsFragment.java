@@ -1,4 +1,4 @@
-package com.example.itravel;
+package com.example.itravel.post;
 
 import android.os.Bundle;
 
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.itravel.R;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
 
@@ -23,7 +24,6 @@ public class PostDetailsFragment extends Fragment {
     TextView authorEt;
     TextView descriptionEt;
     TextView difficultyEt;
-    TextView likesEt;
     Button editBtn;
     Button deleteBtn;
 
@@ -36,7 +36,6 @@ public class PostDetailsFragment extends Fragment {
         locationEt = view.findViewById(R.id.postdetails_location_tv);
         authorEt = view.findViewById(R.id.postdetails_author_tv);
         descriptionEt=view.findViewById(R.id.postdetails_description_tv);
-        likesEt =view.findViewById(R.id.postdetails_likes_tv);
         difficultyEt = view.findViewById(R.id.postdetails_difficulty_tv);
         editBtn = view.findViewById(R.id.postdetails_edit_btn);
         deleteBtn = view.findViewById(R.id.postdetails_delete_btn);
