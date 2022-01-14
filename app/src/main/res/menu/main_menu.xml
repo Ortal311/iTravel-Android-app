@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_addpost"
+        android:icon="@android:drawable/ic_input_add"
+        android:title="Add post"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_profile"
+        android:icon="@drawable/avatar"
+        android:title="Profile"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_homepage"
+        android:title="Home page"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_signout"
+        android:title="Sign out" />
+</menu>

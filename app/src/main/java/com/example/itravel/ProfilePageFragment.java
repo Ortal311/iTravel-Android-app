@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,9 +19,7 @@ import android.widget.TextView;
 
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
-
-import java.util.LinkedList;
-import java.util.List;
+import com.example.itravel.post.PostListRvViewModel;
 
 
 public class ProfilePageFragment extends Fragment {

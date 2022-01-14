@@ -1,4 +1,4 @@
-package com.example.itravel;
+package com.example.itravel.post;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

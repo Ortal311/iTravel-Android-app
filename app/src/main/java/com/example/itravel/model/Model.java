@@ -1,8 +1,11 @@
 package com.example.itravel.model;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.os.HandlerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -14,10 +17,16 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class Model {
 
     public static final Model instance = new Model();
+    //added
+    public Executor executor= Executors.newFixedThreadPool(1);
+    public Handler mainThread = HandlerCompat.createAsync(Looper.getMainLooper());
+
     ModelFirebase modelFirebase = new ModelFirebase();
     MutableLiveData<List<Post>> postsList = new MutableLiveData<List<Post>>();
 
@@ -114,6 +123,14 @@ public class Model {
 
     public LiveData<PostListLoadingState> getPostListLoadingState() {
         return postListLoadingState;
+    }
+
+    /**
+     * Authentication
+     */
+
+    public boolean isSignedIn() {
+        return modelFirebase.isSignedIn();
     }
 
 

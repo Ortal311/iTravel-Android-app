@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PostAddFragment">
+    tools:context=".post.PostAddFragment"
+    >
 
     <TextView
         android:id="@+id/addpost_title_tv"
@@ -25,6 +27,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:ems="10"
+        android:hint="Title"
         android:inputType="textPersonName"
         app:layout_constraintBaseline_toBaselineOf="@+id/addpost_title_tv"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,6 +52,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:ems="10"
+        android:hint="Location"
         android:inputType="textPersonName"
         app:layout_constraintBaseline_toBaselineOf="@+id/addpost_location_tv"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,20 +68,28 @@
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addpost_location_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/addpost_location_tv"
+        />
+
 
     <EditText
         android:id="@+id/addpost_description_show"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="249dp"
+        android:layout_height="66dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:ems="10"
+        android:focusable="true"
+        android:gravity="start"
+        android:hint="Description"
         android:inputType="textMultiLine"
+        android:lines="5"
+        android:maxLines="10"
+        android:paddingTop="0dp"
         android:scrollbars="vertical"
+        android:textColor="@android:color/black"
         app:layout_constraintBaseline_toBaselineOf="@+id/addpost_description_tv"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.157"
         app:layout_constraintStart_toEndOf="@+id/addpost_description_tv" />
 
     <TextView
@@ -93,17 +105,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addpost_description_tv" />
 
-    <TextView
-        android:id="@+id/addpost_pictures_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="32dp"
-        android:text="Pictures"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addpost_difficulty_tv" />
+        <TextView
+            android:id="@+id/addpost_pictures_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="32dp"
+            android:text="Pictures"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addpost_difficulty_tv" />
 
     <ImageButton
         android:id="@+id/imageButton"
@@ -123,34 +135,35 @@
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/addpost_difficulty_tv"
         app:layout_constraintTop_toBottomOf="@+id/addpost_description_show" />
 
     <Button
-        android:id="@+id/addpost_save_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="68dp"
-        android:layout_marginBottom="20dp"
-        android:backgroundTint="#4FA1CA"
-        android:text="POST"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            android:id="@+id/addpost_save_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="68dp"
+            android:backgroundTint="#4FA1CA"
+            android:text="POST"
+            android:textSize="24sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/addpost_cancel_btn"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/addpost_cancel_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
         android:backgroundTint="#4FA1CA"
         android:text="CANCEL"
         android:textSize="24sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/addpost_save_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/addpost_save_btn"
         app:layout_constraintStart_toStartOf="parent" />
 

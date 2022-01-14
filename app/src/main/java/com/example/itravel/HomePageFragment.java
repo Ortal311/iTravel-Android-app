@@ -11,14 +11,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
+import com.example.itravel.post.PostListRvViewModel;
 
 public class HomePageFragment extends Fragment {
 
@@ -26,7 +28,7 @@ public class HomePageFragment extends Fragment {
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
 
-    Button btn;
+    //Button btn;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -40,8 +42,8 @@ public class HomePageFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home_page,container,false);
 
-        btn = view.findViewById(R.id.addBtn);
-        btn.setOnClickListener(Navigation.createNavigateOnClickListener(HomePageFragmentDirections.actionHomePageFragmentToPostAddFragment()));
+//        btn = view.findViewById(R.id.addBtn);
+//        btn.setOnClickListener(Navigation.createNavigateOnClickListener(HomePageFragmentDirections.actionHomePageFragmentToPostAddFragment()));
 
         swipeRefresh = view.findViewById(R.id.postlist_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshPostList());
@@ -58,6 +60,7 @@ public class HomePageFragment extends Fragment {
             @Override
             public void onItemClick(View v,int position) {
                 String postTitle = viewModel.getData().getValue().get(position).getTitle();
+                Log.d("TAG", " ~~~~~title is : ~~~~~~" + postTitle);
                Navigation.findNavController(v).navigate(HomePageFragmentDirections.actionHomePageFragmentToPostDetailsFragment(postTitle));
 
             }
@@ -86,16 +89,27 @@ public class HomePageFragment extends Fragment {
     class MyViewHolder extends RecyclerView.ViewHolder{
         TextView titleTv;
         TextView locationTv;
+        ImageButton postDetails;
 
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
             titleTv = itemView.findViewById(R.id.listrow_title_tv);
             locationTv = itemView.findViewById(R.id.listrow_location_tv);
+            postDetails = itemView.findViewById(R.id.listrow_postdetails_btn);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
                     listener.onItemClick(v,pos);
+                }
+            });
+            postDetails.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    String postTitle = viewModel.getData().getValue().get(itemView.getVerticalScrollbarPosition()).getTitle();
+//                    Log.d("TAG", " ~~~~~title is : ~~~~~~" + postTitle);
+//                    Navigation.findNavController(v).navigate(HomePageFragmentDirections.actionHomePageFragmentToPostDetailsFragment(postTitle));
+
                 }
             });
         }
