@@ -8,7 +8,7 @@ import java.util.Map;
 public class User {
     String name="";
     String email="";
-    String password="";
+    String photo="";
     List<Post> postList = new LinkedList<Post>();
     //photo ...
     final public static String collectionName= "users";
@@ -17,18 +17,18 @@ public class User {
 
     }
 
-    public User(String name, String email, String password) {
+    public User(String name, String email, String photo) {
         this.name = name;
         this.email = email;
-        this.password = password;
+        this.photo = photo;
     }
 
     public static User create(Map<String, Object> json) {
         String name = (String) json.get("name");
         String email = (String) json.get("email");
-        String password = (String) json.get("password");
-        User user = new User(name, email, password);
-        List<Post> postList = (List<Post>) json.get("postList");
+        String photo = (String) json.get("photo");
+//        List<Post> postList = (List<Post>) json.get("postList");
+        User user = new User(name, email, photo);
         return user;
     }
 
@@ -50,19 +50,20 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPhoto() {
+        return photo;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
+
 
     public Map<String, Object> toJson() {
         Map<String, Object> json = new HashMap<>();
         json.put("name", name );
         json.put("email", email );
-        json.put("password", password );
+        json.put("photo", photo );
         json.put("postList", postList);
         return json;
     }

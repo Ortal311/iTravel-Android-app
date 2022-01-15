@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import com.example.itravel.model.Model;
 import com.example.itravel.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class SignUpFragment extends Fragment {
@@ -37,6 +39,8 @@ public class SignUpFragment extends Fragment {
     View view;
     TextView popup;
     View popupView;
+
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,6 +80,7 @@ public class SignUpFragment extends Fragment {
         String email = emailEt.getText().toString();
         String password = passwordEt.getText().toString();
         String verifyPassword = verifyPasswordEt.getText().toString();
+        String photo = "";
         popupView = inflater.inflate(R.layout.popup_window, null);
         popup = popupView.findViewById(R.id.popup_text_tv);
 
@@ -97,12 +102,17 @@ public class SignUpFragment extends Fragment {
             cancelBtn.setEnabled(true);
             return;
         }
-        User user = new User(name, email, password);
 
-        Model.instance.addUser(user, () -> {
-          //  Navigation.findNavController(nameEt).navigate(SignUpFragmentDirections.actionSignUpFragmentToHomePageFragment());
+        Model.instance.createNewAccount(name, email, password, photo,  () -> {
             toFeedActivity();
         });
+
+//        User user = new User(name, email, password);
+
+//        Model.instance.addUser(user, () -> {
+//          //  Navigation.findNavController(nameEt).navigate(SignUpFragmentDirections.actionSignUpFragmentToHomePageFragment());
+//            toFeedActivity();
+//        });
 
     }
 

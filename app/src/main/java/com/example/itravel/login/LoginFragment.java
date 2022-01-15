@@ -19,6 +19,7 @@ import android.widget.EditText;
 
 import com.example.itravel.MainActivity;
 import com.example.itravel.R;
+import com.example.itravel.model.Model;
 
 public class LoginFragment extends Fragment {
 
@@ -30,8 +31,8 @@ public class LoginFragment extends Fragment {
 
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        SharedPreferences sp = context.getSharedPreferences("Login", 0);
-        Ed = sp.edit();
+//        SharedPreferences sp = context.getSharedPreferences("Login", 0);
+//        Ed = sp.edit();
     }
 
 
@@ -45,22 +46,21 @@ public class LoginFragment extends Fragment {
         loginBtn=view.findViewById(R.id.login_login_btn);
         signupBtn = view.findViewById(R.id.login_signup_btn);
 
+//        String email = emailEt.getText().toString();
+//        String password = passwordEt.getText().toString();
+
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveUser();
-               // Navigation.findNavController(v).navigate(LoginFragmentDirections());
-                 toFeedActivity();  
+                Model.instance.isExist(emailEt.getText().toString(), passwordEt.getText().toString(), ()->{
+                    Log.d("TAG", "Connected!!!");
+                    toFeedActivity();
+                });
             }
         });
         signupBtn.setOnClickListener(Navigation.createNavigateOnClickListener(LoginFragmentDirections.actionLoginFragment3ToSignUpFragment()));
 
         return view;
-    }
-
-    public void saveUser() {
-        Ed.putString("email", emailEt.getText().toString());
-        Ed.commit();
     }
 
     private void toFeedActivity() {

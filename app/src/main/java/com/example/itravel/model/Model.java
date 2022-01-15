@@ -3,6 +3,7 @@ package com.example.itravel.model;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.core.os.HandlerCompat;
@@ -11,6 +12,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.HashMap;
@@ -29,6 +31,9 @@ public class Model {
 
     ModelFirebase modelFirebase = new ModelFirebase();
     MutableLiveData<List<Post>> postsList = new MutableLiveData<List<Post>>();
+
+    FirebaseUser currUser;
+
 
     public enum PostListLoadingState{
         loading,
@@ -50,10 +55,6 @@ public class Model {
 
     public interface AddPostListener{
         void onComplete();
-    }
-
-    public void addUser(User user, AddUserListener listener){
-        modelFirebase.addUser(user,listener);
     }
 
     public interface UpdateUserListener{
@@ -112,8 +113,8 @@ public class Model {
         void onComplete(Post post);
     }
 
-    public User getUserByEmail(String userEmail, GetUserByEmail listener) {
-        modelFirebase.getUserByEmail(userEmail, listener);
+    public User getUserById(String Id, GetUserByEmail listener) {
+        modelFirebase.getUserById(Id, listener);
         return null;
     }
     public User getPostByTitle(String postTitle, GetPostByTitle listener) {
@@ -133,5 +134,28 @@ public class Model {
         return modelFirebase.isSignedIn();
     }
 
+    public interface CreateNewAccount{
+        void onComplete();
+    }
 
+    public void createNewAccount(String name, String email, String password, String photo, CreateNewAccount listener) {
+        modelFirebase.createNewAccount(name, email, password, photo, listener);
+    }
+
+    public interface SignOut{
+        void onComplete();
+    }
+
+    public void signOut(SignOut listener) {
+        modelFirebase.signOut(listener);
+    }
+
+    public interface IsExist{
+        void onComplete();
+//        void onFailure();
+    }
+
+    public void isExist(String email, String password, IsExist listener) {
+        modelFirebase.isExist(email, password, listener);
+    }
 }
