@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,7 @@ import com.example.itravel.R;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
 import com.example.itravel.model.User;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class PostAddFragment extends Fragment {
     EditText titleEt;
@@ -86,22 +86,23 @@ public class PostAddFragment extends Fragment {
         String title = titleEt.getText().toString();
         String description = descriptionEt.getText().toString();
         String location = locationEt.getText().toString();
-        User user = new User();
-        Model.instance.getUserByEmail(userEmail, new Model.GetUserByEmail() {
+
+        String Id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        Model.instance.getUserById(Id, new Model.GetUserByEmail() {
             @Override
-            public void onComplete(User u) {
-                user.setEmail(u.getEmail());
-                user.setName(u.getName());
+            public void onComplete(User user) {
+                String name = user.getName();
+                savePost(name, title, description, location);
             }
         });
+    }
 
-        Log.d("TAG", "User: " + user.getEmail());
-
-        Post post = new Post(user.getName(), title, description, location);
-        user.addNewPost(post);
-
+    public void savePost(String name, String title, String description, String location) {
+        Post post = new Post(name, title, description, location);
         Model.instance.addPost(post,()->{
             Navigation.findNavController(view).navigate(PostAddFragmentDirections.actionPostAddFragmentToHomePageFragment2());
+            // TODO: Refresh
         });
     }
 

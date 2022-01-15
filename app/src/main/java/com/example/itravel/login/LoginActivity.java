@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.itravel.R;
+import com.example.itravel.model.ModelFirebase;
 
 public class LoginActivity extends AppCompatActivity {
     NavController navCtl;
@@ -26,13 +27,13 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(! super.onOptionsItemSelected(item)){
-            switch ((item.getItemId())){
-                case  android.R.id.home: //back button on the action bar
+        if (!super.onOptionsItemSelected(item)) {
+            switch ((item.getItemId())) {
+                case android.R.id.home: //back button on the action bar
                     navCtl.navigateUp();
                     break;
             }
-        }else
+        } else
             return true;
         return false;
     }

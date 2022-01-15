@@ -8,9 +8,14 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.example.itravel.login.LoginActivity;
+import com.example.itravel.model.Model;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.menu_signout:
                     //TODO: signout
+                    Model.instance.signOut(() -> {
+                        toLoginActivity();
+                    });
                     break;
                case  android.R.id.home: //back button on the action bar
                      navCtl.navigateUp();
@@ -63,6 +71,12 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    private void toLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 }

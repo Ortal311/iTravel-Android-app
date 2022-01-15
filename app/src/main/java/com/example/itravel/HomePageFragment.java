@@ -1,6 +1,7 @@
 package com.example.itravel;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.itravel.login.LoginActivity;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
 import com.example.itravel.post.PostListRvViewModel;
@@ -147,6 +149,12 @@ public class HomePageFragment extends Fragment {
             return viewModel.getData().getValue().size();
         }
 
+    }
+
+    public void toLoginActivity() {
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        startActivity(intent);
+        getActivity().finish();
     }
 
 }
