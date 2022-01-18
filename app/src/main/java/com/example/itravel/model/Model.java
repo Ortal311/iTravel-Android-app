@@ -3,22 +3,14 @@ package com.example.itravel.model;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 import androidx.core.os.HandlerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -43,10 +35,7 @@ public class Model {
 
 
     private Model(){
-//        for(int i=0;i<data.size();i++){
-//            User u = new User("name", "" + i, "phone", "address");
-//            data.add(u);
-//        }
+
     }
 
     public interface AddUserListener{
@@ -90,8 +79,8 @@ public class Model {
 
     public void refreshPostListByUser(User user) {
         postListLoadingState.setValue(PostListLoadingState.loading);
+        modelFirebase.getAllPostsByUser(user, new ModelFirebase.GetAllPostsByUserListener() {
 
-        modelFirebase.getAllPostsByUser(user, new ModelFirebase.GetAllPostsListener() {
             @Override
             public void onComplete(List<Post> list) {
                 postsList.setValue(list);
@@ -105,7 +94,7 @@ public class Model {
     }
 
 
-    public interface GetUserByEmail {
+    public interface GetUserById {
         void onComplete(User user);
     }
 
@@ -113,7 +102,7 @@ public class Model {
         void onComplete(Post post);
     }
 
-    public User getUserById(String Id, GetUserByEmail listener) {
+    public User getUserById(String Id, GetUserById listener) {
         modelFirebase.getUserById(Id, listener);
         return null;
     }

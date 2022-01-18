@@ -6,10 +6,12 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +21,14 @@ import android.widget.TextView;
 
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
+import com.example.itravel.model.User;
 import com.example.itravel.post.PostListRvViewModel;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class ProfilePageFragment extends Fragment {
 
-    TextView name;
+    TextView nameTv;
     ImageView image;
     ImageButton editBtn;
     ImageButton addPostBtn;
@@ -32,6 +36,8 @@ public class ProfilePageFragment extends Fragment {
     PostListRvViewModel viewModel;
     MyAdapterProfile adapter;
     SwipeRefreshLayout swipeRefresh;
+
+    User currUser;
 
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -44,15 +50,29 @@ public class ProfilePageFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile_page, container, false);
 
-        name = view.findViewById(R.id.profile_name_tv);
+        nameTv = view.findViewById(R.id.profile_name_tv);
         image = view.findViewById(R.id.profile_image);
         editBtn = view.findViewById(R.id.profile_editProfile_btn);
         addPostBtn = view.findViewById(R.id.profile_addPost_btn);
 
-        // Button's listener
+        addPostBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(ProfilePageFragmentDirections.actionProfilePageFragmentToPostAddFragment());
+            }
+        });
+
+//        addPostBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
+
+        getUserDetails();
 
         swipeRefresh = view.findViewById(R.id.profilePage_postlist_swiperefresh);
-        swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshPostList());
+        swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshPostListByUser(currUser));
 
         RecyclerView list = view.findViewById(R.id.profilePage_postlist_rv);
         list.setHasFixedSize(true);
@@ -70,7 +90,6 @@ public class ProfilePageFragment extends Fragment {
         });
 
         viewModel.getData().observe(getViewLifecycleOwner(), posts -> refresh());
-
         swipeRefresh.setRefreshing(Model.instance.getPostListLoadingState().getValue() == Model.PostListLoadingState.loading);
 
         Model.instance.getPostListLoadingState().observe(getViewLifecycleOwner(), postListLoadingState -> {
@@ -82,6 +101,20 @@ public class ProfilePageFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public void getUserDetails() {
+        String ID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Model.instance.getUserById(ID, new Model.GetUserById() {
+
+            @Override
+            public void onComplete(User user) {
+                currUser = user;
+                nameTv.setText(user.getName());
+            }
+        });
+
+        //TODO: Get current user posts and display them
     }
 
     private void refresh() {

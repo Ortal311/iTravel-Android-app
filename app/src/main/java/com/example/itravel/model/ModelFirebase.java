@@ -1,35 +1,22 @@
 package com.example.itravel.model;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.itravel.MyApplication;
-import com.example.itravel.R;
-import com.example.itravel.login.LoginActivity;
-import com.example.itravel.login.LoginFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executor;
 
 public class ModelFirebase {
 
@@ -69,7 +56,7 @@ public class ModelFirebase {
     }
 
 
-    public void getUserById(String Id, Model.GetUserByEmail listener) {
+    public void getUserById(String Id, Model.GetUserById listener) {
         db.collection(User.collectionName)
                 .document(Id)
                 .get()
@@ -105,6 +92,10 @@ public class ModelFirebase {
         void onComplete(List<Post> list);
     }
 
+    public interface GetAllPostsByUserListener{
+        void onComplete(List<Post> list);
+    }
+
     public void getAllPosts(GetAllPostsListener listener) {
         db.collection(Post.collectionName)
                 .get()
@@ -126,8 +117,9 @@ public class ModelFirebase {
                 });
     }
 
-    public void getAllPostsByUser(User user, GetAllPostsListener listener) {
+    public void getAllPostsByUser(User user, GetAllPostsByUserListener listener) {
         db.collection(Post.collectionName)
+                .whereEqualTo("userName", user.getName())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

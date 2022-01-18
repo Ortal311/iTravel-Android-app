@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.menu_profile:
                     //TODO: add navigation to profile
+                    navCtl.navigate(R.id.action_global_profilePageFragment);
                     break;
                 case R.id.menu_homepage:
                     navCtl.navigate(R.id.action_global_homePageFragment);
