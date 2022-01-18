@@ -52,11 +52,26 @@
     <fragment
         android:id="@+id/profilePageFragment"
         android:name="com.example.itravel.ProfilePageFragment"
-        android:label="fragment_profile_page"
-        tools:layout="@layout/fragment_profile_page" >
+        android:label="Profile page"
+        tools:layout="@layout/fragment_profile_page">
         <action
             android:id="@+id/action_profilePageFragment_to_postAddFragment"
             app:destination="@id/postAddFragment" />
+        <action
+            android:id="@+id/action_profilePageFragment_to_profileEdit"
+            app:destination="@id/profileEdit" />
+        <argument
+            android:name="name"
+            app:argType="string" />
     </fragment>
     <action android:id="@+id/action_global_profilePageFragment" app:destination="@id/profilePageFragment" />
+    <fragment
+        android:id="@+id/profileEdit"
+        android:name="com.example.itravel.ProfileEditFragment"
+        android:label="fragment_profile_edit"
+        tools:layout="@layout/fragment_profile_edit" >
+        <argument
+            android:name="name"
+            app:argType="string" />
+    </fragment>
 </navigation>
