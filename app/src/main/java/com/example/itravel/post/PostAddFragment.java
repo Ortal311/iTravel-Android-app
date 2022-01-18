@@ -108,7 +108,7 @@ public class PostAddFragment extends Fragment {
 
         String Id = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        Model.instance.getUserById(Id, new Model.GetUserByEmail() {
+        Model.instance.getUserById(Id, new Model.GetUserById() {
             @Override
             public void onComplete(User user) {
                 String name = user.getName();
