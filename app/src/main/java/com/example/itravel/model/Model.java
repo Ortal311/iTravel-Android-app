@@ -57,10 +57,6 @@ public class Model {
 
     /** Interface **/
 
-    public interface AddUserListener{
-        void onComplete();
-    }
-
     public interface AddPostListener{
         void onComplete();
     }
@@ -69,12 +65,12 @@ public class Model {
         void onComplete();
     }
 
-    public interface UpdatePostListener{
-        void onComplete();
+    public interface GetUserById {
+        void onComplete(User user);
     }
 
-    public interface GetUserByEmail {
-        void onComplete(User user);
+    public interface UpdatePostListener{
+        void onComplete();
     }
 
     public interface GetPostByTitle {
@@ -95,9 +91,9 @@ public class Model {
 
     public interface IsExist{
         void onComplete();
-//        void onFailure();
     }
 
+    /******************************************************/
 
     public void deleteAllPostsDao()
     {
@@ -109,45 +105,12 @@ public class Model {
         });
     }
 
-    /**  Users **/
-    public void updateUser(User user, UpdateUserListener listener){
-        modelFirebase.updateUser(user,listener);
-    }
 
-    //posts
-    public LiveData<List<Post>> getAll(){
-        if (postsList.getValue() == null) { refreshPostList(); };
-        return  postsList;
-    }
-
-    public LiveData<List<Post>> getAllPostsByUser(User user) {
-        if (postsList.getValue() == null) { refreshPostListByUser(user); };
-        return  postsList;
-    }
-
-    public void refreshPostListByUser(User user) {
-        postListLoadingState.setValue(PostListLoadingState.loading);
-
-        modelFirebase.getAllPostsByUser(user, new ModelFirebase.GetAllPostsListener() {
-            @Override
-            public void onComplete(List<Post> list) {
-                postsList.setValue(list);
-                postListLoadingState.setValue(PostListLoadingState.loaded);
-            }
-        });
-    }
-
-    public void updatePost(Post post)
-    {
-        executor.execute(() -> {
-            AppLocalDb.db.postDao().update(post);
-        });
-    }
+    /**  Posts  **/
 
     public void refreshPostList() {
 
         postListLoadingState.setValue(PostListLoadingState.loading);
-        modelFirebase.getAllPostsByUser(user, new ModelFirebase.GetAllPostsByUserListener() {
         // get last local update date
         Long lastUpdateDate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("PostsLastUpdateDate", 0);
 
@@ -188,47 +151,22 @@ public class Model {
         });
     }
 
+    public void updatePost(Post post)
+    {
+        executor.execute(() -> {
+            AppLocalDb.db.postDao().update(post);
+        });
+    }
 
-    /** Posts **/
     public LiveData<List<Post>> getAll(){
         if (postsList.getValue() == null) { refreshPostList(); };
         return  postsList;
     }
 
-    public LiveData<List<Post>> getAllPostsByUser(User user) {
-        if (postsList.getValue() == null) { refreshPostListByUser(user); };
-        return  postsList;
-    }
-
-//    public void refreshPostList() {
-//        postListLoadingState.setValue(PostListLoadingState.loading);
-//
-//        modelFirebase.getAllPosts(new ModelFirebase.GetAllPostsListener() {
-//            @Override
-//            public void onComplete(List<Post> list) {
-//                postsList.setValue(list);
-//                postListLoadingState.setValue(PostListLoadingState.loaded);
-//            }
-//        });
-//    }
-
     public void addPost(Post post, AddPostListener listener){
         modelFirebase.addPost(post,listener);
     }
 
-
-    public interface GetUserById {
-        void onComplete(User user);
-    }
-
-    public interface GetPostByTitle {
-        void onComplete(Post post);
-    }
-
-    public User getUserById(String Id, GetUserById listener) {
-        modelFirebase.getUserById(Id, listener);
-        return null;
-    }
     public User getPostByTitle(String postTitle, GetPostByTitle listener) {
         modelFirebase.getPostByTitle(postTitle,listener);
         return null;
@@ -251,6 +189,35 @@ public class Model {
         modelFirebase.updatePost(post,listener);
     }
 
+    /**  Users  **/
+
+    public User getUserById(String Id, GetUserById listener) {
+        modelFirebase.getUserById(Id, listener);
+        return null;
+    }
+
+
+    public void updateUser(User user, UpdateUserListener listener){
+        modelFirebase.updateUser(user,listener);
+    }
+
+    public void refreshPostListByUser(User user) {
+        postListLoadingState.setValue(PostListLoadingState.loading);
+
+        modelFirebase.getAllPostsByUser(user, new ModelFirebase.GetAllPostsByUserListener() {
+            @Override
+            public void onComplete(List<Post> list) {
+                postsList.setValue(list);
+                postListLoadingState.setValue(PostListLoadingState.loaded);
+            }
+        });
+    }
+
+    public LiveData<List<Post>> getAllPostsByUser(User user) {
+        if (postsList.getValue() == null) { refreshPostListByUser(user); };
+        return  postsList;
+    }
+
     /** Authentication **/
 
     public boolean isSignedIn() {
@@ -261,10 +228,6 @@ public class Model {
         modelFirebase.createNewAccount(name, email, password, photo, listener);
     }
 
-    public interface SignOut{
-        void onComplete();
-    }
-
     public void signOut(SignOut listener) {
         modelFirebase.signOut(listener);
     }
@@ -272,8 +235,4 @@ public class Model {
     public void isExist( Context context, String email, String password, IsExist listener) {
         modelFirebase.isExist( context, email, password, listener);
     }
-
-
-
-
 }
