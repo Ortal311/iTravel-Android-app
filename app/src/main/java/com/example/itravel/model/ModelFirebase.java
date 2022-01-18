@@ -34,13 +34,15 @@ public class ModelFirebase {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-    /** Post **/
+    /**
+     * Post
+     **/
 
-    public interface GetAllPostsListener{
+    public interface GetAllPostsListener {
         void onComplete(List<Post> list);
     }
 
-    public void addPost(Post post, Model.AddPostListener listener){
+    public void addPost(Post post, Model.AddPostListener listener) {
         // Create a new user with a first and last name
         Map<String, Object> json = post.toJson();
         // Add a new document with a generated ID
@@ -54,16 +56,16 @@ public class ModelFirebase {
     public void updatePost(Post post, Model.UpdatePostListener listener) {
 
         db.collection(Post.collectionName).document(post.getTitle())
-                .update("description", post.getDescription() ,
-                        "location" , post.getLocation(),
+                .update("description", post.getDescription(),
+                        "location", post.getLocation(),
                         "difficulty", post.getDifficulty()
-                      )
+                )
                 .addOnSuccessListener(unused -> listener.onComplete())
                 .addOnFailureListener(e -> listener.onComplete());
 
     }
 
-    public void deletePost(Post post, Model.deletePost listener){
+    public void deletePost(Post post, Model.deletePost listener) {
         db.collection(Post.collectionName).document(post.getTitle())
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -85,14 +87,14 @@ public class ModelFirebase {
 
     public void getAllPosts(Long lastUpdateDate, GetAllPostsListener listener) {
         db.collection(Post.collectionName)
-                .whereGreaterThanOrEqualTo("updateDate",new Timestamp(lastUpdateDate,0))
+                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
                 .get()
                 .addOnCompleteListener(task -> {
                     List<Post> list = new LinkedList<Post>();
-                    if (task.isSuccessful()){
-                        for (QueryDocumentSnapshot doc : task.getResult()){
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
                             Post post = Post.create(doc.getData());
-                            if (post != null){
+                            if (post != null) {
                                 list.add(post);
                             }
                         }
@@ -109,10 +111,9 @@ public class ModelFirebase {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         Post post = new Post();
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             DocumentSnapshot docSnapshot = task.getResult();
-                            if(docSnapshot.exists())
-                            {
+                            if (docSnapshot.exists()) {
                                 post = Post.create(task.getResult().getData());
                             }
                         }
@@ -121,15 +122,18 @@ public class ModelFirebase {
                 });
     }
 
-    /** User **/
+    /**
+     * User
+     **/
 
-    public interface GetAllPostsByUserListener{
+    public interface GetAllPostsByUserListener {
         void onComplete(List<Post> list);
     }
 
-    public void updateUser(User user, Model.UpdateUserListener listener) {
-        db.collection(User.collectionName).document(user.getEmail())
-                .update("postList", true)
+    public void updateUser(String id, String name, Model.UpdateUserListener listener) {
+        db.collection(User.collectionName)
+                .document(id)
+                .update("name", name)
                 .addOnSuccessListener(unused -> listener.onComplete())
                 .addOnFailureListener(e -> listener.onComplete());
     }
@@ -145,7 +149,7 @@ public class ModelFirebase {
                         if (task.isSuccessful()) {
                             Log.d("TAG", "Successfullllllll");
                             DocumentSnapshot document = task.getResult();
-                            if(document.exists()) {
+                            if (document.exists()) {
                                 user = User.create(task.getResult().getData());
                                 Log.d("TAG", "exsittttt");
                             }
@@ -156,6 +160,7 @@ public class ModelFirebase {
     }
 
     public void getAllPostsByUser(User user, GetAllPostsByUserListener listener) {
+        Log.d("TAG", "Username: " + user.getName());
         db.collection(Post.collectionName)
                 .whereEqualTo("userName", user.getName())
                 .get()
@@ -168,7 +173,8 @@ public class ModelFirebase {
                             for (QueryDocumentSnapshot doc : querySnapshot) {
                                 Post post = Post.create(doc.getData());
                                 if (post != null && post.userName == user.getName())
-                                    list.add(post);
+                                    Log.d("TAG", "Post title: " + post.getTitle());
+                                list.add(post);
                             }
                         }
                         listener.onComplete(list);
@@ -177,8 +183,10 @@ public class ModelFirebase {
     }
 
 
-    /**  Authentication   **/
-    public boolean isSignedIn(){
+    /**
+     * Authentication
+     **/
+    public boolean isSignedIn() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         return (currentUser != null);
     }
@@ -194,20 +202,20 @@ public class ModelFirebase {
                                 .collection(User.collectionName)
                                 .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                 .set(user).addOnCompleteListener(task1 -> {
-                                    if(task1.isSuccessful()) {
-                                        Log.d("TAG", "createUserWithEmail:success");
-                                        listener.onComplete();
-                                    } else {
-                                        Log.w("TAG", "-- createUserWithEmail:failure", task1.getException());
-                                    }
-                                });
+                            if (task1.isSuccessful()) {
+                                Log.d("TAG", "createUserWithEmail:success");
+                                listener.onComplete();
+                            } else {
+                                Log.w("TAG", "-- createUserWithEmail:failure", task1.getException());
+                            }
+                        });
                     } else {
                         Log.d("TAG", "createUserWithEmail:failure");
                     }
                 });
     }
 
-    public void isExist( Context context, String email, String password, Model.IsExist listener){
+    public void isExist(Context context, String email, String password, Model.IsExist listener) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override

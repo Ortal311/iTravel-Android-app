@@ -19,9 +19,9 @@ public class PostListRvViewModel extends ViewModel {
         data = Model.instance.getAll();
     }
 
-    public PostListRvViewModel(User user){
-        data = Model.instance.getAllPostsByUser(user);
-    }
+//    public PostListRvViewModel(User user){
+//        data = Model.instance.getAllPostsByUser(user);
+//    }
 
     public LiveData<List<Post>> getData() {
         return data;

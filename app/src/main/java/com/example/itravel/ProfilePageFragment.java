@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
 import com.example.itravel.model.User;
+import com.example.itravel.post.PostDetailsFragmentArgs;
 import com.example.itravel.post.PostListRvViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -55,6 +56,8 @@ public class ProfilePageFragment extends Fragment {
         editBtn = view.findViewById(R.id.profile_editProfile_btn);
         addPostBtn = view.findViewById(R.id.profile_addPost_btn);
 
+//        String name = ProfilePageFragmentArgs.fromBundle(getArguments()).getName();
+
         addPostBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,12 +65,12 @@ public class ProfilePageFragment extends Fragment {
             }
         });
 
-//        addPostBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(ProfilePageFragmentDirections.actionProfilePageFragmentToProfileEdit(nameTv.getText().toString()));
+            }
+        });
 
         getUserDetails();
 
@@ -106,15 +109,13 @@ public class ProfilePageFragment extends Fragment {
     public void getUserDetails() {
         String ID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Model.instance.getUserById(ID, new Model.GetUserById() {
-
             @Override
             public void onComplete(User user) {
+                Log.d("TAG", "111");
                 currUser = user;
                 nameTv.setText(user.getName());
             }
         });
-
-        //TODO: Get current user posts and display them
     }
 
     private void refresh() {

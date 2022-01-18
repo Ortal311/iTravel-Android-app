@@ -4,30 +4,15 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 import androidx.core.os.HandlerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
-import androidx.room.Query;
 
 import com.example.itravel.MyApplication;
-import com.example.itravel.login.LoginFragment;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -35,33 +20,37 @@ public class Model {
 
     public static final Model instance = new Model();
     //added
-    public Executor executor= Executors.newFixedThreadPool(1);
+    public Executor executor = Executors.newFixedThreadPool(1);
     public Handler mainThread = HandlerCompat.createAsync(Looper.getMainLooper());
 
     ModelFirebase modelFirebase = new ModelFirebase();
     MutableLiveData<List<Post>> postsList = new MutableLiveData<List<Post>>();
+    MutableLiveData<List<Post>> currUserPostsList = new MutableLiveData<List<Post>>();
 
     FirebaseUser currUser;
 
 
-    public enum PostListLoadingState{
+    public enum PostListLoadingState {
         loading,
         loaded
     }
+
     MutableLiveData<PostListLoadingState> postListLoadingState = new MutableLiveData<PostListLoadingState>();
 
 
-    private Model(){
+    private Model() {
 
     }
 
-    /** Interface **/
+    /**
+     * Interface
+     **/
 
-    public interface AddPostListener{
+    public interface AddPostListener {
         void onComplete();
     }
 
-    public interface UpdateUserListener{
+    public interface UpdateUserListener {
         void onComplete();
     }
 
@@ -69,7 +58,7 @@ public class Model {
         void onComplete(User user);
     }
 
-    public interface UpdatePostListener{
+    public interface UpdatePostListener {
         void onComplete();
     }
 
@@ -77,7 +66,7 @@ public class Model {
         void onComplete(Post post);
     }
 
-    public interface CreateNewAccount{
+    public interface CreateNewAccount {
         void onComplete();
     }
 
@@ -85,28 +74,29 @@ public class Model {
         void onComplete();
     }
 
-    public interface SignOut{
+    public interface SignOut {
         void onComplete();
     }
 
-    public interface IsExist{
+    public interface IsExist {
         void onComplete();
     }
 
     /******************************************************/
 
-    public void deleteAllPostsDao()
-    {
+    public void deleteAllPostsDao() {
         executor.execute(() -> {
             List<Post> pList = AppLocalDb.db.postDao().getAll();
-            for (Post post: pList) {
+            for (Post post : pList) {
                 AppLocalDb.db.postDao().delete(post);
             }
         });
     }
 
 
-    /**  Posts  **/
+    /**
+     * Posts
+     **/
 
     public void refreshPostList() {
 
@@ -151,74 +141,71 @@ public class Model {
         });
     }
 
-    public void updatePost(Post post)
-    {
+    public void updatePost(Post post) {
         executor.execute(() -> {
             AppLocalDb.db.postDao().update(post);
         });
     }
 
-    public LiveData<List<Post>> getAll(){
-        if (postsList.getValue() == null) { refreshPostList(); };
-        return  postsList;
+    public LiveData<List<Post>> getAll() {
+        if (postsList.getValue() == null) {
+            refreshPostList();
+        }
+        ;
+        return postsList;
     }
 
-    public void addPost(Post post, AddPostListener listener){
-        modelFirebase.addPost(post,listener);
+    public void addPost(Post post, AddPostListener listener) {
+        modelFirebase.addPost(post, listener);
     }
 
     public User getPostByTitle(String postTitle, GetPostByTitle listener) {
-        modelFirebase.getPostByTitle(postTitle,listener);
+        modelFirebase.getPostByTitle(postTitle, listener);
         return null;
     }
 
-    public void deletePost(Post post,deletePost listener){
+    public void deletePost(Post post, deletePost listener) {
         executor.execute(() -> {
             AppLocalDb.db.postDao().delete(post);
         });
         modelFirebase.deletePost(post, listener);
-
-
     }
 
     public LiveData<PostListLoadingState> getPostListLoadingState() {
         return postListLoadingState;
     }
 
-    public void UpdatePost(Post post, UpdatePostListener listener ){
-        modelFirebase.updatePost(post,listener);
+    public void UpdatePost(Post post, UpdatePostListener listener) {
+        modelFirebase.updatePost(post, listener);
     }
 
-    /**  Users  **/
+    /**
+     * Users
+     **/
 
-    public User getUserById(String Id, GetUserById listener) {
+    public void getUserById(String Id, GetUserById listener) {
         modelFirebase.getUserById(Id, listener);
-        return null;
     }
 
-
-    public void updateUser(User user, UpdateUserListener listener){
-        modelFirebase.updateUser(user,listener);
+    public void updateUser(String id, String newName, UpdateUserListener listener) {
+        modelFirebase.updateUser(id, newName, listener);
     }
 
     public void refreshPostListByUser(User user) {
         postListLoadingState.setValue(PostListLoadingState.loading);
-
+        Log.d("TAG", "222");
         modelFirebase.getAllPostsByUser(user, new ModelFirebase.GetAllPostsByUserListener() {
             @Override
             public void onComplete(List<Post> list) {
-                postsList.setValue(list);
+                currUserPostsList.setValue(list);
                 postListLoadingState.setValue(PostListLoadingState.loaded);
             }
         });
     }
 
-    public LiveData<List<Post>> getAllPostsByUser(User user) {
-        if (postsList.getValue() == null) { refreshPostListByUser(user); };
-        return  postsList;
-    }
-
-    /** Authentication **/
+    /**
+     * Authentication
+     **/
 
     public boolean isSignedIn() {
         return modelFirebase.isSignedIn();
@@ -232,7 +219,7 @@ public class Model {
         modelFirebase.signOut(listener);
     }
 
-    public void isExist( Context context, String email, String password, IsExist listener) {
-        modelFirebase.isExist( context, email, password, listener);
+    public void isExist(Context context, String email, String password, IsExist listener) {
+        modelFirebase.isExist(context, email, password, listener);
     }
 }
