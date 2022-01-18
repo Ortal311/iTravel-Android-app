@@ -1,21 +1,27 @@
 package com.example.itravel.post;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.example.itravel.MainActivity;
 import com.example.itravel.R;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
@@ -36,6 +42,8 @@ public class PostAddFragment extends Fragment {
     String userPassword;
 
     Spinner dropdown;
+    String difficulty;
+
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -57,15 +65,14 @@ public class PostAddFragment extends Fragment {
         cancelBtn=view.findViewById(R.id.addpost_cancel_btn);
         dropdown = view.findViewById(R.id.addpost_dropdown);
         String[] itemsDropdown = new String[]{"easy", "medium", "hard"};
-        //There are multiple variations of this, but this is the basic variant.
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, itemsDropdown);
-        //set the spinners adapter to the previously created one.
         dropdown.setAdapter(adapter);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 save();
+
                 //navigate to home page
 //                Navigation.findNavController(v).navigate(PostAddFragmentDirections.actionPostAddFragmentToHomePageFragment2());
             }
@@ -74,6 +81,18 @@ public class PostAddFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Navigation.findNavController(v).navigateUp();
+            }
+        });
+
+        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                TextView spinner_item_text = (TextView) view;
+                difficulty = spinner_item_text.getText().toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                difficulty="";
             }
         });
 
@@ -93,16 +112,17 @@ public class PostAddFragment extends Fragment {
             @Override
             public void onComplete(User user) {
                 String name = user.getName();
-                savePost(name, title, description, location);
+                savePost(name, title, description, location, difficulty);
             }
         });
     }
 
-    public void savePost(String name, String title, String description, String location) {
-        Post post = new Post(name, title, description, location);
+    public void savePost(String name, String title, String description, String location, String difficulty) {
+        Post post = new Post(name, title, description, location, difficulty);
         Model.instance.addPost(post,()->{
+            Model.instance.refreshPostList();
             Navigation.findNavController(view).navigate(PostAddFragmentDirections.actionPostAddFragmentToHomePageFragment2());
-            // TODO: Refresh
+
         });
     }
 

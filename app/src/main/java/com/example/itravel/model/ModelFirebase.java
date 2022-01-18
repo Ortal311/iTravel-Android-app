@@ -1,27 +1,52 @@
 package com.example.itravel.model;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.itravel.MyApplication;
+import com.example.itravel.R;
+import com.example.itravel.login.LoginActivity;
+import com.example.itravel.login.LoginFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 public class ModelFirebase {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+
+    public interface GetAllUsersListener{
+        void onComplete(List<User> list);
+    }
+
+    public interface GetAllPostsListener{
+        void onComplete(List<Post> list);
+    }
+
+
+    /** User **/
 
     public void updateUser(User user, Model.UpdateUserListener listener) {
         db.collection(User.collectionName).document(user.getEmail())
@@ -30,11 +55,8 @@ public class ModelFirebase {
                 .addOnFailureListener(e -> listener.onComplete());
     }
 
-    public interface GetAllUsersListener{
-        void onComplete(List<User> list);
-    }
 
-    public void getAllUsers(GetAllUsersListener listener) {
+     public void getAllUsers(GetAllUsersListener listener) {
         db.collection(User.collectionName)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -51,7 +73,6 @@ public class ModelFirebase {
                         }
                         listener.onComplete(list);
                     }
-
                 });
     }
 
@@ -77,6 +98,9 @@ public class ModelFirebase {
         });
     }
 
+
+    /** Post **/
+
     public void addPost(Post post, Model.AddPostListener listener){
         // Create a new user with a first and last name
         Map<String, Object> json = post.toJson();
@@ -88,10 +112,75 @@ public class ModelFirebase {
                 .addOnFailureListener(e -> listener.onComplete());
     }
 
-    public interface GetAllPostsListener{
-        void onComplete(List<Post> list);
+    public void updatePost(Post post, Model.UpdatePostListener listener) {
+
+        db.collection(Post.collectionName).document(post.getTitle())
+                .update("description", post.getDescription() ,
+                        "location" , post.getLocation(),
+                        "difficulty", post.getDifficulty()
+                      )
+                .addOnSuccessListener(unused -> listener.onComplete())
+                .addOnFailureListener(e -> listener.onComplete());
+
     }
 
+    public void deletePost(Post post, Model.deletePost listener){
+        db.collection(Post.collectionName).document(post.getTitle())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("TAG", "DocumentSnapshot successfully deleted!");
+                        listener.onComplete();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("TAG", "Error deleting document", e);
+                    }
+                });
+
+
+    }
+
+
+//    public void getAllPosts(Long lastUpdateDate, GetAllPostsListener listener) {
+//        db.collection(Post.collectionName)
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        List<Post> list = new LinkedList<Post>();
+//                        if (task.isSuccessful()) {
+//                            QuerySnapshot querySnapshot = task.getResult();
+//                            for (QueryDocumentSnapshot doc : querySnapshot) {
+//                                Post post = Post.create(doc.getData());
+//                                if (post != null)
+//                                    list.add(post);
+//                            }
+//                        }
+//                        listener.onComplete(list);
+//                    }
+//                });
+//    }
+public void getAllPosts(Long lastUpdateDate, GetAllPostsListener listener) {
+    db.collection(Post.collectionName)
+            .whereGreaterThanOrEqualTo("updateDate",new Timestamp(lastUpdateDate,0))
+            .get()
+            .addOnCompleteListener(task -> {
+                List<Post> list = new LinkedList<Post>();
+                if (task.isSuccessful()){
+                    for (QueryDocumentSnapshot doc : task.getResult()){
+                        Post post = Post.create(doc.getData());
+                        if (post != null){
+                            list.add(post);
+                        }
+                    }
+                }
+                listener.onComplete(list);
+            });
+}
     public interface GetAllPostsByUserListener{
         void onComplete(List<Post> list);
     }
@@ -114,8 +203,6 @@ public class ModelFirebase {
                         listener.onComplete(list);
                     }
 
-                });
-    }
 
     public void getAllPostsByUser(User user, GetAllPostsByUserListener listener) {
         db.collection(Post.collectionName)
@@ -145,20 +232,21 @@ public class ModelFirebase {
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        Post post = null;
-                        if ((task.isSuccessful()) & (task.getResult().getData() != null)) {
-                            post = Post.create(task.getResult().getData());
+                        Post post = new Post();
+                        if (task.isSuccessful()){
+                            DocumentSnapshot docSnapshot = task.getResult();
+                            if(docSnapshot.exists())
+                            {
+                                post = Post.create(task.getResult().getData());
+                            }
                         }
                         listener.onComplete(post);
                     }
                 });
     }
 
-    /**
-     * Authentication
-     */
 
-
+    /**  Authentication   **/
     public boolean isSignedIn(){
         FirebaseUser currentUser = mAuth.getCurrentUser();
         return (currentUser != null);
@@ -199,7 +287,7 @@ public class ModelFirebase {
                 });
     }
 
-    public void isExist(String email, String password, Model.IsExist listener){
+    public void isExist( Context context, String email, String password, Model.IsExist listener){
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -211,12 +299,20 @@ public class ModelFirebase {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("TAG", "signInWithEmail:failure", task.getException());
+                            Toast toast = new Toast(context);
+                            View popupView = LayoutInflater.from(context).inflate(R.layout.popup_window, null);
+                            TextView toastText = popupView.findViewById(R.id.popup_text_tv);
+                            toastText.setText("You need to register first!");
+                            toastText.setTextSize(20);
+                            toast.setView(popupView);
+                            toast.setDuration(Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
                         }
                     }
-
-
                 });
     }
+
 
     public void signOut(Model.SignOut listener) {
         FirebaseAuth.getInstance().signOut();

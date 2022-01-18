@@ -20,9 +20,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.itravel.login.LoginActivity;
+import com.example.itravel.model.AppLocalDb;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
 import com.example.itravel.post.PostListRvViewModel;
+
+import java.util.List;
 
 public class HomePageFragment extends Fragment {
 
@@ -47,6 +50,8 @@ public class HomePageFragment extends Fragment {
 //        btn = view.findViewById(R.id.addBtn);
 //        btn.setOnClickListener(Navigation.createNavigateOnClickListener(HomePageFragmentDirections.actionHomePageFragmentToPostAddFragment()));
 
+//        Model.instance.deleteAllPostsDao();
+
         swipeRefresh = view.findViewById(R.id.postlist_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshPostList());
 
@@ -62,7 +67,6 @@ public class HomePageFragment extends Fragment {
             @Override
             public void onItemClick(View v,int position) {
                 String postTitle = viewModel.getData().getValue().get(position).getTitle();
-                Log.d("TAG", " ~~~~~title is : ~~~~~~" + postTitle);
                Navigation.findNavController(v).navigate(HomePageFragmentDirections.actionHomePageFragmentToPostDetailsFragment(postTitle));
 
             }
@@ -76,11 +80,9 @@ public class HomePageFragment extends Fragment {
             } else{
                 swipeRefresh.setRefreshing(false);
             }
-
         });
 
         return view;
-
     }
 
     private void refresh() {
@@ -91,27 +93,18 @@ public class HomePageFragment extends Fragment {
     class MyViewHolder extends RecyclerView.ViewHolder{
         TextView titleTv;
         TextView locationTv;
-        ImageButton postDetails;
+        TextView userName;
 
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
             titleTv = itemView.findViewById(R.id.listrow_title_tv);
             locationTv = itemView.findViewById(R.id.listrow_location_tv);
-            postDetails = itemView.findViewById(R.id.listrow_postdetails_btn);
+            userName = itemView.findViewById(R.id.listrow_username_tv);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
                     listener.onItemClick(v,pos);
-                }
-            });
-            postDetails.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    String postTitle = viewModel.getData().getValue().get(itemView.getVerticalScrollbarPosition()).getTitle();
-//                    Log.d("TAG", " ~~~~~title is : ~~~~~~" + postTitle);
-//                    Navigation.findNavController(v).navigate(HomePageFragmentDirections.actionHomePageFragmentToPostDetailsFragment(postTitle));
-
                 }
             });
         }
@@ -140,6 +133,7 @@ public class HomePageFragment extends Fragment {
             Post post = viewModel.getData().getValue().get(position);
             holder.titleTv.setText(post.getTitle());
             holder.locationTv.setText(post.getLocation());
+            holder.userName.setText(post.getUserName());
         }
         @Override
         public int getItemCount() {

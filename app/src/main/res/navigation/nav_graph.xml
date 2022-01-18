@@ -24,7 +24,7 @@
         <action
             android:id="@+id/action_postAddFragment_to_homePageFragment2"
             app:destination="@id/homePageFragment"
-            app:popUpTo="@id/homePageFragment" />
+            app:popUpTo="@id/nav_graph" />
     </fragment>
     <fragment
         android:id="@+id/postDetailsFragment"
@@ -34,9 +34,21 @@
         <argument
             android:name="postTitle"
             app:argType="string" />
+        <action
+            android:id="@+id/action_postDetailsFragment_to_postEditFragment"
+            app:destination="@id/postEditFragment" />
     </fragment>
     <action android:id="@+id/action_global_homePageFragment" app:destination="@id/homePageFragment" />
     <action android:id="@+id/action_global_postAddFragment" app:destination="@id/postAddFragment" />
+    <fragment
+        android:id="@+id/postEditFragment"
+        android:name="com.example.itravel.post.PostEditFragment"
+        android:label="fragment_post_edit"
+        tools:layout="@layout/fragment_post_edit" >
+        <argument
+            android:name="postTitle"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/profilePageFragment"
         android:name="com.example.itravel.ProfilePageFragment"
