@@ -1,30 +1,24 @@
 package com.example.itravel.post;
 
-import android.content.Context;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.provider.Settings;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.itravel.MyApplication;
 import com.example.itravel.R;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.FieldValue;
-
-import java.util.Calendar;
 
 public class PostEditFragment extends Fragment {
 
@@ -35,9 +29,7 @@ public class PostEditFragment extends Fragment {
     Button saveBtn;
     Button cancelBtn;
     String postId;
-    Post post;
 
-    String oldTitle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,7 +59,8 @@ public class PostEditFragment extends Fragment {
                 Model.instance.getPostByTitle(postId, new Model.GetPostByTitle() {
                     @Override
                     public void onComplete(Post post) {
-                        savePost(post,titleEt.getText().toString(), descriptionEt.getText().toString(), locationEt.getText().toString(), post.getDifficulty());
+                        String difficulty = dropdown.getSelectedItem().toString();
+                        savePost(post,titleEt.getText().toString(), descriptionEt.getText().toString(), locationEt.getText().toString(),difficulty);
                         Model.instance.refreshPostList();
                         Navigation.findNavController(v).navigateUp();
                     }
@@ -85,26 +78,17 @@ public class PostEditFragment extends Fragment {
 
     private void savePost(Post post, String title,String description,String location,String difficulty ) {
 
+        Log.d("TAG", difficulty);
         saveData(post, title, description , location , difficulty);
         Model.instance.updatePost(post);
-        Model.instance.UpdatePost(post, () -> {
-
-        });
+        Model.instance.UpdatePost(post, () -> {});
     }
 
     private void saveData(Post post,String title,String description,String location,String difficulty) {
         post.setTitle(title);
-        Log.d("TAG", " %%%%% " + title);
         post.setLocation(location);
-//      post.setDifficulty("easy");
         post.setDescription(description);
-        String[] itemsDropdown = new String[]{"easy", "medium", "hard"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, itemsDropdown);
-        dropdown.setAdapter(adapter);
-//      dropdown.getSelectedItem().toString();
-        adapter.notifyDataSetChanged();
-        post.setDifficulty( dropdown.getSelectedItem().toString());
-
+        post.setDifficulty(difficulty);
     }
 
     public void displayPost(String title, String location, String description,String difficulty)
