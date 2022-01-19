@@ -22,7 +22,6 @@ import android.widget.TextView;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
 import com.example.itravel.model.User;
-import com.example.itravel.post.PostDetailsFragmentArgs;
 import com.example.itravel.post.PostListRvViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -58,19 +57,8 @@ public class ProfilePageFragment extends Fragment {
 
 //        String name = ProfilePageFragmentArgs.fromBundle(getArguments()).getName();
 
-        addPostBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigate(ProfilePageFragmentDirections.actionProfilePageFragmentToPostAddFragment());
-            }
-        });
-
-        editBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigate(ProfilePageFragmentDirections.actionProfilePageFragmentToProfileEdit(nameTv.getText().toString()));
-            }
-        });
+        addPostBtn.setOnClickListener(v -> Navigation.findNavController(v).navigate(ProfilePageFragmentDirections.actionProfilePageFragmentToPostAddFragment()));
+        editBtn.setOnClickListener(v -> Navigation.findNavController(v).navigate(ProfilePageFragmentDirections.actionProfilePageFragmentToProfileEdit(nameTv.getText().toString())));
 
         getUserDetails();
 
@@ -87,8 +75,8 @@ public class ProfilePageFragment extends Fragment {
         adapter.setOnItemClickListener(new OnItemClickListenerProfile() {
             @Override
             public void onItemClick(View v,int position) {
-                String postTitle = viewModel.getData().getValue().get(position).getTitle();
-                // Navigation.findNavController(v).navigate(StudentListRvFragmentDirections.actionStudentListRvFragmentToStudentDetailsFragment(stId));
+//                String postTitle = viewModel.getData().getValue().get(position).getTitle();
+//                 Navigation.findNavController(v).navigate(StudentListRvFragmentDirections.actionStudentListRvFragmentToStudentDetailsFragment(stId));
             }
         });
 
