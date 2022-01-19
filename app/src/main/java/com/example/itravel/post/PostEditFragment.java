@@ -34,7 +34,7 @@ public class PostEditFragment extends Fragment {
     Spinner dropdown;
     Button saveBtn;
     Button cancelBtn;
-    String postTitle;
+    String postId;
     Post post;
 
     String oldTitle;
@@ -51,9 +51,9 @@ public class PostEditFragment extends Fragment {
         saveBtn = view.findViewById(R.id.editpost_save_btn);
         cancelBtn = view.findViewById(R.id.editpost_cancel_btn);
 
-        postTitle = PostDetailsFragmentArgs.fromBundle(getArguments()).getPostTitle();
+        postId = PostDetailsFragmentArgs.fromBundle(getArguments()).getPostId();
 
-        Model.instance.getPostByTitle(postTitle, new Model.GetPostByTitle() {
+        Model.instance.getPostByTitle(postId, new Model.GetPostByTitle() {
             @Override
             public void onComplete(Post post) {
                 displayPost(post.getTitle(), post.getLocation(), post.getDescription(),post.getDifficulty());
@@ -64,7 +64,7 @@ public class PostEditFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Model.instance.getPostByTitle(postTitle, new Model.GetPostByTitle() {
+                Model.instance.getPostByTitle(postId, new Model.GetPostByTitle() {
                     @Override
                     public void onComplete(Post post) {
                         savePost(post,titleEt.getText().toString(), descriptionEt.getText().toString(), locationEt.getText().toString(), post.getDifficulty());

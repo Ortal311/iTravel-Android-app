@@ -18,6 +18,7 @@ public class Post {
     final public static String collectionName = "posts";
     @PrimaryKey
     @NonNull
+    String id="";
     String title = "";
     String userName;  // Find the connected user
     String description = "";
@@ -25,19 +26,22 @@ public class Post {
     String difficulty="";
     Long updateDate = new Long(0);
 
+
+
 //pictures
 
     public Post(){}
 
-    public Post(String userName, String title, String description, String location, String difficulty) {
+    public Post( String id,String userName, String title, String description, String location, String difficulty) {
         this.userName = userName;
         this.title = title;
         this.description = description;
         this.location = location;
         this.difficulty = difficulty;
+        this.id = id;
     }
 
-    public static Post create(Map<String, Object> json) {
+    public static Post create(String id, Map<String, Object> json) {
         String userName = (String) json.get("userName");
         String title = (String) json.get("title");
         String description = (String) json.get("description");
@@ -46,7 +50,7 @@ public class Post {
         Timestamp ts = (Timestamp)json.get("updateDate");
         Long updateDate = ts.getSeconds();
 
-        Post post = new Post(userName, title, description, location, difficulty);
+        Post post = new Post(id, userName, title, description, location, difficulty);
         post.setUpdateDate(updateDate);
         return post;
     }
@@ -98,6 +102,15 @@ public class Post {
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
 
     public Map<String, Object> toJson() {
         Map<String, Object> json = new HashMap<>();

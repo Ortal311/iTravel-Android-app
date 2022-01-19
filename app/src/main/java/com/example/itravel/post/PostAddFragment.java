@@ -112,14 +112,15 @@ public class PostAddFragment extends Fragment {
             @Override
             public void onComplete(User user) {
                 String name = user.getName();
-                savePost(name, title, description, location, difficulty);
+                savePost( name, title, description, location, difficulty);
             }
         });
     }
 
-    public void savePost(String name, String title, String description, String location, String difficulty) {
-        Post post = new Post(name, title, description, location, difficulty);
-        Model.instance.addPost(post,()->{
+    public void savePost( String name, String title, String description, String location, String difficulty) {
+        Post post = new Post("", name, title, description, location, difficulty);
+        Model.instance.addPost(post,(id)->{
+            post.setId(id);
             Model.instance.refreshPostList();
             Navigation.findNavController(view).navigate(PostAddFragmentDirections.actionPostAddFragmentToHomePageFragment2());
 

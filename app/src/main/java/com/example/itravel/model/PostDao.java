@@ -12,14 +12,20 @@ import java.util.List;
 @Dao
 public interface PostDao {
     @Query("select * from Post")
-        List<Post> getAll();
-        @Insert(onConflict = OnConflictStrategy.REPLACE)
-        void insertAll(Post... posts);
+    List<Post> getAll();
 
-        @Delete
+    @Query("select * from Post where userName = :name")
+    List<Post> getAllPostsByUser(String name);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(Post... posts);
+
+    @Delete
     void delete(Post post);
-        @Update
+
+    @Update
     void update(Post post);
+
 }
 
 
