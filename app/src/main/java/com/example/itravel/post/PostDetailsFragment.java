@@ -45,7 +45,6 @@ public class PostDetailsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_post_details, container, false);
 
-
         titleEt = view.findViewById(R.id.postdetails_title_tv);
         locationEt = view.findViewById(R.id.postdetails_location_tv);
         authorEt = view.findViewById(R.id.postdetails_author_tv);
