@@ -2,12 +2,9 @@ package com.example.itravel.post;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
+
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.Gravity;
@@ -18,17 +15,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.itravel.HomePageFragmentDirections;
-import com.example.itravel.ProfilePageFragment;
 import com.example.itravel.R;
 import com.example.itravel.model.Model;
-import com.example.itravel.model.ModelFirebase;
 import com.example.itravel.model.Post;
-import com.example.itravel.model.User;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.storage.FirebaseStorage;
 
-import org.w3c.dom.Text;
 
 public class PostDetailsFragment extends Fragment {
 
@@ -67,8 +57,6 @@ public class PostDetailsFragment extends Fragment {
             }
         });
 
-        //TODO: ADD DIFFICULTY AND USERNAME!
-
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +93,6 @@ public class PostDetailsFragment extends Fragment {
     public void savePost(String title, String location, String description,String difficulty, String userName)
     {
         titleEt.setText(title);
-//        titleEt.setTextSize(20);
         locationEt.setText(location);
         authorEt.setText(userName);
         descriptionEt.setText(description);
