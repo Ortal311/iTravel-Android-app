@@ -25,6 +25,8 @@ import com.example.itravel.model.Model;
 import com.example.itravel.model.ModelFirebase;
 import com.example.itravel.model.Post;
 import com.example.itravel.model.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
 
 import org.w3c.dom.Text;
 
@@ -38,6 +40,7 @@ public class PostDetailsFragment extends Fragment {
     Button editBtn;
     Button deleteBtn;
     Post p;
+    String postId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,9 +56,9 @@ public class PostDetailsFragment extends Fragment {
         editBtn = view.findViewById(R.id.postdetails_edit_btn);
         deleteBtn = view.findViewById(R.id.postdetails_delete_btn);
 
-        String postTitle = PostDetailsFragmentArgs.fromBundle(getArguments()).getPostTitle();
+        postId = PostDetailsFragmentArgs.fromBundle(getArguments()).getPostId();
 
-        Model.instance.getPostByTitle(postTitle, new Model.GetPostByTitle() {
+        Model.instance.getPostByTitle(postId, new Model.GetPostByTitle() {
             @Override
             public void onComplete(Post post) {
                 Log.d("TAG", "~~~~~POST USER:~~~~~" + post.getUserName());
@@ -69,7 +72,7 @@ public class PostDetailsFragment extends Fragment {
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                  Navigation.findNavController(v).navigate(PostDetailsFragmentDirections.actionPostDetailsFragmentToPostEditFragment(postTitle));
+                  Navigation.findNavController(v).navigate(PostDetailsFragmentDirections.actionPostDetailsFragmentToPostEditFragment(postId));
             }
         });
 

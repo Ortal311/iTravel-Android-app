@@ -26,4 +26,14 @@ public class PostListRvViewModel extends ViewModel {
     public LiveData<List<Post>> getData() {
         return data;
     }
+
+    public LiveData<List<Post>> getDataByUser(String name ) {
+        MutableLiveData<List<Post>> lst = new MutableLiveData<>();
+
+        for (Post post: data.getValue()  ) {
+            if(post.getUserName() == name )
+                lst.getValue().add(post);
+        }
+        return lst;
+    }
 }

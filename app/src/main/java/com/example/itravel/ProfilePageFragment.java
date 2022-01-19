@@ -55,15 +55,18 @@ public class ProfilePageFragment extends Fragment {
         editBtn = view.findViewById(R.id.profile_editProfile_btn);
         addPostBtn = view.findViewById(R.id.profile_addPost_btn);
 
-//        String name = ProfilePageFragmentArgs.fromBundle(getArguments()).getName();
-
         addPostBtn.setOnClickListener(v -> Navigation.findNavController(v).navigate(ProfilePageFragmentDirections.actionProfilePageFragmentToPostAddFragment()));
         editBtn.setOnClickListener(v -> Navigation.findNavController(v).navigate(ProfilePageFragmentDirections.actionProfilePageFragmentToProfileEdit(nameTv.getText().toString())));
 
         getUserDetails();
 
         swipeRefresh = view.findViewById(R.id.profilePage_postlist_swiperefresh);
-        swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshPostListByUser(currUser));
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Model.instance.refreshPostListByUser(currUser.getName());
+            }
+        });
 
         RecyclerView list = view.findViewById(R.id.profilePage_postlist_rv);
         list.setHasFixedSize(true);
@@ -75,12 +78,15 @@ public class ProfilePageFragment extends Fragment {
         adapter.setOnItemClickListener(new OnItemClickListenerProfile() {
             @Override
             public void onItemClick(View v,int position) {
-//                String postTitle = viewModel.getData().getValue().get(position).getTitle();
-//                 Navigation.findNavController(v).navigate(StudentListRvFragmentDirections.actionStudentListRvFragmentToStudentDetailsFragment(stId));
+                String postId = viewModel.getData().getValue().get(position).getId();
+                 Navigation.findNavController(v).navigate(ProfilePageFragmentDirections.actionProfilePageFragmentToPostDetailsFragment(postId));
             }
         });
 
-        viewModel.getData().observe(getViewLifecycleOwner(), posts -> refresh());
+        viewModel.getData().observe(getViewLifecycleOwner(), posts -> {
+            refresh();
+        });
+
         swipeRefresh.setRefreshing(Model.instance.getPostListLoadingState().getValue() == Model.PostListLoadingState.loading);
 
         Model.instance.getPostListLoadingState().observe(getViewLifecycleOwner(), postListLoadingState -> {
@@ -114,11 +120,13 @@ public class ProfilePageFragment extends Fragment {
     class MyViewHolderProfile extends RecyclerView.ViewHolder{
         TextView titleTv;
         TextView locationTv;
+        TextView userName;
 
         public MyViewHolderProfile(@NonNull View itemView, OnItemClickListenerProfile listener) {
             super(itemView);
             titleTv = itemView.findViewById(R.id.listrow_title_tv);
             locationTv = itemView.findViewById(R.id.listrow_location_tv);
+            userName = itemView.findViewById(R.id.listrow_username_tv);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -152,6 +160,7 @@ public class ProfilePageFragment extends Fragment {
             Post post = viewModel.getData().getValue().get(position);
             holder.titleTv.setText(post.getTitle());
             holder.locationTv.setText(post.getLocation());
+            holder.userName.setText(post.getUserName());
         }
 
         @Override
@@ -159,6 +168,7 @@ public class ProfilePageFragment extends Fragment {
             if(viewModel.getData().getValue() == null){
                 return 0;
             }
+            Log.d("TAG","list sizeeeeee:::" +viewModel.getData().getValue().size() );
             return viewModel.getData().getValue().size();
         }
 

@@ -31,12 +31,12 @@
         android:name="com.example.itravel.post.PostDetailsFragment"
         android:label="details"
         tools:layout="@layout/fragment_post_details">
-        <argument
-            android:name="postTitle"
-            app:argType="string" />
         <action
             android:id="@+id/action_postDetailsFragment_to_postEditFragment"
             app:destination="@id/postEditFragment" />
+        <argument
+            android:name="postId"
+            app:argType="string" />
     </fragment>
     <action android:id="@+id/action_global_homePageFragment" app:destination="@id/homePageFragment" />
     <action android:id="@+id/action_global_postAddFragment" app:destination="@id/postAddFragment" />
@@ -46,7 +46,7 @@
         android:label="fragment_post_edit"
         tools:layout="@layout/fragment_post_edit" >
         <argument
-            android:name="postTitle"
+            android:name="postId"
             app:argType="string" />
     </fragment>
     <fragment
@@ -63,6 +63,9 @@
         <argument
             android:name="name"
             app:argType="string" />
+        <action
+            android:id="@+id/action_profilePageFragment_to_postDetailsFragment"
+            app:destination="@id/postDetailsFragment" />
     </fragment>
     <action android:id="@+id/action_global_profilePageFragment" app:destination="@id/profilePageFragment" />
     <fragment

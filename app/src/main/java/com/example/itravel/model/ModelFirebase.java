@@ -19,6 +19,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -46,19 +47,25 @@ public class ModelFirebase {
         // Create a new user with a first and last name
         Map<String, Object> json = post.toJson();
         // Add a new document with a generated ID
-        db.collection(Post.collectionName)
-                .document(post.getTitle())
-                .set(json)
-                .addOnSuccessListener(unused -> listener.onComplete())
-                .addOnFailureListener(e -> listener.onComplete());
+        Task<DocumentReference> ref = db.collection(Post.collectionName)
+                .add(json)
+                .addOnCompleteListener(task -> {
+                    String id = task.getResult().getId();
+                    Log.d("TAG", "33333 +" + id);
+//                    json.put("_id" , id);
+
+                    listener.onComplete(id);
+                });
+
+
     }
 
     public void updatePost(Post post, Model.UpdatePostListener listener) {
-
-        db.collection(Post.collectionName).document(post.getTitle())
+        db.collection(Post.collectionName).document(post.getId())
                 .update("description", post.getDescription(),
                         "location", post.getLocation(),
-                        "difficulty", post.getDifficulty()
+                        "difficulty", post.getDifficulty(),
+                        "title", post.getTitle()
                 )
                 .addOnSuccessListener(unused -> listener.onComplete())
                 .addOnFailureListener(e -> listener.onComplete());
@@ -66,7 +73,7 @@ public class ModelFirebase {
     }
 
     public void deletePost(Post post, Model.deletePost listener) {
-        db.collection(Post.collectionName).document(post.getTitle())
+        db.collection(Post.collectionName).document(post.getId())
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -93,7 +100,8 @@ public class ModelFirebase {
                     List<Post> list = new LinkedList<Post>();
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot doc : task.getResult()) {
-                            Post post = Post.create(doc.getData());
+                            String id = doc.getReference().getId();
+                            Post post = Post.create(id, doc.getData());
                             if (post != null) {
                                 list.add(post);
                             }
@@ -103,9 +111,9 @@ public class ModelFirebase {
                 });
     }
 
-    public void getPostByTitle(String postTitle, Model.GetPostByTitle listener) {
+    public void getPostByTitle(String postId, Model.GetPostByTitle listener) {
         db.collection(Post.collectionName)
-                .document(postTitle)
+                .document(postId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -114,7 +122,7 @@ public class ModelFirebase {
                         if (task.isSuccessful()) {
                             DocumentSnapshot docSnapshot = task.getResult();
                             if (docSnapshot.exists()) {
-                                post = Post.create(task.getResult().getData());
+                                post = Post.create(postId,task.getResult().getData());
                             }
                         }
                         listener.onComplete(post);
@@ -171,7 +179,8 @@ public class ModelFirebase {
                         if (task.isSuccessful()) {
                             QuerySnapshot querySnapshot = task.getResult();
                             for (QueryDocumentSnapshot doc : querySnapshot) {
-                                Post post = Post.create(doc.getData());
+
+                                Post post = Post.create(doc.getId(),doc.getData());
                                 if (post != null && post.userName == user.getName())
                                     Log.d("TAG", "Post title: " + post.getTitle());
                                 list.add(post);

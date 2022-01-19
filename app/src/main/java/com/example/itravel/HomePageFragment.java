@@ -66,8 +66,9 @@ public class HomePageFragment extends Fragment {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View v,int position) {
-                String postTitle = viewModel.getData().getValue().get(position).getTitle();
-               Navigation.findNavController(v).navigate(HomePageFragmentDirections.actionHomePageFragmentToPostDetailsFragment(postTitle));
+
+                String postId = viewModel.getData().getValue().get(position).getId();
+                Navigation.findNavController(v).navigate(HomePageFragmentDirections.actionHomePageFragmentToPostDetailsFragment(postId));
 
             }
         });
