@@ -19,6 +19,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -47,10 +48,21 @@ public class ModelFirebase {
         Map<String, Object> json = post.toJson();
         // Add a new document with a generated ID
         db.collection(Post.collectionName)
-                .document(post.getTitle())
-                .set(json)
-                .addOnSuccessListener(unused -> listener.onComplete())
-                .addOnFailureListener(e -> listener.onComplete());
+                .add(json)
+                .addOnCompleteListener( task -> {
+                    String id = task.getResult().getId();
+                    Log.d("TAG", "33333 +" + id);
+//                    json.put("_id" , id);
+
+                    listener.onComplete();
+                })
+                .addOnFailureListener( command -> listener.onComplete());
+
+//                .document(post.getTitle())
+//                .set(json)
+//                .addOnSuccessListener(unused -> listener.onComplete())
+//                .addOnFailureListener(e -> listener.onComplete());
+
     }
 
     public void updatePost(Post post, Model.UpdatePostListener listener) {

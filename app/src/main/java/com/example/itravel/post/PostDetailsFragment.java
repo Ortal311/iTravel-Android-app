@@ -25,6 +25,7 @@ import com.example.itravel.model.Model;
 import com.example.itravel.model.ModelFirebase;
 import com.example.itravel.model.Post;
 import com.example.itravel.model.User;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.w3c.dom.Text;
 
@@ -55,6 +56,8 @@ public class PostDetailsFragment extends Fragment {
         deleteBtn = view.findViewById(R.id.postdetails_delete_btn);
 
         String postTitle = PostDetailsFragmentArgs.fromBundle(getArguments()).getPostTitle();
+//        String Id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
 
         Model.instance.getPostByTitle(postTitle, new Model.GetPostByTitle() {
             @Override
