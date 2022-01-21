@@ -2,12 +2,14 @@ package com.example.itravel;
 
 import static androidx.core.content.ContextCompat.getSystemService;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -22,9 +24,13 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.example.itravel.model.Model;
+import com.example.itravel.model.Post;
 import com.example.itravel.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class SignUpFragment extends Fragment {
@@ -33,7 +39,7 @@ public class SignUpFragment extends Fragment {
     EditText emailEt;
     EditText passwordEt;
     EditText verifyPasswordEt;
-    //Picture-ADD
+    ImageButton img;
     Button saveBtn;
     Button cancelBtn;
     View view;
@@ -51,6 +57,7 @@ public class SignUpFragment extends Fragment {
         emailEt = view.findViewById(R.id.signup_email_show);
         passwordEt = view.findViewById(R.id.signup_password_show);
         verifyPasswordEt = view.findViewById(R.id.signup_verifypass_show);
+        img = view.findViewById(R.id.signup_image_gallery);
         saveBtn = view.findViewById(R.id.signup_save_btn);
         cancelBtn = view.findViewById(R.id.signup_cancel_btn);
 
@@ -67,6 +74,16 @@ public class SignUpFragment extends Fragment {
                 Navigation.findNavController(v).navigateUp();
             }
         });
+
+        img.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
 
         return view;
     }
@@ -103,7 +120,7 @@ public class SignUpFragment extends Fragment {
             return;
         }
 
-        Model.instance.createNewAccount(name, email, password, photo,  () -> {
+        Model.instance.createNewAccount(name, email, password, photo, () -> {
             toFeedActivity();
         });
 

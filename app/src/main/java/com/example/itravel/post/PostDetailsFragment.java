@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.example.itravel.R;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
+import com.example.itravel.model.User;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class PostDetailsFragment extends Fragment {
@@ -51,11 +53,26 @@ public class PostDetailsFragment extends Fragment {
         Model.instance.getPostByTitle(postId, new Model.GetPostByTitle() {
             @Override
             public void onComplete(Post post) {
-                Log.d("TAG", "~~~~~POST USER:~~~~~" + post.getUserName());
                 savePost(post.getTitle(), post.getLocation(), post.getDescription(),post.getDifficulty(), post.getUserName());
                 p=post;
             }
         });
+
+        //TODO: Why user list is null??? - NEED TO CHECK
+//        String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        Model.instance.getUserById(id, new Model.GetUserById() {
+//            @Override
+//            public void onComplete(User user) {
+//                Log.d("TAG", "length of list  -  " + user.getPostList().size());
+//                for (String id :user.getPostList()) {
+//                    if(id.equals(postId))
+//                    {
+//                        editBtn.setVisibility(View.GONE);
+//                        deleteBtn.setVisibility(View.VISIBLE);
+//                    }
+//                }
+//            }
+//        });
 
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +98,6 @@ public class PostDetailsFragment extends Fragment {
                         toast.show();
                         Model.instance.refreshPostList();
                         Navigation.findNavController(v).navigateUp();
-
                     }
                 });
             }
@@ -97,7 +113,6 @@ public class PostDetailsFragment extends Fragment {
         authorEt.setText(userName);
         descriptionEt.setText(description);
         difficultyEt.setText(difficulty);
-
     }
 
 }

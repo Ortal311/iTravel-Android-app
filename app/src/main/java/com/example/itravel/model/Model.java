@@ -200,8 +200,8 @@ public class Model {
         return postsList;
     }
 
-    public void addPost(Post post, AddPostListener listener) {
-        modelFirebase.addPost(post, listener);
+    public void addPost(Post post,User user, AddPostListener listener) {
+        modelFirebase.addPost(post,user, listener);
     }
 
     public User getPostByTitle(String postId, GetPostByTitle listener) {

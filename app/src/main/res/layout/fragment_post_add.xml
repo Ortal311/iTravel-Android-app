@@ -145,15 +145,16 @@
         app:layout_constraintTop_toBottomOf="@+id/addpost_description_show" />
 
     <Button
-            android:id="@+id/addpost_save_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="68dp"
-            android:backgroundTint="#4FA1CA"
-            android:text="POST"
-            android:textSize="24sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/addpost_cancel_btn"
-            app:layout_constraintEnd_toEndOf="parent" />
+        android:id="@+id/addpost_save_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="68dp"
+        android:backgroundTint="#4FA1CA"
+        android:text="POST"
+        android:textSize="24sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/addpost_cancel_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/addpost_cancel_btn"
@@ -165,6 +166,7 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/addpost_save_btn"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

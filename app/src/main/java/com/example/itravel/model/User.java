@@ -9,7 +9,7 @@ public class User {
     String name="";
     String email="";
     String photo="";
-    List<Post> postList = new LinkedList<Post>();
+    List<String> postList =  new LinkedList<>();;
     //photo ...
     final public static String collectionName= "users";
 
@@ -21,17 +21,19 @@ public class User {
         this.name = name;
         this.email = email;
         this.photo = photo;
+
     }
 
     public static User create(Map<String, Object> json) {
         String name = (String) json.get("name");
         String email = (String) json.get("email");
         String photo = (String) json.get("photo");
-//        List<Post> postList = (List<Post>) json.get("postList");
+//        List<String> postList = (List<String>) json.get("postList");
         User user = new User(name, email, photo);
+//        user.addNewPost(postList.get(postList.size()-1));
+
         return user;
     }
-
 
 
     public String getName() {
@@ -58,6 +60,14 @@ public class User {
         this.photo = photo;
     }
 
+    public List<String> getPostList() {
+        return postList;
+    }
+
+    public void setPostList(List<String> postList) {
+        this.postList = postList;
+    }
+
 
     public Map<String, Object> toJson() {
         Map<String, Object> json = new HashMap<>();
@@ -68,8 +78,8 @@ public class User {
         return json;
     }
 
-    public void addNewPost(Post post) {
-        this.postList.add(post);
+    public void addNewPost(String postId) {
+        this.postList.add(postId);
     }
 }
 
