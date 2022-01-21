@@ -1,4 +1,4 @@
-package com.example.itravel;
+package com.example.itravel.profile;
 
 import android.os.Bundle;
 
@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.itravel.R;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
 import com.example.itravel.post.PostDetailsFragmentArgs;

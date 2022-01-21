@@ -44,7 +44,6 @@ public class PostAddFragment extends Fragment {
     Spinner dropdown;
     String difficulty;
 
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -72,7 +71,6 @@ public class PostAddFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 save();
-
                 //navigate to home page
 //                Navigation.findNavController(v).navigate(PostAddFragmentDirections.actionPostAddFragmentToHomePageFragment2());
             }
@@ -112,19 +110,20 @@ public class PostAddFragment extends Fragment {
             @Override
             public void onComplete(User user) {
                 String name = user.getName();
-                savePost( name, title, description, location, difficulty);
+                String postId = savePost( name, title, description, location, difficulty,user);
+
             }
         });
     }
 
-    public void savePost( String name, String title, String description, String location, String difficulty) {
+    public String savePost( String name, String title, String description, String location, String difficulty, User user) {
         Post post = new Post("", name, title, description, location, difficulty);
-        Model.instance.addPost(post,(id)->{
+         Model.instance.addPost(post,user,(id)->{
             post.setId(id);
             Model.instance.refreshPostList();
             Navigation.findNavController(view).navigate(PostAddFragmentDirections.actionPostAddFragmentToHomePageFragment2());
-
         });
+         return post.getId();
     }
 
 }

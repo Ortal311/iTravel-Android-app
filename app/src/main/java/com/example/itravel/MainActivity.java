@@ -50,14 +50,12 @@ public class MainActivity extends AppCompatActivity {
                     navCtl.navigate(R.id.action_global_postAddFragment);
                     break;
                 case R.id.menu_profile:
-                    //TODO: add navigation to profile
                     navCtl.navigate(R.id.action_global_profilePageFragment);
                     break;
                 case R.id.menu_homepage:
                     navCtl.navigate(R.id.action_global_homePageFragment);
                     break;
                 case R.id.menu_signout:
-                    //TODO: signout
                     Model.instance.signOut(() -> {
                         toLoginActivity();
                     });

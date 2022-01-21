@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -43,7 +44,7 @@ public class ModelFirebase {
         void onComplete(List<Post> list);
     }
 
-    public void addPost(Post post, Model.AddPostListener listener) {
+    public void addPost(Post post,User user, Model.AddPostListener listener) {
         // Create a new user with a first and last name
         Map<String, Object> json = post.toJson();
         // Add a new document with a generated ID
@@ -51,14 +52,40 @@ public class ModelFirebase {
                 .add(json)
                 .addOnCompleteListener(task -> {
                     String id = task.getResult().getId();
-                    Log.d("TAG", "33333 +" + id);
-//                    json.put("_id" , id);
+                    addPostToUsersList(id);
 
                     listener.onComplete(id);
                 });
-
-
     }
+
+    public void addPostToUsersList(String postId)
+    {
+        String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        db.collection(User.collectionName)
+               .document(id)
+                .update("postList", FieldValue.arrayUnion(postId))
+        .addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+
+            }
+        });
+    }
+
+    public void removePostToUsersList(String postId)
+    {
+        String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        db.collection(User.collectionName)
+                .document(id)
+                .update("postList", FieldValue.arrayRemove(postId))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+
+                    }
+                });
+    }
+
 
     public void updatePost(Post post, Model.UpdatePostListener listener) {
         db.collection(Post.collectionName).document(post.getId())
@@ -79,6 +106,7 @@ public class ModelFirebase {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d("TAG", "DocumentSnapshot successfully deleted!");
+                        removePostToUsersList(post.getId());
                         listener.onComplete();
                     }
                 })
@@ -155,11 +183,10 @@ public class ModelFirebase {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         User user = new User();
                         if (task.isSuccessful()) {
-                            Log.d("TAG", "Successfullllllll");
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
                                 user = User.create(task.getResult().getData());
-                                Log.d("TAG", "exsittttt");
+//                                listener.onComplete(user);
                             }
                         }
                         listener.onComplete(user);

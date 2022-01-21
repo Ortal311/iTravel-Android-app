@@ -1,4 +1,4 @@
-package com.example.itravel;
+package com.example.itravel.profile;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.itravel.R;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
 import com.example.itravel.model.User;

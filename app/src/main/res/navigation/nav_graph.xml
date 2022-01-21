@@ -51,7 +51,7 @@
     </fragment>
     <fragment
         android:id="@+id/profilePageFragment"
-        android:name="com.example.itravel.ProfilePageFragment"
+        android:name="com.example.itravel.profile.ProfilePageFragment"
         android:label="Profile page"
         tools:layout="@layout/fragment_profile_page">
         <action
@@ -70,7 +70,7 @@
     <action android:id="@+id/action_global_profilePageFragment" app:destination="@id/profilePageFragment" />
     <fragment
         android:id="@+id/profileEdit"
-        android:name="com.example.itravel.ProfileEditFragment"
+        android:name="com.example.itravel.profile.ProfileEditFragment"
         android:label="fragment_profile_edit"
         tools:layout="@layout/fragment_profile_edit" >
         <argument
