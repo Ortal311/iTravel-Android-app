@@ -17,14 +17,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.itravel.MyApplication;
 import com.example.itravel.R;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
 import com.example.itravel.model.User;
 import com.example.itravel.post.PostListRvViewModel;
 import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 
 public class ProfilePageFragment extends Fragment {
@@ -37,8 +42,10 @@ public class ProfilePageFragment extends Fragment {
     PostListRvViewModel viewModel;
     MyAdapterProfile adapter;
     SwipeRefreshLayout swipeRefresh;
+    ProgressBar progressBar;
 
     User currUser;
+    String ID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -55,19 +62,28 @@ public class ProfilePageFragment extends Fragment {
         image = view.findViewById(R.id.profile_image);
         editBtn = view.findViewById(R.id.profile_editProfile_btn);
         addPostBtn = view.findViewById(R.id.profile_addPost_btn);
+        progressBar = view.findViewById(R.id.profilepage_progressBar);
+
 
         addPostBtn.setOnClickListener(v -> Navigation.findNavController(v).navigate(ProfilePageFragmentDirections.actionProfilePageFragmentToPostAddFragment()));
         editBtn.setOnClickListener(v -> Navigation.findNavController(v).navigate(ProfilePageFragmentDirections.actionProfilePageFragmentToProfileEdit(nameTv.getText().toString())));
-
-        getUserDetails();
+        progressBar.setVisibility(View.VISIBLE);
+        User usr = getUserDetails();
 
         swipeRefresh = view.findViewById(R.id.profilePage_postlist_swiperefresh);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Model.instance.refreshPostListByUser(currUser.getName());
+                Model.instance.refreshPostListByUser(currUser.getNickName());
             }
         });
+
+//        Model.instance.getAllPostsByUser(usr, ID, new Model.GetAllPostsByUserListener() {
+//            @Override
+//            public void onComplete(List<Post> list) {
+//
+//            }
+//        });
 
         RecyclerView list = view.findViewById(R.id.profilePage_postlist_rv);
         list.setHasFixedSize(true);
@@ -84,8 +100,10 @@ public class ProfilePageFragment extends Fragment {
             }
         });
 
+
         viewModel.getData().observe(getViewLifecycleOwner(), posts -> {
             refresh();
+
         });
 
         swipeRefresh.setRefreshing(Model.instance.getPostListLoadingState().getValue() == Model.PostListLoadingState.loading);
@@ -93,6 +111,7 @@ public class ProfilePageFragment extends Fragment {
         Model.instance.getPostListLoadingState().observe(getViewLifecycleOwner(), postListLoadingState -> {
             if (postListLoadingState == Model.PostListLoadingState.loading){
                 swipeRefresh.setRefreshing(true);
+
             } else{
                 swipeRefresh.setRefreshing(false);
             }
@@ -101,20 +120,28 @@ public class ProfilePageFragment extends Fragment {
         return view;
     }
 
-    public void getUserDetails() {
-        String ID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    public User getUserDetails() {
         Model.instance.getUserById(ID, new Model.GetUserById() {
             @Override
             public void onComplete(User user) {
-                Log.d("TAG", "111");
                 currUser = user;
-                nameTv.setText(user.getName());
+                nameTv.setText(user.getNickName());
+                if(currUser.getPhoto() != "") {
+                    Picasso.get()
+                            .load(currUser.getPhoto())
+                            .into(image);
+                }
+                progressBar.setVisibility(View.GONE);
             }
+
         });
+
+        return currUser;
     }
 
     private void refresh() {
-        adapter.notifyDataSetChanged();
+
+//        adapter.notifyDataSetChanged();
         swipeRefresh.setRefreshing(false);
     }
 
@@ -162,6 +189,7 @@ public class ProfilePageFragment extends Fragment {
             holder.titleTv.setText(post.getTitle());
             holder.locationTv.setText(post.getLocation());
             holder.userName.setText(post.getUserName());
+
         }
 
         @Override

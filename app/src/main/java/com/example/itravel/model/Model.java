@@ -1,6 +1,7 @@
 package com.example.itravel.model;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -28,6 +29,14 @@ public class Model {
     MutableLiveData<List<Post>> currUserPostsList = new MutableLiveData<List<Post>>();
 
     FirebaseUser currUser;
+
+    public interface SaveImageListener{
+        void onComplete(String url);
+    }
+    public void saveImage(Bitmap imageBitmap, String imageName, SaveImageListener listener) {
+
+        modelFirebase.saveImage(imageBitmap,imageName,listener);
+    }
 
 
     public enum PostListLoadingState {
@@ -80,6 +89,10 @@ public class Model {
 
     public interface IsExist {
         void onComplete();
+    }
+
+    public interface GetAllPostsByUserListener{
+        void onComplete(List<Post> list);
     }
 
     /******************************************************/
@@ -177,6 +190,7 @@ public class Model {
 
                         //return all data to caller
                         List<Post> pList = AppLocalDb.db.postDao().getAllPostsByUser(name);
+                        Log.d("TAG", "pList " + pList.size());
                         currUserPostsList.postValue(pList);
                         postListLoadingState.postValue(PostListLoadingState.loaded);
                     }
@@ -235,6 +249,10 @@ public class Model {
     public void updateUser(String id, String newName, UpdateUserListener listener) {
         modelFirebase.updateUser(id, newName, listener);
     }
+
+    public void getAllPostsByUser(User user, String userId, GetAllPostsByUserListener listener){
+        modelFirebase.getAllPostsByUser(user,userId,listener);
+    }
 //
 //    public void refreshPostListByUser(User user) {
 //        postListLoadingState.setValue(PostListLoadingState.loading);
@@ -256,8 +274,8 @@ public class Model {
         return modelFirebase.isSignedIn();
     }
 
-    public void createNewAccount(String name, String email, String password, String photo, CreateNewAccount listener) {
-        modelFirebase.createNewAccount(name, email, password, photo, listener);
+    public void createNewAccount(String fullName,String nickName, String email, String password, String photo,List<String> postList, CreateNewAccount listener) {
+        modelFirebase.createNewAccount(fullName,nickName, email, password, photo,postList, listener);
     }
 
     public void signOut(SignOut listener) {

@@ -43,8 +43,8 @@
     <fragment
         android:id="@+id/postEditFragment"
         android:name="com.example.itravel.post.PostEditFragment"
-        android:label="fragment_post_edit"
-        tools:layout="@layout/fragment_post_edit" >
+        android:label="edit post"
+        tools:layout="@layout/fragment_post_edit">
         <argument
             android:name="postId"
             app:argType="string" />
@@ -71,8 +71,8 @@
     <fragment
         android:id="@+id/profileEdit"
         android:name="com.example.itravel.profile.ProfileEditFragment"
-        android:label="fragment_profile_edit"
-        tools:layout="@layout/fragment_profile_edit" >
+        android:label="edit profile"
+        tools:layout="@layout/fragment_profile_edit">
         <argument
             android:name="name"
             app:argType="string" />

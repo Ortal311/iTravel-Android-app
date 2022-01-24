@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -29,6 +30,7 @@ public class PostEditFragment extends Fragment {
     Button saveBtn;
     Button cancelBtn;
     String postId;
+    ProgressBar progressBar;
 
 
     @Override
@@ -36,6 +38,9 @@ public class PostEditFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_post_edit, container, false);
+        progressBar = view.findViewById(R.id.editpost_progressBar);
+        progressBar.setVisibility(View.VISIBLE);
+
         titleEt = view.findViewById(R.id.editpost_title_show);
         locationEt = view.findViewById(R.id.editpost_location_show);
         descriptionEt=view.findViewById(R.id.editpost_description_show);
@@ -49,6 +54,7 @@ public class PostEditFragment extends Fragment {
             @Override
             public void onComplete(Post post) {
                 displayPost(post.getTitle(), post.getLocation(), post.getDescription(),post.getDifficulty());
+                progressBar.setVisibility(View.GONE);
             }
         });
 
@@ -77,8 +83,6 @@ public class PostEditFragment extends Fragment {
     }
 
     private void savePost(Post post, String title,String description,String location,String difficulty ) {
-
-        Log.d("TAG", difficulty);
         saveData(post, title, description , location , difficulty);
         Model.instance.updatePost(post);
         Model.instance.UpdatePost(post, () -> {});

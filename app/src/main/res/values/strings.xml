@@ -2,7 +2,8 @@
     <string name="app_name">Class3Demo2</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="name">name</string>
+    <string name="name">full name</string>
+    <string name="nick_name">user name</string>
     <string name="id">id</string>
     <string name="welcome_to_app">Welcome to Studnet App</string>
     <string name="login">login</string>

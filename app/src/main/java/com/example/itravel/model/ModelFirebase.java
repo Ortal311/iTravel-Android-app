@@ -1,6 +1,8 @@
 package com.example.itravel.model;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,7 +27,11 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +50,7 @@ public class ModelFirebase {
         void onComplete(List<Post> list);
     }
 
-    public void addPost(Post post,User user, Model.AddPostListener listener) {
+    public void addPost(Post post, User user, Model.AddPostListener listener) {
         // Create a new user with a first and last name
         Map<String, Object> json = post.toJson();
         // Add a new document with a generated ID
@@ -52,28 +58,26 @@ public class ModelFirebase {
                 .add(json)
                 .addOnCompleteListener(task -> {
                     String id = task.getResult().getId();
-                    addPostToUsersList(id);
-
+                    addPostToUsersList(id, user);
                     listener.onComplete(id);
                 });
     }
 
-    public void addPostToUsersList(String postId)
-    {
+    public void addPostToUsersList(String postId, User user) {
         String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         db.collection(User.collectionName)
-               .document(id)
+                .document(id)
                 .update("postList", FieldValue.arrayUnion(postId))
-        .addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        user.addNewPost(postId);
 
-            }
-        });
+                    }
+                });
     }
 
-    public void removePostToUsersList(String postId)
-    {
+    public void removePostToUsersList(String postId) {
         String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         db.collection(User.collectionName)
                 .document(id)
@@ -81,7 +85,6 @@ public class ModelFirebase {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-
                     }
                 });
     }
@@ -150,7 +153,7 @@ public class ModelFirebase {
                         if (task.isSuccessful()) {
                             DocumentSnapshot docSnapshot = task.getResult();
                             if (docSnapshot.exists()) {
-                                post = Post.create(postId,task.getResult().getData());
+                                post = Post.create(postId, task.getResult().getData());
                             }
                         }
                         listener.onComplete(post);
@@ -162,10 +165,9 @@ public class ModelFirebase {
      * User
      **/
 
-    public interface GetAllPostsByUserListener {
-        void onComplete(List<Post> list);
-    }
-
+//    public interface GetAllPostsByUserListener {
+//        void onComplete(List<Post> list);
+//    }
     public void updateUser(String id, String name, Model.UpdateUserListener listener) {
         db.collection(User.collectionName)
                 .document(id)
@@ -185,7 +187,7 @@ public class ModelFirebase {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
-                                user = User.create(task.getResult().getData());
+                                user = user.create(task.getResult().getData());
 //                                listener.onComplete(user);
                             }
                         }
@@ -194,28 +196,54 @@ public class ModelFirebase {
                 });
     }
 
-    public void getAllPostsByUser(User user, GetAllPostsByUserListener listener) {
-        Log.d("TAG", "Username: " + user.getName());
-        db.collection(Post.collectionName)
-                .whereEqualTo("userName", user.getName())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        List<Post> list = new LinkedList<Post>();
-                        if (task.isSuccessful()) {
-                            QuerySnapshot querySnapshot = task.getResult();
-                            for (QueryDocumentSnapshot doc : querySnapshot) {
+//    public void getAllPostsByUser(User user, GetAllPostsByUserListener listener) {
+//        Log.d("TAG", "Username: " + user.getName());
+//        db.collection(Post.collectionName)
+//                .whereEqualTo("userName", user.getName())
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        List<Post> list = new LinkedList<Post>();
+//                        if (task.isSuccessful()) {
+//                            QuerySnapshot querySnapshot = task.getResult();
+//                            for (QueryDocumentSnapshot doc : querySnapshot) {
+//
+//                                Post post = Post.create(doc.getId(),doc.getData());
+//                                if (post != null && post.userName == user.getName())
+//                                    Log.d("TAG", "Post title: " + post.getTitle());
+//                                list.add(post);
+//                            }
+//                        }
+//                        listener.onComplete(list);
+//                    }
+//                });
+//    }
 
-                                Post post = Post.create(doc.getId(),doc.getData());
-                                if (post != null && post.userName == user.getName())
-                                    Log.d("TAG", "Post title: " + post.getTitle());
-                                list.add(post);
+    public void getAllPostsByUser(User user, String userId, Model.GetAllPostsByUserListener listener) {
+//        Log.d("TAG", "Username: " + user.getName());
+        if (user.getPostList().size() > 0) {
+            db.collection(User.collectionName)
+                    .whereEqualTo("userName", user.getNickName())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            List<Post> list = new LinkedList<Post>();
+                            if (task.isSuccessful()) {
+                                QuerySnapshot querySnapshot = task.getResult();
+                                for (QueryDocumentSnapshot doc : querySnapshot) {
+                                    Post post = Post.create(doc.getId(), doc.getData());
+                                    if (post != null)
+                                        if (user.getPostList().contains(post.getId()))
+                                            list.add(post);
+                                }
                             }
+                            listener.onComplete(list);
                         }
-                        listener.onComplete(list);
-                    }
-                });
+                    });
+        }
+
     }
 
 
@@ -227,12 +255,12 @@ public class ModelFirebase {
         return (currentUser != null);
     }
 
-    public void createNewAccount(String name, String email, String password, String photo, Model.CreateNewAccount listener) {
+    public void createNewAccount(String fullName,String nickName, String email, String password, String photo, List<String> postList, Model.CreateNewAccount listener) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d("TAG", "createUserWithEmail:success");
-                        User user = new User(name, email, photo);
+                        User user = new User(fullName,nickName, email, photo, postList);
 
                         FirebaseFirestore.getInstance()
                                 .collection(User.collectionName)
@@ -280,5 +308,38 @@ public class ModelFirebase {
     public void signOut(Model.SignOut listener) {
         FirebaseAuth.getInstance().signOut();
         listener.onComplete();
+    }
+
+    /**
+     * Stroage
+     **/
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+
+    public void saveImage(Bitmap imageBitmap, String imageName, Model.SaveImageListener listener) {
+        // Create a storage reference from our app
+        StorageReference storageRef = storage.getReference();
+        StorageReference imgRef = storageRef.child("/user_avatars/" + imageName);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = imgRef.putBytes(data);
+        uploadTask.addOnFailureListener(exception -> {
+            listener.onComplete(null);
+        }).addOnSuccessListener(taskSnapshot -> {
+            imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Uri downloadUrl = uri;
+                    listener.onComplete(downloadUrl.toString());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("TAG", "error here!");
+                }
+            });
+        });
+
     }
 }
