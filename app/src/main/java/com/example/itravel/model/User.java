@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 public class User {
-    String name="";
+    String fullName="";
+    String nickName="";//must be unique
     String email="";
     String photo="";
     List<String> postList =  new LinkedList<>();;
@@ -17,31 +18,39 @@ public class User {
 
     }
 
-    public User(String name, String email, String photo) {
-        this.name = name;
+    public User(String fullName,String nickName, String email, String photo, List<String> postList) {
+        this.fullName = fullName;
+        this.nickName = nickName;
         this.email = email;
         this.photo = photo;
+        this.postList = postList;
 
     }
 
     public static User create(Map<String, Object> json) {
-        String name = (String) json.get("name");
+        String fullName = (String) json.get("fullName");
+        String nickName = (String) json.get("nickName");
         String email = (String) json.get("email");
         String photo = (String) json.get("photo");
-//        List<String> postList = (List<String>) json.get("postList");
-        User user = new User(name, email, photo);
-//        user.addNewPost(postList.get(postList.size()-1));
-
+        List<String> postList = (List<String>) json.get("postList");
+        User user = new User(fullName,nickName, email, photo,postList);
         return user;
     }
 
 
-    public String getName() {
-        return name;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String name) {
+        this.fullName = name;
     }
 
     public String getEmail() {
@@ -71,10 +80,11 @@ public class User {
 
     public Map<String, Object> toJson() {
         Map<String, Object> json = new HashMap<>();
-        json.put("name", name );
+        json.put("fullName", fullName );
         json.put("email", email );
         json.put("photo", photo );
         json.put("postList", postList);
+        json.put("nickName", nickName);
         return json;
     }
 

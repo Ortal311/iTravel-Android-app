@@ -32,7 +32,6 @@ public class PostAddFragment extends Fragment {
     EditText titleEt;
     EditText descriptionEt;
     EditText locationEt;
-    //difficulty-ADD
     //Picture-ADD
     Button saveBtn;
     Button cancelBtn;
@@ -71,8 +70,6 @@ public class PostAddFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 save();
-                //navigate to home page
-//                Navigation.findNavController(v).navigate(PostAddFragmentDirections.actionPostAddFragmentToHomePageFragment2());
             }
         });
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -109,9 +106,9 @@ public class PostAddFragment extends Fragment {
         Model.instance.getUserById(Id, new Model.GetUserById() {
             @Override
             public void onComplete(User user) {
-                String name = user.getName();
-                String postId = savePost( name, title, description, location, difficulty,user);
-
+                String nickName = user.getNickName();
+                String postId = savePost( nickName, title, description, location, difficulty,user);
+                user.addNewPost(postId);
             }
         });
     }

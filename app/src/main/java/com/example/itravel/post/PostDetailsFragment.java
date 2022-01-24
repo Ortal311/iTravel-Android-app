@@ -12,14 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.itravel.HomePageFragment;
 import com.example.itravel.R;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
 import com.example.itravel.model.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
 
 
 public class PostDetailsFragment extends Fragment {
@@ -33,12 +37,16 @@ public class PostDetailsFragment extends Fragment {
     Button deleteBtn;
     Post p;
     String postId;
+    ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_post_details, container, false);
+
+        progressBar = view.findViewById(R.id.postdetails_progressBar);
+        progressBar.setVisibility(View.VISIBLE);
 
         titleEt = view.findViewById(R.id.postdetails_title_tv);
         locationEt = view.findViewById(R.id.postdetails_location_tv);
@@ -53,26 +61,29 @@ public class PostDetailsFragment extends Fragment {
         Model.instance.getPostByTitle(postId, new Model.GetPostByTitle() {
             @Override
             public void onComplete(Post post) {
+
                 savePost(post.getTitle(), post.getLocation(), post.getDescription(),post.getDifficulty(), post.getUserName());
                 p=post;
+
             }
         });
 
-        //TODO: Why user list is null??? - NEED TO CHECK
-//        String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//        Model.instance.getUserById(id, new Model.GetUserById() {
-//            @Override
-//            public void onComplete(User user) {
-//                Log.d("TAG", "length of list  -  " + user.getPostList().size());
-//                for (String id :user.getPostList()) {
-//                    if(id.equals(postId))
-//                    {
-//                        editBtn.setVisibility(View.GONE);
-//                        deleteBtn.setVisibility(View.VISIBLE);
-//                    }
-//                }
-//            }
-//        });
+
+        String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Model.instance.getUserById(id, new Model.GetUserById() {
+            @Override
+            public void onComplete(User user) {
+                Log.d("TAG", "length of list  -  " + user.getPostList().size());
+                for (String id :user.getPostList()) {
+                    if(id.equals(postId))
+                    {
+                        editBtn.setVisibility(View.VISIBLE);
+                        deleteBtn.setVisibility(View.VISIBLE);
+                    }
+                }
+                progressBar.setVisibility(View.GONE);
+            }
+        });
 
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,11 +119,15 @@ public class PostDetailsFragment extends Fragment {
 
     public void savePost(String title, String location, String description,String difficulty, String userName)
     {
+//
+//        editBtn.setEnabled(false);
+//        deleteBtn.setEnabled(false);
         titleEt.setText(title);
         locationEt.setText(location);
         authorEt.setText(userName);
         descriptionEt.setText(description);
         difficultyEt.setText(difficulty);
+
     }
 
 }

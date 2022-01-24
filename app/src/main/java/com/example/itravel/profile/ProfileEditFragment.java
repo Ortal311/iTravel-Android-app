@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.itravel.R;
@@ -25,6 +26,7 @@ public class ProfileEditFragment extends Fragment {
     ImageButton imgBtn;
     Button saveBtn;
     Button cancelBtn;
+    ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,6 +34,8 @@ public class ProfileEditFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_profile_edit, container, false);
+        progressBar = view.findViewById(R.id.editProfile_progressBar);
+        progressBar.setVisibility(View.VISIBLE);
         nameEt = view.findViewById(R.id.editProfile_name);
         imgBtn = view.findViewById(R.id.editProfile_img_btn);
         saveBtn = view.findViewById(R.id.editProfile_save_btn);
@@ -41,6 +45,7 @@ public class ProfileEditFragment extends Fragment {
         String name = ProfilePageFragmentArgs.fromBundle(getArguments()).getName();
 
         nameEt.setText(name);
+        progressBar.setVisibility(View.GONE);
 
         saveBtn.setOnClickListener(v -> Model.instance.updateUser(id, nameEt.getText().toString(), new Model.UpdateUserListener() {
             @Override

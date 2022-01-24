@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
-        android:text="Title"
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,7 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="32dp"
-        android:text="Location"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/postdetails_title_tv" />
@@ -36,7 +34,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="32dp"
-        android:text="Description"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/postdetails_location_tv" />
@@ -50,6 +47,7 @@
         android:backgroundTint="#4FA1CA"
         android:text="EDIT"
         android:textSize="20sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -62,7 +60,8 @@
         android:textSize="20sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/postdetails_edit_btn"
         app:layout_constraintEnd_toStartOf="@+id/postdetails_edit_btn"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/postdetails_author_tv"
@@ -70,7 +69,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="170dp"
         android:layout_marginEnd="12dp"
-        android:text="Author"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -81,7 +79,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="32dp"
-        android:text="Difficulty"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/postdetails_description_tv" />
@@ -98,14 +95,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize8Percent" />
 
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="42dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="165dp"
-        android:layout_marginEnd="10dp"
-        android:src="@drawable/avatar"
-        app:layout_constraintEnd_toStartOf="@+id/postdetails_author_tv"
+    <ProgressBar
+        android:id="@+id/postdetails_progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

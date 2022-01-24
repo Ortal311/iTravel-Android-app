@@ -22,16 +22,19 @@
             android:layout_height="match_parent" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/profile_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="25dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/avatar"
         app:layout_constraintBottom_toTopOf="@+id/profilePage_postlist_swiperefresh"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize8Percent" />
 
     <TextView
         android:id="@+id/profile_name_tv"
@@ -41,7 +44,6 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="66dp"
-        android:text="TextView"
         android:textSize="25dp"
         app:layout_constraintBottom_toTopOf="@+id/profilePage_postlist_swiperefresh"
         app:layout_constraintEnd_toStartOf="@+id/profile_addPost_btn"
@@ -68,5 +70,15 @@
         app:layout_constraintEnd_toStartOf="@+id/profile_editProfile_btn"
         app:layout_constraintHorizontal_bias="0.788"
         app:layout_constraintStart_toEndOf="@+id/profile_name_tv" />
+
+    <ProgressBar
+        android:id="@+id/profilepage_progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="@+id/profilePage_postlist_swiperefresh"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
