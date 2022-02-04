@@ -118,7 +118,7 @@
             app:layout_constraintTop_toBottomOf="@+id/addpost_difficulty_tv" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/editpost_camera_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -168,5 +168,15 @@
         app:layout_constraintEnd_toStartOf="@+id/addpost_save_btn"
         app:layout_constraintStart_toStartOf="parent"
         tools:visibility="visible" />
+
+    <ImageButton
+        android:id="@+id/addpost_gallery_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="28dp"
+        android:src="@android:drawable/ic_menu_gallery"
+        app:layout_constraintStart_toEndOf="@+id/editpost_camera_btn"
+        app:layout_constraintTop_toBottomOf="@+id/addpost_dropdown" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

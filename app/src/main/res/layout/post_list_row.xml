@@ -28,7 +28,7 @@
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/listrow_location_tv"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintStart_toEndOf="@+id/listrow_post_img"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.133" />
 
@@ -41,11 +41,11 @@
             android:text="TextView"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintStart_toEndOf="@+id/listrow_post_img"
             app:layout_constraintTop_toBottomOf="@+id/listrow_title_tv" />
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/imageView"
+            android:id="@+id/listrow_post_img"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_marginStart="8dp"
