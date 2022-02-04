@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.itravel.login.LoginActivity;
@@ -24,7 +25,9 @@ import com.example.itravel.model.AppLocalDb;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
 import com.example.itravel.post.PostListRvViewModel;
+import com.squareup.picasso.Picasso;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class HomePageFragment extends Fragment {
@@ -49,7 +52,7 @@ public class HomePageFragment extends Fragment {
 
 //        btn = view.findViewById(R.id.addBtn);
 //        btn.setOnClickListener(Navigation.createNavigateOnClickListener(HomePageFragmentDirections.actionHomePageFragmentToPostAddFragment()));
-
+//
 //        Model.instance.deleteAllPostsDao();
 
         swipeRefresh = view.findViewById(R.id.postlist_swiperefresh);
@@ -57,7 +60,6 @@ public class HomePageFragment extends Fragment {
 
         RecyclerView list = view.findViewById(R.id.postlist_rv);
         list.setHasFixedSize(true);
-
         list.setLayoutManager(new LinearLayoutManager(getContext()));
 
         adapter = new MyAdapter();
@@ -95,12 +97,15 @@ public class HomePageFragment extends Fragment {
         TextView titleTv;
         TextView locationTv;
         TextView userName;
+        ImageView img;
 
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
             titleTv = itemView.findViewById(R.id.listrow_title_tv);
             locationTv = itemView.findViewById(R.id.listrow_location_tv);
             userName = itemView.findViewById(R.id.listrow_username_tv);
+            img = itemView.findViewById(R.id.listrow_post_img);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -135,6 +140,12 @@ public class HomePageFragment extends Fragment {
             holder.titleTv.setText(post.getTitle());
             holder.locationTv.setText(post.getLocation());
             holder.userName.setText(post.getUserName());
+            if(!post.getPhoto().contentEquals("")) {
+                Picasso.get()
+                        .load(post.getPhoto())
+                        .into(holder.img);
+            }
+
         }
         @Override
         public int getItemCount() {

@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.example.itravel.MyApplication;
 import com.example.itravel.R;
+import com.example.itravel.model.AppLocalDb;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
 import com.example.itravel.model.User;
@@ -35,6 +36,7 @@ import java.util.List;
 public class ProfilePageFragment extends Fragment {
 
     TextView nameTv;
+    TextView nickNameTv;
     ImageView image;
     ImageButton editBtn;
     ImageButton addPostBtn;
@@ -59,6 +61,7 @@ public class ProfilePageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile_page, container, false);
 
         nameTv = view.findViewById(R.id.profile_name_tv);
+        nickNameTv = view.findViewById(R.id.profile_nickName_tv);
         image = view.findViewById(R.id.profile_image);
         editBtn = view.findViewById(R.id.profile_editProfile_btn);
         addPostBtn = view.findViewById(R.id.profile_addPost_btn);
@@ -78,15 +81,9 @@ public class ProfilePageFragment extends Fragment {
             }
         });
 
-//        Model.instance.getAllPostsByUser(usr, ID, new Model.GetAllPostsByUserListener() {
-//            @Override
-//            public void onComplete(List<Post> list) {
-//
-//            }
-//        });
-
         RecyclerView list = view.findViewById(R.id.profilePage_postlist_rv);
         list.setHasFixedSize(true);
+
         list.setLayoutManager(new LinearLayoutManager(getContext()));
 
         adapter = new MyAdapterProfile();
@@ -101,10 +98,10 @@ public class ProfilePageFragment extends Fragment {
         });
 
 
-        viewModel.getData().observe(getViewLifecycleOwner(), posts -> {
-            refresh();
-
-        });
+//        viewModel.getData().observe(getViewLifecycleOwner(), posts -> {
+//            refresh();
+//
+//        });
 
         swipeRefresh.setRefreshing(Model.instance.getPostListLoadingState().getValue() == Model.PostListLoadingState.loading);
 
@@ -125,7 +122,8 @@ public class ProfilePageFragment extends Fragment {
             @Override
             public void onComplete(User user) {
                 currUser = user;
-                nameTv.setText(user.getNickName());
+                nameTv.setText(user.getFullName());
+                nickNameTv.setText(user.getNickName());
                 if(currUser.getPhoto() != "") {
                     Picasso.get()
                             .load(currUser.getPhoto())

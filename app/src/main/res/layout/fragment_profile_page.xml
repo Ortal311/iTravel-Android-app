@@ -43,9 +43,7 @@
         android:layout_marginStart="13dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="66dp"
         android:textSize="25dp"
-        app:layout_constraintBottom_toTopOf="@+id/profilePage_postlist_swiperefresh"
         app:layout_constraintEnd_toStartOf="@+id/profile_addPost_btn"
         app:layout_constraintStart_toEndOf="@+id/profile_image"
         app:layout_constraintTop_toTopOf="parent" />
@@ -80,5 +78,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/profile_nickName_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="@+id/profile_name_tv"
+        app:layout_constraintStart_toEndOf="@+id/profile_image"
+        app:layout_constraintTop_toBottomOf="@+id/profile_name_tv" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

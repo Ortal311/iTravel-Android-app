@@ -63,6 +63,17 @@ public class ModelFirebase {
                 });
     }
 
+    public void addPhotoToPost(Post post, Model.AddPhotoToPost listener) {
+        db.collection(Post.collectionName)
+                .document(post.getId())
+                .update("photo", post.getPhoto()).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d("TAG", "lplplp");
+            }
+        });
+    }
+
     public void addPostToUsersList(String postId, User user) {
         String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         db.collection(User.collectionName)
@@ -91,11 +102,14 @@ public class ModelFirebase {
 
 
     public void updatePost(Post post, Model.UpdatePostListener listener) {
+
         db.collection(Post.collectionName).document(post.getId())
                 .update("description", post.getDescription(),
                         "location", post.getLocation(),
                         "difficulty", post.getDifficulty(),
-                        "title", post.getTitle()
+                        "title", post.getTitle(),
+                        "photo", post.getPhoto()
+
                 )
                 .addOnSuccessListener(unused -> listener.onComplete())
                 .addOnFailureListener(e -> listener.onComplete());
@@ -168,12 +182,25 @@ public class ModelFirebase {
 //    public interface GetAllPostsByUserListener {
 //        void onComplete(List<Post> list);
 //    }
-    public void updateUser(String id, String name, Model.UpdateUserListener listener) {
+    public void updateUser(String id, String name,String nickName,String photo, Model.UpdateUserListener listener) {
         db.collection(User.collectionName)
                 .document(id)
-                .update("name", name)
+                .update("name", name,
+                "nickName", nickName
+                ,"photo", photo)
                 .addOnSuccessListener(unused -> listener.onComplete())
                 .addOnFailureListener(e -> listener.onComplete());
+    }
+
+    public void addPhotoToUser(String id,String url, Model.AddPhotoToUser listener) {
+        db.collection(Post.collectionName)
+                .document(id)
+                .update("photo", url).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d("TAG", "lplplp");
+            }
+        });
     }
 
     public void getUserById(String Id, Model.GetUserById listener) {
@@ -194,6 +221,22 @@ public class ModelFirebase {
                         listener.onComplete(user);
                     }
                 });
+    }
+    boolean flag;
+    public boolean isNickNameExist(String nickName, Model.IsNickNameExist listener) {
+         Task<QuerySnapshot> res = db.collection(User.collectionName)
+                .whereEqualTo("nickName", nickName)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.getResult().size() == 0)
+                            flag= false;
+                        else
+                            flag= true;
+                    }
+                });
+        return flag;
+
     }
 
 //    public void getAllPostsByUser(User user, GetAllPostsByUserListener listener) {
@@ -255,12 +298,12 @@ public class ModelFirebase {
         return (currentUser != null);
     }
 
-    public void createNewAccount(String fullName,String nickName, String email, String password, String photo, List<String> postList, Model.CreateNewAccount listener) {
+    public void createNewAccount(String fullName, String nickName, String email, String password, String photo, List<String> postList, Model.CreateNewAccount listener) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d("TAG", "createUserWithEmail:success");
-                        User user = new User(fullName,nickName, email, photo, postList);
+                        User user = new User(fullName, nickName, email, photo, postList);
 
                         FirebaseFirestore.getInstance()
                                 .collection(User.collectionName)
@@ -315,7 +358,7 @@ public class ModelFirebase {
      **/
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
-    public void saveImage(Bitmap imageBitmap, String imageName, Model.SaveImageListener listener) {
+    public void saveUserImage(Bitmap imageBitmap, String imageName, Model.SaveImageListener listener) {
         // Create a storage reference from our app
         StorageReference storageRef = storage.getReference();
         StorageReference imgRef = storageRef.child("/user_avatars/" + imageName);
@@ -342,4 +385,34 @@ public class ModelFirebase {
         });
 
     }
+
+    public void savePostImage(Bitmap imageBitmap, String imageName, Model.SaveImageListener listener) {
+        // Create a storage reference from our app
+        StorageReference storageRef = storage.getReference();
+        StorageReference imgRef = storageRef.child("/post_images/" + imageName);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = imgRef.putBytes(data);
+        uploadTask.addOnFailureListener(exception -> {
+            listener.onComplete(null);
+        }).addOnSuccessListener(taskSnapshot -> {
+            imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Uri downloadUrl = uri;
+                    listener.onComplete(downloadUrl.toString());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("TAG", "error here!");
+                }
+            });
+        });
+
+    }
+
+
 }

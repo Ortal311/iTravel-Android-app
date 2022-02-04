@@ -38,6 +38,8 @@ public class PostDetailsFragment extends Fragment {
     Post p;
     String postId;
     ProgressBar progressBar;
+    ImageView postImg;
+    User usr;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,6 +57,8 @@ public class PostDetailsFragment extends Fragment {
         difficultyEt = view.findViewById(R.id.postdetails_difficulty_tv);
         editBtn = view.findViewById(R.id.postdetails_edit_btn);
         deleteBtn = view.findViewById(R.id.postdetails_delete_btn);
+        postImg = view.findViewById(R.id.postDetails_post_img);
+        postImg.setVisibility(View.GONE);
 
         postId = PostDetailsFragmentArgs.fromBundle(getArguments()).getPostId();
 
@@ -62,7 +66,7 @@ public class PostDetailsFragment extends Fragment {
             @Override
             public void onComplete(Post post) {
 
-                savePost(post.getTitle(), post.getLocation(), post.getDescription(),post.getDifficulty(), post.getUserName());
+                savePost(post.getTitle(), post.getLocation(), post.getDescription(),post.getDifficulty(), post.getUserName(), post);
                 p=post;
 
             }
@@ -73,6 +77,7 @@ public class PostDetailsFragment extends Fragment {
         Model.instance.getUserById(id, new Model.GetUserById() {
             @Override
             public void onComplete(User user) {
+                usr = user;
                 Log.d("TAG", "length of list  -  " + user.getPostList().size());
                 for (String id :user.getPostList()) {
                     if(id.equals(postId))
@@ -117,7 +122,7 @@ public class PostDetailsFragment extends Fragment {
         return view;
     }
 
-    public void savePost(String title, String location, String description,String difficulty, String userName)
+    public void savePost(String title, String location, String description,String difficulty, String userName,Post post)
     {
 //
 //        editBtn.setEnabled(false);
@@ -127,6 +132,12 @@ public class PostDetailsFragment extends Fragment {
         authorEt.setText(userName);
         descriptionEt.setText(description);
         difficultyEt.setText(difficulty);
+        if(!post.getPhoto().contentEquals("")) {
+            Picasso.get()
+                    .load(post.getPhoto())
+                    .into(postImg);
+        }
+        postImg.setVisibility(View.VISIBLE);
 
     }
 

@@ -136,9 +136,7 @@ public class SignUpFragment extends Fragment {
                     final InputStream imageStream = getContext().getContentResolver().openInputStream(imageUri);
                     imageBitmap= BitmapFactory.decodeStream(imageStream);
                 } catch (FileNotFoundException e) {
-                   Log.d("TAG","ERRORRRR");
                     e.printStackTrace();
-//                    Toast.makeText(PostImage.this, "Something went wrong", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -160,6 +158,23 @@ public class SignUpFragment extends Fragment {
         String verifyPassword = verifyPasswordEt.getText().toString();
 
         User user = new User(fullName,nickName, email, photo, postList);
+
+//        boolean isExist = Model.instance.isNickNameExist(nickName, new Model.IsNickNameExist() {
+//            @Override
+//            public void onComplete() {
+//
+//            }
+//        });
+//        if(isExist == true)
+//        {
+//            //popup
+//            popup.setText("Nick name already taken!");
+//            popup.setTextSize(20);
+//            onButtonShowPopupWindowClick(view, inflater);
+//            saveBtn.setEnabled(true);
+//            cancelBtn.setEnabled(true);
+//            return;
+//        }
 
         //TODO: check if user name(nick name) already exist!
         if (fullName.equals("") ||nickName.equals("") || email.equals("") || password.equals("") || verifyPassword.equals("")) {
@@ -183,12 +198,11 @@ public class SignUpFragment extends Fragment {
 
         if(imageBitmap!= null) {
 
-            Model.instance.saveImage(imageBitmap, nickName + ".jpg",
+            Model.instance.saveUserImage(imageBitmap, nickName + ".jpg",
                     new Model.SaveImageListener() {
                         @Override
                         public void onComplete(String url) {
                             user.setPhoto(url);
-                            Log.d("TAG", "url - " + url);
                             Log.d("TAG", "url - " + url);
                             Model.instance.createNewAccount(fullName,nickName, email, password, url, postList, () -> {
                                   toFeedActivity();

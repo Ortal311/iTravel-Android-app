@@ -33,9 +33,14 @@ public class Model {
     public interface SaveImageListener{
         void onComplete(String url);
     }
-    public void saveImage(Bitmap imageBitmap, String imageName, SaveImageListener listener) {
+    public void saveUserImage(Bitmap imageBitmap, String imageName, SaveImageListener listener) {
 
-        modelFirebase.saveImage(imageBitmap,imageName,listener);
+        modelFirebase.saveUserImage(imageBitmap,imageName,listener);
+    }
+
+    public void savePostImage(Bitmap imageBitmap, String imageName, SaveImageListener listener) {
+
+        modelFirebase.savePostImage(imageBitmap,imageName,listener);
     }
 
 
@@ -130,7 +135,7 @@ public class Model {
                     @Override
                     public void run() {
                         Long lud = new Long(0);
-                        Log.d("TAG", "fb returned " + list.size());
+                        Log.d("TAG", "fb returned - " + list.size());
                         for (Post post : list) {
                             AppLocalDb.db.postDao().insertAll(post);
                             if (lud < post.getUpdateDate()) {
@@ -174,7 +179,6 @@ public class Model {
                     @Override
                     public void run() {
                         Long lud = new Long(0);
-                        Log.d("TAG", "fb returned " + list.size());
                         for (Post post : list) {
                             AppLocalDb.db.postDao().insertAll(post);
                             if (lud < post.getUpdateDate()) {
@@ -246,8 +250,8 @@ public class Model {
         modelFirebase.getUserById(Id, listener);
     }
 
-    public void updateUser(String id, String newName, UpdateUserListener listener) {
-        modelFirebase.updateUser(id, newName, listener);
+    public void updateUser(String id, String newName, String newNickName,String photo, UpdateUserListener listener) {
+        modelFirebase.updateUser(id, newName,newNickName,photo, listener);
     }
 
     public void getAllPostsByUser(User user, String userId, GetAllPostsByUserListener listener){
@@ -284,5 +288,31 @@ public class Model {
 
     public void isExist(Context context, String email, String password, IsExist listener) {
         modelFirebase.isExist(context, email, password, listener);
+    }
+
+    public interface AddPhotoToPost {
+        void onComplete();
+    }
+    public void addPhotoToPost(Post post,AddPhotoToPost listener )
+    {
+        modelFirebase.addPhotoToPost(post,listener);
+    }
+
+    public interface AddPhotoToUser {
+        void onComplete();
+    }
+    public void addPhotoToUser(String id, String url,AddPhotoToUser listener )
+    {
+        modelFirebase.addPhotoToUser(id,url,listener);
+    }
+
+
+    public interface IsNickNameExist {
+       void  onComplete();
+    }
+
+    public boolean isNickNameExist(String nickName, IsNickNameExist listener)
+    {
+       return modelFirebase.isNickNameExist(nickName,listener);
     }
 }

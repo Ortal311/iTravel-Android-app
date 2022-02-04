@@ -25,20 +25,18 @@ public class Post {
     String location = "";
     String difficulty="";
     Long updateDate = new Long(0);
-
-
-
-//pictures
+    String photo="";
 
     public Post(){}
 
-    public Post( String id,String userName, String title, String description, String location, String difficulty) {
+    public Post( String id,String userName, String title, String description,String photo, String location, String difficulty) {
         this.userName = userName;
         this.title = title;
         this.description = description;
         this.location = location;
         this.difficulty = difficulty;
         this.id = id;
+        this.photo = photo;
     }
 
     public static Post create(String id, Map<String, Object> json) {
@@ -48,9 +46,10 @@ public class Post {
         String location = (String) json.get("location");
         String difficulty = (String) json.get("difficulty");
         Timestamp ts = (Timestamp)json.get("updateDate");
+        String photo = (String) json.get("photo");
         Long updateDate = ts.getSeconds();
 
-        Post post = new Post(id, userName, title, description, location, difficulty);
+        Post post = new Post(id, userName, title, description,photo, location, difficulty);
         post.setUpdateDate(updateDate);
         return post;
     }
@@ -112,6 +111,16 @@ public class Post {
     }
 
 
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+
+
     public Map<String, Object> toJson() {
         Map<String, Object> json = new HashMap<>();
         json.put("userName", userName);
@@ -120,6 +129,7 @@ public class Post {
         json.put("location", location );
         json.put("difficulty", difficulty);
         json.put("updateDate", FieldValue.serverTimestamp());
+        json.put("photo",photo);
 
 
         return json;

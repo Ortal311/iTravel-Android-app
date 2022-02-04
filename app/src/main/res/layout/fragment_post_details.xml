@@ -16,7 +16,7 @@
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintTop_toBottomOf="@+id/postDetails_post_img" />
 
     <TextView
         android:id="@+id/postdetails_location_tv"
@@ -84,7 +84,7 @@
         app:layout_constraintTop_toBottomOf="@+id/postdetails_description_tv" />
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/postDetails_post_img"
         android:layout_width="210dp"
         android:layout_height="174dp"
         android:layout_marginStart="10dp"
