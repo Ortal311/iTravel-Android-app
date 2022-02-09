@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.itravel.R;
-import com.example.itravel.model.ModelFirebase;
 
 public class LoginActivity extends AppCompatActivity {
     NavController navCtl;

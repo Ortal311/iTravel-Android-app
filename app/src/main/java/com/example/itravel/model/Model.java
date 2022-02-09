@@ -5,14 +5,10 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-
 import androidx.core.os.HandlerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-
 import com.example.itravel.MyApplication;
-import com.google.firebase.auth.FirebaseUser;
-
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -20,15 +16,12 @@ import java.util.concurrent.Executors;
 public class Model {
 
     public static final Model instance = new Model();
-    //added
     public Executor executor = Executors.newFixedThreadPool(1);
     public Handler mainThread = HandlerCompat.createAsync(Looper.getMainLooper());
 
     ModelFirebase modelFirebase = new ModelFirebase();
     MutableLiveData<List<Post>> postsList = new MutableLiveData<List<Post>>();
     MutableLiveData<List<Post>> currUserPostsList = new MutableLiveData<List<Post>>();
-
-    FirebaseUser currUser;
 
     public interface SaveImageListener{
         void onComplete(String url);
@@ -43,18 +36,19 @@ public class Model {
         modelFirebase.savePostImage(imageBitmap,imageName,listener);
     }
 
-
     public enum PostListLoadingState {
+        loading,
+        loaded
+    }
+    public enum UserPostListLoadingState {
         loading,
         loaded
     }
 
     MutableLiveData<PostListLoadingState> postListLoadingState = new MutableLiveData<PostListLoadingState>();
+    MutableLiveData<UserPostListLoadingState> userPostListLoadingState = new MutableLiveData<UserPostListLoadingState>();
 
-
-    private Model() {
-
-    }
+    private Model() {}
 
     /**
      * Interface
@@ -100,6 +94,11 @@ public class Model {
         void onComplete(List<Post> list);
     }
 
+    public interface IsNickNameExist {
+        void  onComplete();
+        void onFail();
+    }
+
     /******************************************************/
 
     public void deleteAllPostsDao() {
@@ -135,7 +134,6 @@ public class Model {
                     @Override
                     public void run() {
                         Long lud = new Long(0);
-                        Log.d("TAG", "fb returned - " + list.size());
                         for (Post post : list) {
                             AppLocalDb.db.postDao().insertAll(post);
                             if (lud < post.getUpdateDate()) {
@@ -159,10 +157,9 @@ public class Model {
         });
     }
 
-
     public void refreshPostListByUser(String name) {
 
-        postListLoadingState.setValue(PostListLoadingState.loading);
+        userPostListLoadingState.setValue(UserPostListLoadingState.loading);
         // get last local update date
         Long lastUpdateDate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("PostsLastUpdateDate", 0);
 
@@ -196,7 +193,7 @@ public class Model {
                         List<Post> pList = AppLocalDb.db.postDao().getAllPostsByUser(name);
                         Log.d("TAG", "pList " + pList.size());
                         currUserPostsList.postValue(pList);
-                        postListLoadingState.postValue(PostListLoadingState.loaded);
+                        userPostListLoadingState.postValue(UserPostListLoadingState.loaded);
                     }
                 });
             }
@@ -237,7 +234,9 @@ public class Model {
     public LiveData<PostListLoadingState> getPostListLoadingState() {
         return postListLoadingState;
     }
-
+    public LiveData<UserPostListLoadingState> getUserPostListLoadingState() {
+        return userPostListLoadingState;
+    }
     public void UpdatePost(Post post, UpdatePostListener listener) {
         modelFirebase.updatePost(post, listener);
     }
@@ -306,13 +305,8 @@ public class Model {
         modelFirebase.addPhotoToUser(id,url,listener);
     }
 
-
-    public interface IsNickNameExist {
-       void  onComplete();
-    }
-
-    public boolean isNickNameExist(String nickName, IsNickNameExist listener)
+    public void isNickNameExist(Context context,String nickName, IsNickNameExist listener)
     {
-       return modelFirebase.isNickNameExist(nickName,listener);
+       modelFirebase.isNickNameExist(context,nickName,listener);
     }
 }

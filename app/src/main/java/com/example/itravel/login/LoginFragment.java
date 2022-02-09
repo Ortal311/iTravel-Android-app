@@ -7,19 +7,15 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,8 +29,6 @@ public class LoginFragment extends Fragment {
     EditText passwordEt;
     Button loginBtn;
     Button signupBtn;
-    SharedPreferences.Editor Ed;
-    View popupView;
 
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -74,7 +68,7 @@ public class LoginFragment extends Fragment {
                 }
                 else {
                     Model.instance.isExist(getContext(), email, password, () -> {
-                        Log.d("TAG", "Connected!!!");
+                        Log.d("TAG", "Connected!");
                         toFeedActivity();
                     });
                 }

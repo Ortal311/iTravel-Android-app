@@ -1,4 +1,4 @@
-package com.example.itravel;
+package com.example.itravel.signUp;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -25,8 +25,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.itravel.MainActivity;
+import com.example.itravel.R;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,7 +59,6 @@ public class SignUpFragment extends Fragment {
     static final int REQUEST_IMAGE_GALLERY = 2;
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -78,9 +78,9 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 save(inflater);
-//                Navigation.findNavController(v).navigate(SignUpFragmentDirections.actionSignUpFragmentToHomePageFragment());
             }
         });
+
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +103,6 @@ public class SignUpFragment extends Fragment {
             }
         });
 
-
         return view;
     }
 
@@ -121,20 +120,18 @@ public class SignUpFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_IMAGE_CAPTURE){
-            if( resultCode == RESULT_OK){
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            if (resultCode == RESULT_OK) {
                 Bundle extras = data.getExtras();
                 imageBitmap = (Bitmap) extras.get("data");
 
             }
-        }
-        else if(requestCode == REQUEST_IMAGE_GALLERY)
-        {
-            if( resultCode == RESULT_OK) {
-               try {
+        } else if (requestCode == REQUEST_IMAGE_GALLERY) {
+            if (resultCode == RESULT_OK) {
+                try {
                     final Uri imageUri = data.getData();
                     final InputStream imageStream = getContext().getContentResolver().openInputStream(imageUri);
-                    imageBitmap= BitmapFactory.decodeStream(imageStream);
+                    imageBitmap = BitmapFactory.decodeStream(imageStream);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -152,32 +149,15 @@ public class SignUpFragment extends Fragment {
         popup = popupView.findViewById(R.id.popup_text_tv);
 
         String fullName = FullNameEt.getText().toString();
-        String nickName= NickNameEt.getText().toString();;
+        String nickName = NickNameEt.getText().toString();
+        ;
         String email = emailEt.getText().toString();
         String password = passwordEt.getText().toString();
         String verifyPassword = verifyPasswordEt.getText().toString();
 
-        User user = new User(fullName,nickName, email, photo, postList);
+        User user = new User(fullName, nickName, email, photo, postList);
 
-//        boolean isExist = Model.instance.isNickNameExist(nickName, new Model.IsNickNameExist() {
-//            @Override
-//            public void onComplete() {
-//
-//            }
-//        });
-//        if(isExist == true)
-//        {
-//            //popup
-//            popup.setText("Nick name already taken!");
-//            popup.setTextSize(20);
-//            onButtonShowPopupWindowClick(view, inflater);
-//            saveBtn.setEnabled(true);
-//            cancelBtn.setEnabled(true);
-//            return;
-//        }
-
-        //TODO: check if user name(nick name) already exist!
-        if (fullName.equals("") ||nickName.equals("") || email.equals("") || password.equals("") || verifyPassword.equals("")) {
+        if (fullName.equals("") || nickName.equals("") || email.equals("") || password.equals("") || verifyPassword.equals("")) {
             //popup
             popup.setText("You did not enter all values!");
             popup.setTextSize(20);
@@ -186,6 +166,7 @@ public class SignUpFragment extends Fragment {
             cancelBtn.setEnabled(true);
             return;
         }
+
         if (!password.equals(verifyPassword)) {
             //popup
             popup.setText("Passwords does not match!");
@@ -196,34 +177,37 @@ public class SignUpFragment extends Fragment {
             return;
         }
 
-        if(imageBitmap!= null) {
-
-            Model.instance.saveUserImage(imageBitmap, nickName + ".jpg",
-                    new Model.SaveImageListener() {
-                        @Override
-                        public void onComplete(String url) {
-                            user.setPhoto(url);
-                            Log.d("TAG", "url - " + url);
-                            Model.instance.createNewAccount(fullName,nickName, email, password, url, postList, () -> {
-                                  toFeedActivity();
+        Model.instance.isNickNameExist(getContext(), nickName, new Model.IsNickNameExist() {
+            @Override
+            public void onComplete() {
+                if (imageBitmap != null) {
+                    Model.instance.saveUserImage(imageBitmap, nickName + ".jpg",
+                            new Model.SaveImageListener() {
+                                @Override
+                                public void onComplete(String url) {
+                                    user.setPhoto(url);
+                                    Log.d("TAG", "url - " + url);
+                                    Model.instance.createNewAccount(fullName, nickName, email, password, url, postList, () -> {
+                                        toFeedActivity();
+                                    });
+                                }
                             });
-                        }
+                } else {
+                    Model.instance.createNewAccount(fullName, nickName, email, password, photo, postList, () -> {
+                        toFeedActivity();
                     });
-        }
-        else{
-            Model.instance.createNewAccount(fullName,nickName, email, password, photo, postList, () -> {
-                toFeedActivity();
-            });
-
-        }
-
-
-
-//        Model.instance.addUser(user, () -> {
-//          //  Navigation.findNavController(nameEt).navigate(SignUpFragmentDirections.actionSignUpFragmentToHomePageFragment());
-//            toFeedActivity();
-//        });
-
+                }
+            }
+            @Override
+            public void onFail() {
+                popup.setText("Nick name already taken!");
+                popup.setTextSize(20);
+                onButtonShowPopupWindowClick(view, inflater);
+                saveBtn.setEnabled(true);
+                cancelBtn.setEnabled(true);
+                return;
+            }
+        });
     }
 
     public void onButtonShowPopupWindowClick(View view, LayoutInflater inflater) {
@@ -235,7 +219,6 @@ public class SignUpFragment extends Fragment {
         final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
 
         // show the popup window
-        // which view you pass in doesn't matter, it is only used for the window tolken
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
         // dismiss the popup window when touched

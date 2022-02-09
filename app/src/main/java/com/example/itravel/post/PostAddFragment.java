@@ -17,6 +17,7 @@ import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.itravel.R;
 import com.example.itravel.model.Model;
@@ -53,6 +55,8 @@ public class PostAddFragment extends Fragment {
 
     Spinner dropdown;
     String difficulty;
+
+    User user;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_IMAGE_GALLERY = 2;
@@ -101,7 +105,10 @@ public class PostAddFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 TextView spinner_item_text = (TextView) view;
-                difficulty = spinner_item_text.getText().toString();
+                if(spinner_item_text!=null)
+                {
+                    difficulty = spinner_item_text.getText().toString();
+                }
             }
 
             @Override
@@ -136,6 +143,21 @@ public class PostAddFragment extends Fragment {
         String photo = "";
 
         String Id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if(title.equals("") || location.equals("") )
+        {
+            Toast toast = new Toast(getContext());
+            View popupView = LayoutInflater.from(getContext()).inflate(R.layout.popup_window, null);
+            TextView toastText = popupView.findViewById(R.id.popup_text_tv);
+            toastText.setText("You didn't enter Title/Location!");
+            toastText.setTextSize(20);
+            toast.setView(popupView);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+            saveBtn.setEnabled(true);
+            cancelBtn.setEnabled(true);
+            return;
+        }
 
         Model.instance.getUserById(Id, new Model.GetUserById() {
             @Override
@@ -149,6 +171,7 @@ public class PostAddFragment extends Fragment {
 
     public String savePost(String name, String title, String description, String photo, String location, String difficulty, User user) {
         Post post = new Post("", name, title, description, photo, location, difficulty);
+
         if (imageBitmap != null) {
 
             Model.instance.addPost(post, user, (id) -> {
@@ -162,7 +185,7 @@ public class PostAddFragment extends Fragment {
                         Model.instance.addPhotoToPost(post, new Model.AddPhotoToPost() {
                             @Override
                             public void onComplete() {
-
+                                Log.d("TAG", "added photo successfully");
                             }
                         });
                         Model.instance.refreshPostList();

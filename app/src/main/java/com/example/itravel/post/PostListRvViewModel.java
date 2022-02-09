@@ -1,5 +1,7 @@
 package com.example.itravel.post;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -29,11 +31,15 @@ public class PostListRvViewModel extends ViewModel {
 
     public LiveData<List<Post>> getDataByUser(String name ) {
         MutableLiveData<List<Post>> lst = new MutableLiveData<>();
-
+List<Post> tmp = new LinkedList<>();
         for (Post post: data.getValue()  ) {
-            if(post.getUserName() == name )
-                lst.getValue().add(post);
+            if(post.getUserName().equals(name)) {
+                Log.d("TAG","in++");
+                tmp.add(post);
+//                lst.getValue().add(post);
+            }
         }
+        lst.postValue(tmp);
         return lst;
     }
 }

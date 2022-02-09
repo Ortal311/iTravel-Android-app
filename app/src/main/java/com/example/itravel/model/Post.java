@@ -5,6 +5,7 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.google.firebase.Timestamp;
@@ -26,6 +27,7 @@ public class Post {
     String difficulty="";
     Long updateDate = new Long(0);
     String photo="";
+
 
     public Post(){}
 

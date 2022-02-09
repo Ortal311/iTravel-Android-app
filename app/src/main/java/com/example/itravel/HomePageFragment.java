@@ -12,31 +12,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.itravel.login.LoginActivity;
-import com.example.itravel.model.AppLocalDb;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
 import com.example.itravel.post.PostListRvViewModel;
 import com.squareup.picasso.Picasso;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
+import java.util.Collections;
 
 public class HomePageFragment extends Fragment {
 
     PostListRvViewModel viewModel;
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
-
-    //Button btn;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -50,9 +44,6 @@ public class HomePageFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home_page,container,false);
 
-//        btn = view.findViewById(R.id.addBtn);
-//        btn.setOnClickListener(Navigation.createNavigateOnClickListener(HomePageFragmentDirections.actionHomePageFragmentToPostAddFragment()));
-//
 //        Model.instance.deleteAllPostsDao();
 
         swipeRefresh = view.findViewById(R.id.postlist_swiperefresh);
@@ -89,6 +80,7 @@ public class HomePageFragment extends Fragment {
     }
 
     private void refresh() {
+        Collections.reverse(viewModel.getData().getValue());
         adapter.notifyDataSetChanged();
         swipeRefresh.setRefreshing(false);
     }
@@ -152,6 +144,7 @@ public class HomePageFragment extends Fragment {
             if(viewModel.getData().getValue() == null){
                 return 0;
             }
+//            Collections.reverse(viewModel.getData().getValue());
             return viewModel.getData().getValue().size();
         }
 
