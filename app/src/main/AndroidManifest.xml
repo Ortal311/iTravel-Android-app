@@ -10,7 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ITravel"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:configChanges="orientation|screenSize">
         <activity
             android:name=".login.LoginActivity"
             android:exported="false" />

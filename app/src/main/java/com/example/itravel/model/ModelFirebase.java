@@ -182,17 +182,17 @@ public class ModelFirebase {
 //    public interface GetAllPostsByUserListener {
 //        void onComplete(List<Post> list);
 //    }
-    public void updateUser(String id, String name,String nickName,String photo, Model.UpdateUserListener listener) {
+    public void updateUser(String id, String name, String nickName, String photo, Model.UpdateUserListener listener) {
         db.collection(User.collectionName)
                 .document(id)
                 .update("name", name,
-                "nickName", nickName
-                ,"photo", photo)
+                        "nickName", nickName
+                        , "photo", photo)
                 .addOnSuccessListener(unused -> listener.onComplete())
                 .addOnFailureListener(e -> listener.onComplete());
     }
 
-    public void addPhotoToUser(String id,String url, Model.AddPhotoToUser listener) {
+    public void addPhotoToUser(String id, String url, Model.AddPhotoToUser listener) {
         db.collection(Post.collectionName)
                 .document(id)
                 .update("photo", url).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -222,20 +222,23 @@ public class ModelFirebase {
                     }
                 });
     }
+
     boolean flag;
-    public boolean isNickNameExist(String nickName, Model.IsNickNameExist listener) {
-         Task<QuerySnapshot> res = db.collection(User.collectionName)
+
+    public void isNickNameExist(Context context, String nickName, Model.IsNickNameExist listener) {
+
+        Task<QuerySnapshot> res = db.collection(User.collectionName)
                 .whereEqualTo("nickName", nickName)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.getResult().size() == 0)
-                            flag= false;
-                        else
-                            flag= true;
+                        if (task.getResult().size() == 0) {
+                            listener.onComplete();
+                        } else {
+                            listener.onFail();
+                        }
                     }
                 });
-        return flag;
 
     }
 

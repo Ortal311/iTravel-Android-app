@@ -14,6 +14,7 @@ import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.itravel.R;
 import com.example.itravel.model.Model;
@@ -40,9 +42,7 @@ public class ProfileEditFragment extends Fragment {
     ProgressBar progressBar;
     ImageButton cameraBtn;
     ImageButton galleryBtn;
-    String photo = "";
     Bitmap imageBitmap;
-
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_IMAGE_GALLERY = 2;
     User usr;
@@ -51,7 +51,6 @@ public class ProfileEditFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         View view = inflater.inflate(R.layout.fragment_profile_edit, container, false);
         progressBar = view.findViewById(R.id.editProfile_progressBar);
         progressBar.setVisibility(View.VISIBLE);
@@ -75,59 +74,61 @@ public class ProfileEditFragment extends Fragment {
         });
 //        String name = ProfilePageFragmentArgs.fromBundle(getArguments()).getName();
 
-
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (imageBitmap != null) {
-                    Model.instance.getUserById(id, new Model.GetUserById() {
-                        @Override
-                        public void onComplete(User user) {
-                            usr = user;
-                            Model.instance.saveUserImage(imageBitmap, user.getNickName() + ".jpg", new Model.SaveImageListener() {
+                Model.instance.isNickNameExist(getContext(), nickNameEt.getText().toString(), new Model.IsNickNameExist() {
+                    @Override
+                    public void onComplete() {
+                        if (imageBitmap != null) {
+                            Model.instance.getUserById(id, new Model.GetUserById() {
                                 @Override
-                                public void onComplete(String url) {
-                                    user.setPhoto(url);
-                                    Log.d("TAG", "url - " + url);
-                                    Model.instance.updateUser(id, nameEt.getText().toString(), nickNameEt.getText().toString(), url, () -> {
-                                        Navigation.findNavController(v).navigateUp();
+                                public void onComplete(User user) {
+                                    usr = user;
+                                    Model.instance.saveUserImage(imageBitmap, user.getNickName() + ".jpg", new Model.SaveImageListener() {
+                                        @Override
+                                        public void onComplete(String url) {
+                                            user.setPhoto(url);
+                                            Log.d("TAG", "url - " + url);
+                                            Model.instance.updateUser(id, nameEt.getText().toString(), nickNameEt.getText().toString(), url, () -> {
+                                                Navigation.findNavController(v).navigateUp();
 
-                                        Model.instance.refreshPostList();
+                                                Model.instance.refreshPostList();
+                                            });
+                                        }
                                     });
-
-
                                 }
-
                             });
-                        }
-                    });
-
-                } else {
-                    Model.instance.getUserById(id, new Model.GetUserById() {
-                        @Override
-                        public void onComplete(User user) {
-                            Model.instance.updateUser(id, nameEt.getText().toString(), nickNameEt.getText().toString(), user.getPhoto(), () -> {
-                                Navigation.findNavController(v).navigateUp();
+                        } else {
+                            Model.instance.getUserById(id, new Model.GetUserById() {
+                                @Override
+                                public void onComplete(User user) {
+                                    Model.instance.updateUser(id, nameEt.getText().toString(), nickNameEt.getText().toString(), user.getPhoto(), () -> {
+                                        Navigation.findNavController(v).navigateUp();
+                                    });
+                                }
                             });
+                            Model.instance.refreshPostList();
                         }
-                    });
-                    Model.instance.refreshPostList();
+                    }
 
-                }
-
+                    @Override
+                    public void onFail() {
+                        Toast toast = new Toast(getContext());
+                        View popupView = LayoutInflater.from(getContext()).inflate(R.layout.popup_window, null);
+                        TextView toastText = popupView.findViewById(R.id.popup_text_tv);
+                        toastText.setText("Nick name already taken!");
+                        toastText.setTextSize(20);
+                        toast.setView(popupView);
+                        toast.setDuration(Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+                    }
+                });
             }
         });
 
-//        saveBtn.setOnClickListener(v -> Model.instance.updateUser(id, nameEt.getText().toString(), new Model.UpdateUserListener() {
-//            @Override
-//            public void onComplete() {
-//                Navigation.findNavController(v).navigateUp();
-//            }
-//        }));
-
-        cancelBtn.setOnClickListener(v -> Navigation.findNavController(v).
-
-                navigateUp());
+        cancelBtn.setOnClickListener(v -> Navigation.findNavController(v).navigateUp());
 
         cameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,9 +144,7 @@ public class ProfileEditFragment extends Fragment {
             }
         });
 
-
         return view;
-
     }
 
     private void openGallery() {
@@ -174,9 +173,7 @@ public class ProfileEditFragment extends Fragment {
                     final InputStream imageStream = getContext().getContentResolver().openInputStream(imageUri);
                     imageBitmap = BitmapFactory.decodeStream(imageStream);
                 } catch (FileNotFoundException e) {
-                    Log.d("TAG", "ERRORRRR");
                     e.printStackTrace();
-//                    Toast.makeText(PostImage.this, "Something went wrong", Toast.LENGTH_LONG).show();
                 }
             }
 

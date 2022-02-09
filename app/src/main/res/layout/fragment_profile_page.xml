@@ -24,8 +24,8 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/profile_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="25dp"
@@ -34,7 +34,7 @@
         app:layout_constraintBottom_toTopOf="@+id/profilePage_postlist_swiperefresh"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize8Percent" />
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent" />
 
     <TextView
         android:id="@+id/profile_name_tv"
@@ -50,20 +50,20 @@
 
     <ImageButton
         android:id="@+id/profile_editProfile_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginBottom="65dp"
-        android:src="@android:drawable/ic_menu_edit"
+        android:src="@drawable/edit"
         app:layout_constraintBottom_toTopOf="@+id/profilePage_postlist_swiperefresh"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageButton
         android:id="@+id/profile_addPost_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="65dp"
-        android:src="@android:drawable/ic_menu_add"
+        android:src="@drawable/add"
         app:layout_constraintBottom_toTopOf="@+id/profilePage_postlist_swiperefresh"
         app:layout_constraintEnd_toStartOf="@+id/profile_editProfile_btn"
         app:layout_constraintHorizontal_bias="0.788"
@@ -83,8 +83,9 @@
         android:id="@+id/profile_nickName_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="7dp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/profile_name_tv"
         app:layout_constraintStart_toEndOf="@+id/profile_image"
         app:layout_constraintTop_toBottomOf="@+id/profile_name_tv" />
