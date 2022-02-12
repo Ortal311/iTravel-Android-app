@@ -21,7 +21,7 @@ public class Model {
 
     ModelFirebase modelFirebase = new ModelFirebase();
     MutableLiveData<List<Post>> postsList = new MutableLiveData<List<Post>>();
-    MutableLiveData<List<Post>> currUserPostsList = new MutableLiveData<List<Post>>();
+//    MutableLiveData<List<Post>> currUserPostsList = new MutableLiveData<List<Post>>();
 
     public interface SaveImageListener{
         void onComplete(String url);
@@ -165,7 +165,7 @@ public class Model {
 
         executor.execute(() -> {
             List<Post> pList = AppLocalDb.db.postDao().getAllPostsByUser(name);
-            currUserPostsList.postValue(pList);
+            postsList.postValue(pList);
         });
         // firebase get all updates since lastLocalUpdateDate
         modelFirebase.getAllPosts(lastUpdateDate, new ModelFirebase.GetAllPostsListener() {
@@ -192,7 +192,7 @@ public class Model {
                         //return all data to caller
                         List<Post> pList = AppLocalDb.db.postDao().getAllPostsByUser(name);
                         Log.d("TAG", "pList " + pList.size());
-                        currUserPostsList.postValue(pList);
+                        postsList.postValue(pList);
                         userPostListLoadingState.postValue(UserPostListLoadingState.loaded);
                     }
                 });
@@ -211,7 +211,13 @@ public class Model {
         if (postsList.getValue() == null) {
             refreshPostList();
         }
-        ;
+        return postsList;
+    }
+
+    public LiveData<List<Post>> getAllByUser() {
+        if (postsList.getValue() == null) {
+            refreshPostList();
+        }
         return postsList;
     }
 
@@ -253,8 +259,8 @@ public class Model {
         modelFirebase.updateUser(id, newName,newNickName,photo, listener);
     }
 
-    public void getAllPostsByUser(User user, String userId, GetAllPostsByUserListener listener){
-        modelFirebase.getAllPostsByUser(user,userId,listener);
+    public void getAllPostsByUser(User user, ModelFirebase.GetAllPostsByUserListener listener){
+        modelFirebase.getAllPostsByUser(user,listener);
     }
 //
 //    public void refreshPostListByUser(User user) {
