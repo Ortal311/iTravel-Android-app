@@ -108,7 +108,8 @@ public class ModelFirebase {
                         "location", post.getLocation(),
                         "difficulty", post.getDifficulty(),
                         "title", post.getTitle(),
-                        "photo", post.getPhoto()
+                        "photo", post.getPhoto(),
+                        "userName", post.getUserName()
 
                 )
                 .addOnSuccessListener(unused -> listener.onComplete())
@@ -179,13 +180,13 @@ public class ModelFirebase {
      * User
      **/
 
-//    public interface GetAllPostsByUserListener {
-//        void onComplete(List<Post> list);
-//    }
+    public interface GetAllPostsByUserListener {
+        void onComplete(List<Post> list);
+    }
     public void updateUser(String id, String name, String nickName, String photo, Model.UpdateUserListener listener) {
         db.collection(User.collectionName)
                 .document(id)
-                .update("name", name,
+                .update("fullName", name,
                         "nickName", nickName
                         , "photo", photo)
                 .addOnSuccessListener(unused -> listener.onComplete())
@@ -223,8 +224,6 @@ public class ModelFirebase {
                 });
     }
 
-    boolean flag;
-
     public void isNickNameExist(Context context, String nickName, Model.IsNickNameExist listener) {
 
         Task<QuerySnapshot> res = db.collection(User.collectionName)
@@ -242,55 +241,52 @@ public class ModelFirebase {
 
     }
 
-//    public void getAllPostsByUser(User user, GetAllPostsByUserListener listener) {
-//        Log.d("TAG", "Username: " + user.getName());
-//        db.collection(Post.collectionName)
-//                .whereEqualTo("userName", user.getName())
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        List<Post> list = new LinkedList<Post>();
-//                        if (task.isSuccessful()) {
-//                            QuerySnapshot querySnapshot = task.getResult();
-//                            for (QueryDocumentSnapshot doc : querySnapshot) {
-//
-//                                Post post = Post.create(doc.getId(),doc.getData());
-//                                if (post != null && post.userName == user.getName())
-//                                    Log.d("TAG", "Post title: " + post.getTitle());
-//                                list.add(post);
-//                            }
-//                        }
-//                        listener.onComplete(list);
-//                    }
-//                });
-//    }
-
-    public void getAllPostsByUser(User user, String userId, Model.GetAllPostsByUserListener listener) {
-//        Log.d("TAG", "Username: " + user.getName());
-        if (user.getPostList().size() > 0) {
-            db.collection(User.collectionName)
-                    .whereEqualTo("userName", user.getNickName())
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            List<Post> list = new LinkedList<Post>();
-                            if (task.isSuccessful()) {
-                                QuerySnapshot querySnapshot = task.getResult();
-                                for (QueryDocumentSnapshot doc : querySnapshot) {
-                                    Post post = Post.create(doc.getId(), doc.getData());
-                                    if (post != null)
-                                        if (user.getPostList().contains(post.getId()))
-                                            list.add(post);
-                                }
+    public void getAllPostsByUser(User user, GetAllPostsByUserListener listener) {
+        db.collection(Post.collectionName)
+                .whereEqualTo("userName", user.getNickName())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        List<Post> list = new LinkedList<Post>();
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+                            for (QueryDocumentSnapshot doc : querySnapshot) {
+                                Post post = Post.create(doc.getId(),doc.getData());
+                                list.add(post);
                             }
-                            listener.onComplete(list);
                         }
-                    });
-        }
-
+                        listener.onComplete(list);
+                    }
+                });
     }
+
+//    public void getAllPostsByUser(User user, String userId, Model.GetAllPostsByUserListener listener) {
+////        Log.d("TAG", "Username: " + user.getName());
+//        if (user.getPostList().size() > 0) {
+//            db.collection(User.collectionName)
+//                    .whereEqualTo("nickName", user.getNickName())
+//                    .get()
+//                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                            List<Post> list = new LinkedList<Post>();
+//                            if (task.isSuccessful()) {
+//                                QuerySnapshot querySnapshot = task.getResult();
+//                                for (QueryDocumentSnapshot doc : querySnapshot) {
+//                                    Post post = Post.create(doc.getId(), doc.getData());
+//                                    if (post != null)
+//                                        if (user.getPostList().contains(post.getId())) {
+//                                            list.add(post);
+//                                        }
+//                                }
+//                            }
+//                            listener.onComplete(list);
+//                        }
+//                    });
+//        }
+//
+//    }
 
 
     /**

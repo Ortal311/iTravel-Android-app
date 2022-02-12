@@ -50,7 +50,9 @@ public class MainActivity extends AppCompatActivity {
                     navCtl.navigate(R.id.action_global_profilePageFragment);
                     break;
                 case R.id.menu_homepage:
-                    navCtl.navigate(R.id.action_global_homePageFragment);
+//                    navCtl.navigate(R.id.action_global_homePageFragment);
+                    toFeedActivity();
+
                     break;
                 case R.id.menu_signout:
                     Model.instance.signOut(() -> {
@@ -72,6 +74,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void toLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void toFeedActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }

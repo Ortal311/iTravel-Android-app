@@ -125,12 +125,9 @@
             android:id="@+id/editpost_camera_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
-            android:layout_marginEnd="100dp"
             android:src="@android:drawable/ic_menu_camera"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.278"
             app:layout_constraintStart_toEndOf="@+id/addpost_pictures_tv"
             app:layout_constraintTop_toBottomOf="@+id/addpost_difficulty_tv" />
 
@@ -145,32 +142,35 @@
             android:spinnerMode="dropdown"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
+
             app:layout_constraintStart_toEndOf="@+id/addpost_difficulty_tv"
             app:layout_constraintTop_toBottomOf="@+id/addpost_description_show" />
 
         <Button
             android:id="@+id/addpost_save_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="68dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="12dp"
             android:backgroundTint="#7b9abe"
             android:text="POST"
-            android:textSize="24sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/addpost_cancel_btn"
+            android:textSize="16sp"
+            app:icon="@drawable/save"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editpost_camera_btn"
             tools:visibility="visible" />
 
         <Button
             android:id="@+id/addpost_cancel_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="10dp"
             android:backgroundTint="#7b9abe"
             android:text="CANCEL"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="16sp"
+            app:icon="@drawable/cancel"
+            app:layout_constraintBaseline_toBaselineOf="@+id/addpost_save_btn"
             app:layout_constraintEnd_toStartOf="@+id/addpost_save_btn"
-            app:layout_constraintStart_toStartOf="parent"
             tools:visibility="visible" />
 
         <ImageButton

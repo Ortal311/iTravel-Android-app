@@ -45,40 +45,32 @@
         android:id="@+id/editProfile_camera_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="22dp"
-        android:layout_marginEnd="130dp"
         android:src="@android:drawable/ic_menu_camera"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.55"
         app:layout_constraintStart_toEndOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/editProfile_nickname_et" />
 
     <Button
         android:id="@+id/editProfile_cancel_btn"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="20dp"
+        android:layout_height="45dp"
+        android:layout_marginEnd="10dp"
         android:text="CANCEL"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/editProfile_save_btn"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:icon="@drawable/cancel"
+        app:layout_constraintBaseline_toBaselineOf="@+id/editProfile_save_btn"
+        app:layout_constraintEnd_toStartOf="@+id/editProfile_save_btn" />
 
     <Button
         android:id="@+id/editProfile_save_btn"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="20dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="12dp"
         android:text="SAVE"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:icon="@drawable/save"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/editProfile_cancel_btn" />
+        app:layout_constraintTop_toBottomOf="@+id/editProfile_gallery_btn" />
 
     <ProgressBar
         android:id="@+id/editProfile_progressBar"

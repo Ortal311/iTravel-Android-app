@@ -143,12 +143,12 @@ public class PostAddFragment extends Fragment {
         String photo = "";
 
         String Id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        if(title.equals("") || location.equals("") )
+        if(title.equals("") || location.equals(""))
         {
             Toast toast = new Toast(getContext());
             View popupView = LayoutInflater.from(getContext()).inflate(R.layout.popup_window, null);
             TextView toastText = popupView.findViewById(R.id.popup_text_tv);
-            toastText.setText("You didn't enter Title/Location!");
+            toastText.setText("You didn't enter Title/Location");
             toastText.setTextSize(20);
             toast.setView(popupView);
             toast.setDuration(Toast.LENGTH_SHORT);
@@ -195,11 +195,22 @@ public class PostAddFragment extends Fragment {
 
             });
         } else {
-            Model.instance.addPost(post, user, (id) -> {
-                post.setId(id);
-                Model.instance.refreshPostList();
-                Navigation.findNavController(view).navigate(PostAddFragmentDirections.actionPostAddFragmentToHomePageFragment2());
-            });
+//            Model.instance.addPost(post, user, (id) -> {
+//                post.setId(id);
+//                Model.instance.refreshPostList();
+//                Navigation.findNavController(view).navigate(PostAddFragmentDirections.actionPostAddFragmentToHomePageFragment2());
+//            });
+            Toast toast = new Toast(getContext());
+            View popupView = LayoutInflater.from(getContext()).inflate(R.layout.popup_window, null);
+            TextView toastText = popupView.findViewById(R.id.popup_text_tv);
+            toastText.setText("You didn't enter Photo");
+            toastText.setTextSize(20);
+            toast.setView(popupView);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+            saveBtn.setEnabled(true);
+            cancelBtn.setEnabled(true);
         }
         return post.getId();
     }

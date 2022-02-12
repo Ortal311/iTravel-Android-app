@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.itravel.login.LoginActivity;
@@ -31,6 +32,7 @@ public class HomePageFragment extends Fragment {
     PostListRvViewModel viewModel;
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
+    ProgressBar progressBar;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -43,9 +45,9 @@ public class HomePageFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home_page,container,false);
-
+//        progressBar = view.findViewById(R.id.main_activity_progressBar);
+//        progressBar.setVisibility(View.GONE);
 //        Model.instance.deleteAllPostsDao();
-
         swipeRefresh = view.findViewById(R.id.postlist_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshPostList());
 
@@ -80,9 +82,11 @@ public class HomePageFragment extends Fragment {
     }
 
     private void refresh() {
+//        progressBar.setVisibility(View.VISIBLE);
         Collections.reverse(viewModel.getData().getValue());
         adapter.notifyDataSetChanged();
         swipeRefresh.setRefreshing(false);
+//        progressBar.setVisibility(View.GONE);
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{

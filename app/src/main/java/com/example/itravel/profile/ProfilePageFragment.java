@@ -23,12 +23,15 @@ import android.widget.TextView;
 
 import com.example.itravel.R;
 import com.example.itravel.model.Model;
+import com.example.itravel.model.ModelFirebase;
 import com.example.itravel.model.Post;
 import com.example.itravel.model.User;
 import com.example.itravel.post.PostListRvViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
+import java.util.Collections;
+import java.util.List;
 
 
 public class ProfilePageFragment extends Fragment {
@@ -39,17 +42,19 @@ public class ProfilePageFragment extends Fragment {
     ImageButton editBtn;
     ImageButton addPostBtn;
 
-    PostListRvViewModel viewModel;
+//    ProfilePostListRvViewModel viewModel;
     MyAdapterProfile adapter;
     SwipeRefreshLayout swipeRefresh;
     ProgressBar progressBar;
-
     User currUser;
+    PostListRvViewModel viewModel;
     String ID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+//        viewModel = new ViewModelProvider(this).get(ProfilePostListRvViewModel.class);
         viewModel = new ViewModelProvider(this).get(PostListRvViewModel.class);
+
     }
 
     @Override
@@ -80,9 +85,8 @@ public class ProfilePageFragment extends Fragment {
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-//                viewModel.getDataByUser(currUser.getNickName());
 //                viewModel.getDataByUser(currUser.getNickName()).observe(getViewLifecycleOwner(), list1 -> refresh());
-                Model.instance.refreshPostListByUser(currUser.getNickName());//return the right posts
+                Model.instance.refreshPostListByUser(currUser.getNickName());//return the right number of posts
             }
         });
 
@@ -97,7 +101,7 @@ public class ProfilePageFragment extends Fragment {
             }
         });
 
-//        viewModel.getData().observe(getViewLifecycleOwner(), list1 -> refresh());
+        viewModel.getData().observe(getViewLifecycleOwner(), list1 -> refresh());
         swipeRefresh.setRefreshing(Model.instance.getPostListLoadingState().getValue() == Model.PostListLoadingState.loading);
 
         Model.instance.getUserPostListLoadingState().observe(getViewLifecycleOwner(), userPostListLoadingState -> {
@@ -132,6 +136,7 @@ public class ProfilePageFragment extends Fragment {
     }
 
     private void refresh() {
+        Collections.reverse(viewModel.getData().getValue());
         adapter.notifyDataSetChanged();
         swipeRefresh.setRefreshing(false);
     }
@@ -196,7 +201,7 @@ public class ProfilePageFragment extends Fragment {
             if (viewModel.getData().getValue() == null) {
                 return 0;
             }
-            Log.d("TAG", "list sizeeeeee:::" + viewModel.getData().getValue().size());
+            Log.d("TAG", "get Item Count:::" + viewModel.getData().getValue().size());
             return viewModel.getData().getValue().size();
         }
 
