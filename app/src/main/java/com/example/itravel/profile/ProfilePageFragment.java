@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,7 @@ public class ProfilePageFragment extends Fragment {
         super.onAttach(context);
 //        viewModel = new ViewModelProvider(this).get(ProfilePostListRvViewModel.class);
         viewModel = new ViewModelProvider(this).get(PostListRvViewModel.class);
+        viewModel = new ViewModelProvider(this).get(PostListRvViewModel.class);
 
     }
 
@@ -79,6 +81,7 @@ public class ProfilePageFragment extends Fragment {
 
         RecyclerView list = view.findViewById(R.id.profilePage_postlist_rv);
         list.setHasFixedSize(true);
+        Log.d("TAG", getContext().toString());
         list.setLayoutManager(new LinearLayoutManager(getContext()));
 
         swipeRefresh = view.findViewById(R.id.profilePage_postlist_swiperefresh);
@@ -101,8 +104,8 @@ public class ProfilePageFragment extends Fragment {
             }
         });
 
-        viewModel.getData().observe(getViewLifecycleOwner(), list1 -> refresh());
-        swipeRefresh.setRefreshing(Model.instance.getPostListLoadingState().getValue() == Model.PostListLoadingState.loading);
+        viewModel.getDataByUser().observe(getViewLifecycleOwner(), list1 -> refresh());
+        swipeRefresh.setRefreshing(Model.instance.getUserPostListLoadingState().getValue() == Model.UserPostListLoadingState.loading);
 
         Model.instance.getUserPostListLoadingState().observe(getViewLifecycleOwner(), userPostListLoadingState -> {
             if (userPostListLoadingState == Model.UserPostListLoadingState.loading) {
@@ -127,6 +130,7 @@ public class ProfilePageFragment extends Fragment {
                             .load(currUser.getPhoto())
                             .into(image);
                 }
+                Model.instance.refreshPostListByUser(currUser.getNickName());
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -136,7 +140,7 @@ public class ProfilePageFragment extends Fragment {
     }
 
     private void refresh() {
-        Collections.reverse(viewModel.getData().getValue());
+//        Collections.reverse(viewModel.getDataByUser().getValue());
         adapter.notifyDataSetChanged();
         swipeRefresh.setRefreshing(false);
     }
@@ -184,7 +188,7 @@ public class ProfilePageFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolderProfile holder, int position) {
-            Post post = viewModel.getData().getValue().get(position);
+            Post post = viewModel.getDataByUser().getValue().get(position);
             holder.titleTv.setText(post.getTitle());
             holder.locationTv.setText(post.getLocation());
             holder.userName.setText(post.getUserName());
@@ -198,11 +202,11 @@ public class ProfilePageFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            if (viewModel.getData().getValue() == null) {
+            if (viewModel.getDataByUser().getValue() == null) {
                 return 0;
             }
-            Log.d("TAG", "get Item Count:::" + viewModel.getData().getValue().size());
-            return viewModel.getData().getValue().size();
+            Log.d("TAG", "get Item Count:::" + viewModel.getDataByUser().getValue().size());
+            return viewModel.getDataByUser().getValue().size();
         }
 
     }

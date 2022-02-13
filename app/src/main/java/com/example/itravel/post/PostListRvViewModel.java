@@ -19,30 +19,34 @@ import java.util.List;
 public class PostListRvViewModel extends ViewModel {
 
     LiveData<List<Post>> data;
+    LiveData<List<Post>> usersData;
 
     public PostListRvViewModel(){
         data = Model.instance.getAll();
+        usersData = Model.instance.getAllByUser();
 
-        if(data.getValue()!=null)
-            Collections.reverse(data.getValue());
     }
 
     public LiveData<List<Post>> getData() {
         return data;
     }
 
-    public LiveData<List<Post>> getDataByUser(String nickName ) {
-        MutableLiveData<List<Post>> lst = new MutableLiveData<>();
-        List<Post> tmp = new LinkedList<>();
-        for (Post post: data.getValue()  ) {
-            if(post.getUserName().equals(nickName)) {
-                Log.d("TAG","in++");
-                tmp.add(post);
-//                lst.getValue().add(post);
-            }
-        }
-
-        lst.postValue(tmp);
-        return lst;
+    public LiveData<List<Post>> getDataByUser() {
+        return usersData;
     }
+
+//    public LiveData<List<Post>> getDataByUser(String nickName ) {
+//        MutableLiveData<List<Post>> lst = new MutableLiveData<>();
+//        List<Post> tmp = new LinkedList<>();
+//        for (Post post: data.getValue()  ) {
+//            if(post.getUserName().equals(nickName)) {
+//                Log.d("TAG","in++");
+//                tmp.add(post);
+////                lst.getValue().add(post);
+//            }
+//        }
+//
+//        lst.postValue(tmp);
+//        return lst;
+//    }
 }

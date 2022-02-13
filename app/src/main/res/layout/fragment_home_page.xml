@@ -8,6 +8,7 @@
     tools:context=".HomePageFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/postlist_swiperefresh"
         android:layout_width="0dp"
@@ -22,6 +23,7 @@
             android:id="@+id/postlist_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
