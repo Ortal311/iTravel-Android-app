@@ -9,6 +9,8 @@ import androidx.core.os.HandlerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.example.itravel.MyApplication;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -21,7 +23,7 @@ public class Model {
 
     ModelFirebase modelFirebase = new ModelFirebase();
     MutableLiveData<List<Post>> postsList = new MutableLiveData<List<Post>>();
-//    MutableLiveData<List<Post>> currUserPostsList = new MutableLiveData<List<Post>>();
+    MutableLiveData<List<Post>> currUserPostsList = new MutableLiveData<List<Post>>();
 
     public interface SaveImageListener{
         void onComplete(String url);
@@ -150,6 +152,9 @@ public class Model {
                         //return all data to caller
                         List<Post> pList = AppLocalDb.db.postDao().getAll();
                         postsList.postValue(pList);
+                        if(postsList.getValue()!=null)
+                            Collections.reverse(postsList.getValue());
+//                            Collections.sort(postsList.getValue(),Collections.reverseOrder());
                         postListLoadingState.postValue(PostListLoadingState.loaded);
                     }
                 });
@@ -165,7 +170,7 @@ public class Model {
 
         executor.execute(() -> {
             List<Post> pList = AppLocalDb.db.postDao().getAllPostsByUser(name);
-            postsList.postValue(pList);
+            currUserPostsList.postValue(pList);
         });
         // firebase get all updates since lastLocalUpdateDate
         modelFirebase.getAllPosts(lastUpdateDate, new ModelFirebase.GetAllPostsListener() {
@@ -192,7 +197,10 @@ public class Model {
                         //return all data to caller
                         List<Post> pList = AppLocalDb.db.postDao().getAllPostsByUser(name);
                         Log.d("TAG", "pList " + pList.size());
-                        postsList.postValue(pList);
+                        currUserPostsList.postValue(pList);
+                        if(currUserPostsList.getValue()!=null)
+                            Collections.reverse(currUserPostsList.getValue());
+//                            Collections.sort(currUserPostsList.getValue(),Collections.reverseOrder());
                         userPostListLoadingState.postValue(UserPostListLoadingState.loaded);
                     }
                 });
@@ -215,10 +223,10 @@ public class Model {
     }
 
     public LiveData<List<Post>> getAllByUser() {
-        if (postsList.getValue() == null) {
+        if (currUserPostsList.getValue() == null) {
             refreshPostList();
         }
-        return postsList;
+        return currUserPostsList;
     }
 
     public void addPost(Post post,User user, AddPostListener listener) {
