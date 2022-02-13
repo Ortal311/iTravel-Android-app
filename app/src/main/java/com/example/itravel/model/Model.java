@@ -118,13 +118,13 @@ public class Model {
      **/
 
     public void refreshPostList() {
-
         postListLoadingState.setValue(PostListLoadingState.loading);
         // get last local update date
         Long lastUpdateDate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("PostsLastUpdateDate", 0);
 
         executor.execute(() -> {
             List<Post> pList = AppLocalDb.db.postDao().getAll();
+            Collections.reverse(pList);
             postsList.postValue(pList);
         });
         // firebase get all updates since lastLocalUpdateDate
@@ -151,10 +151,8 @@ public class Model {
 
                         //return all data to caller
                         List<Post> pList = AppLocalDb.db.postDao().getAll();
+                        Collections.reverse(pList);
                         postsList.postValue(pList);
-                        if(postsList.getValue()!=null)
-                            Collections.reverse(postsList.getValue());
-//                            Collections.sort(postsList.getValue(),Collections.reverseOrder());
                         postListLoadingState.postValue(PostListLoadingState.loaded);
                     }
                 });
@@ -170,6 +168,7 @@ public class Model {
 
         executor.execute(() -> {
             List<Post> pList = AppLocalDb.db.postDao().getAllPostsByUser(name);
+            Collections.reverse(pList);
             currUserPostsList.postValue(pList);
         });
         // firebase get all updates since lastLocalUpdateDate
@@ -197,10 +196,8 @@ public class Model {
                         //return all data to caller
                         List<Post> pList = AppLocalDb.db.postDao().getAllPostsByUser(name);
                         Log.d("TAG", "pList " + pList.size());
+                        Collections.reverse(pList);
                         currUserPostsList.postValue(pList);
-                        if(currUserPostsList.getValue()!=null)
-                            Collections.reverse(currUserPostsList.getValue());
-//                            Collections.sort(currUserPostsList.getValue(),Collections.reverseOrder());
                         userPostListLoadingState.postValue(UserPostListLoadingState.loaded);
                     }
                 });
@@ -210,9 +207,7 @@ public class Model {
 
 
     public void updatePost(Post post) {
-        executor.execute(() -> {
-            AppLocalDb.db.postDao().update(post);
-        });
+        executor.execute(() -> AppLocalDb.db.postDao().update(post));
     }
 
     public LiveData<List<Post>> getAll() {

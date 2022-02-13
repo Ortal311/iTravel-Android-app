@@ -83,7 +83,6 @@ public class HomePageFragment extends Fragment {
 
     private void refresh() {
 //        progressBar.setVisibility(View.VISIBLE);
-//        Collections.reverse(viewModel.getData().getValue());
         adapter.notifyDataSetChanged();
         swipeRefresh.setRefreshing(false);
 //        progressBar.setVisibility(View.GONE);
