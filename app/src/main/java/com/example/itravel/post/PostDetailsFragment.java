@@ -40,6 +40,7 @@ public class PostDetailsFragment extends Fragment {
     ProgressBar progressBar;
     ImageView postImg;
     User usr;
+    View line;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,6 +60,14 @@ public class PostDetailsFragment extends Fragment {
         deleteBtn = view.findViewById(R.id.postdetails_delete_btn);
         postImg = view.findViewById(R.id.postDetails_post_img);
         postImg.setVisibility(View.GONE);
+        line = view.findViewById(R.id.postdetails_line);
+
+        titleEt.setVisibility(View.INVISIBLE);
+        locationEt.setVisibility(View.INVISIBLE);
+        authorEt.setVisibility(View.INVISIBLE);
+        descriptionEt.setVisibility(View.INVISIBLE);
+        difficultyEt.setVisibility(View.INVISIBLE);
+        line.setVisibility(View.INVISIBLE);
 
         postId = PostDetailsFragmentArgs.fromBundle(getArguments()).getPostId();
 
@@ -138,7 +147,12 @@ public class PostDetailsFragment extends Fragment {
                     .into(postImg);
         }
         postImg.setVisibility(View.VISIBLE);
-
+        titleEt.setVisibility(View.VISIBLE);
+        locationEt.setVisibility(View.VISIBLE);
+        authorEt.setVisibility(View.VISIBLE);
+        descriptionEt.setVisibility(View.VISIBLE);
+        difficultyEt.setVisibility(View.VISIBLE);
+        line.setVisibility(View.VISIBLE);
     }
 
 }

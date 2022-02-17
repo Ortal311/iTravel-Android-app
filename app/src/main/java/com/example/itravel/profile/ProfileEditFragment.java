@@ -39,6 +39,9 @@ public class ProfileEditFragment extends Fragment {
 
     TextView nameEt;
     TextView nickNameEt;
+    TextView name;
+    TextView username;
+    TextView picture;
     Button saveBtn;
     Button cancelBtn;
     ProgressBar progressBar;
@@ -64,6 +67,11 @@ public class ProfileEditFragment extends Fragment {
         galleryBtn = view.findViewById(R.id.editProfile_gallery_btn);
         saveBtn = view.findViewById(R.id.editProfile_save_btn);
         cancelBtn = view.findViewById(R.id.editProfile_cancel_btn);
+        name = view.findViewById(R.id.editProfile_nameTv);
+        username = view.findViewById(R.id.editProfile_usernameTv);
+        picture = view.findViewById(R.id.editProfile_profilePictureTv);
+
+        updateUI(View.INVISIBLE);
 
 
         Model.instance.getUserById(id, new Model.GetUserById() {
@@ -74,6 +82,7 @@ public class ProfileEditFragment extends Fragment {
                 nickNameEt.setText(usr.getNickName());
                 lastUserName = usr.getNickName();
                 progressBar.setVisibility(View.GONE);
+                updateUI(View.VISIBLE);
             }
         });
 //        String name = ProfilePageFragmentArgs.fromBundle(getArguments()).getName();
@@ -213,5 +222,17 @@ public class ProfileEditFragment extends Fragment {
             }
 
         }
+    }
+
+    public void updateUI(int type) {
+        nameEt.setVisibility(type);
+        nickNameEt.setVisibility(type);
+        cameraBtn.setVisibility(type);
+        galleryBtn.setVisibility(type);
+        saveBtn.setVisibility(type);
+        cancelBtn.setVisibility(type);
+        name.setVisibility(type);
+        username.setVisibility(type);
+        picture.setVisibility(type);
     }
 }
