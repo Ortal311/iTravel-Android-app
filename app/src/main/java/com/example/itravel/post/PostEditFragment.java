@@ -12,6 +12,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 import android.provider.MediaStore;
@@ -38,6 +39,12 @@ public class PostEditFragment extends Fragment {
     TextView titleEt;
     TextView locationEt;
     TextView descriptionEt;
+    TextView titleTv;
+    TextView locationTv;
+    TextView descriptionTv;
+    TextView difficulityTv;
+    TextView picturesTv;
+
     Spinner dropdown;
     Button saveBtn;
     Button cancelBtn;
@@ -66,6 +73,13 @@ public class PostEditFragment extends Fragment {
         cancelBtn = view.findViewById(R.id.editpost_cancel_btn);
         cameraBtn = view.findViewById(R.id.editpost_camera_btn);
         galleryBtn = view.findViewById(R.id.editpost_gallery_btn);
+        titleTv = view.findViewById(R.id.editpost_title_tv);
+        locationTv = view.findViewById(R.id.editpost_location_tv);
+        descriptionTv = view.findViewById(R.id.editpost_description_tv);
+        difficulityTv = view.findViewById(R.id.editpost_difficulty_tv);
+        picturesTv = view.findViewById(R.id.editpost_pictures_tv);
+
+        updateUI(View.INVISIBLE);
 
         postId = PostDetailsFragmentArgs.fromBundle(getArguments()).getPostId();
 
@@ -74,6 +88,7 @@ public class PostEditFragment extends Fragment {
             public void onComplete(Post post) {
                 displayPost(post.getTitle(), post.getLocation(), post.getDescription(),post.getDifficulty());
                 progressBar.setVisibility(View.GONE);
+                updateUI(View.VISIBLE);
             }
         });
 
@@ -207,5 +222,21 @@ public class PostEditFragment extends Fragment {
             }
 
         }
+    }
+
+    public void updateUI(int type) {
+        titleEt.setVisibility(type);
+        locationEt.setVisibility(type);
+        descriptionEt.setVisibility(type);
+        dropdown.setVisibility(type);
+        saveBtn.setVisibility(type);
+        cancelBtn.setVisibility(type);
+        cameraBtn.setVisibility(type);
+        galleryBtn.setVisibility(type);
+        titleTv.setVisibility(type);
+        locationTv.setVisibility(type);
+        descriptionTv.setVisibility(type);
+        difficulityTv.setVisibility(type);
+        picturesTv.setVisibility(type);
     }
 }

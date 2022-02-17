@@ -29,6 +29,7 @@ import com.example.itravel.model.Post;
 import com.example.itravel.model.User;
 import com.example.itravel.post.PostListRvViewModel;
 import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
@@ -44,6 +45,7 @@ public class ProfilePageFragment extends Fragment {
     ImageButton addPostBtn;
 
 //    ProfilePostListRvViewModel viewModel;
+    RecyclerView list;
     MyAdapterProfile adapter;
     SwipeRefreshLayout swipeRefresh;
     ProgressBar progressBar;
@@ -72,17 +74,17 @@ public class ProfilePageFragment extends Fragment {
         addPostBtn = view.findViewById(R.id.profile_addPost_btn);
         progressBar = view.findViewById(R.id.profilepage_progressBar);
 
-
         addPostBtn.setOnClickListener(v -> Navigation.findNavController(v).navigate(ProfilePageFragmentDirections.actionProfilePageFragmentToPostAddFragment()));
         editBtn.setOnClickListener(v -> Navigation.findNavController(v).navigate(ProfilePageFragmentDirections.actionProfilePageFragmentToProfileEdit(nameTv.getText().toString())));
         progressBar.setVisibility(View.VISIBLE);
         User usr = getUserDetails();
 
-
-        RecyclerView list = view.findViewById(R.id.profilePage_postlist_rv);
+        list = view.findViewById(R.id.profilePage_postlist_rv);
         list.setHasFixedSize(true);
         Log.d("TAG", getContext().toString());
         list.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        updateUI(View.INVISIBLE);
 
         swipeRefresh = view.findViewById(R.id.profilePage_postlist_swiperefresh);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -128,10 +130,20 @@ public class ProfilePageFragment extends Fragment {
                 if (currUser.getPhoto() != "") {
                     Picasso.get()
                             .load(currUser.getPhoto())
-                            .into(image);
+                            .into(image, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    progressBar.setVisibility(View.GONE);
+                                    updateUI(View.VISIBLE);
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+
+                                }
+                            });
                 }
                 Model.instance.refreshPostListByUser(currUser.getNickName());
-                progressBar.setVisibility(View.GONE);
             }
 
         });
@@ -197,7 +209,6 @@ public class ProfilePageFragment extends Fragment {
                         .load(post.getPhoto())
                         .into(holder.img);
             }
-
         }
 
         @Override
@@ -208,6 +219,14 @@ public class ProfilePageFragment extends Fragment {
             Log.d("TAG", "get Item Count:::" + viewModel.getDataByUser().getValue().size());
             return viewModel.getDataByUser().getValue().size();
         }
+    }
 
+    public void updateUI(int type) {
+        image.setVisibility(type);
+        nameTv.setVisibility(type);
+        nickNameTv.setVisibility(type);
+        editBtn.setVisibility(type);
+        addPostBtn.setVisibility(type);
+        list.setVisibility(type);
     }
 }

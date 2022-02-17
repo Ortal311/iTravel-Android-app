@@ -32,7 +32,7 @@
             app:layout_constraintTop_toBottomOf="@+id/postDetails_post_img" />
 
         <View
-            android:id="@+id/view"
+            android:id="@+id/postdetails_line"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginStart="12dp"
@@ -141,7 +141,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_gravity="center"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

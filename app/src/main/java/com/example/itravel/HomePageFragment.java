@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +21,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.itravel.login.LoginActivity;
+import com.example.itravel.model.AppLocalDb;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
 import com.example.itravel.post.PostListRvViewModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class HomePageFragment extends Fragment {
 
@@ -33,6 +38,8 @@ public class HomePageFragment extends Fragment {
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
     ProgressBar progressBar;
+
+    public Executor executor = Executors.newFixedThreadPool(1);
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -45,8 +52,8 @@ public class HomePageFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home_page,container,false);
-//        progressBar = view.findViewById(R.id.main_activity_progressBar);
-//        progressBar.setVisibility(View.GONE);
+        progressBar = view.findViewById(R.id.postlist_progressbar);
+        progressBar.setVisibility(View.VISIBLE);
 //        Model.instance.deleteAllPostsDao();
         swipeRefresh = view.findViewById(R.id.postlist_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshPostList());
@@ -61,12 +68,11 @@ public class HomePageFragment extends Fragment {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View v,int position) {
-
                 String postId = viewModel.getData().getValue().get(position).getId();
                 Navigation.findNavController(v).navigate(HomePageFragmentDirections.actionHomePageFragmentToPostDetailsFragment(postId));
-
             }
         });
+
        // setHasOptionsMenu(true);
         viewModel.getData().observe(getViewLifecycleOwner(), list1 -> refresh());
         swipeRefresh.setRefreshing(Model.instance.getPostListLoadingState().getValue() == Model.PostListLoadingState.loading);
@@ -77,15 +83,14 @@ public class HomePageFragment extends Fragment {
                 swipeRefresh.setRefreshing(false);
             }
         });
-
         return view;
     }
 
     private void refresh() {
-//        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         adapter.notifyDataSetChanged();
         swipeRefresh.setRefreshing(false);
-//        progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{
@@ -140,7 +145,6 @@ public class HomePageFragment extends Fragment {
                         .load(post.getPhoto())
                         .into(holder.img);
             }
-
         }
         @Override
         public int getItemCount() {
