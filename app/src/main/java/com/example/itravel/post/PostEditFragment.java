@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.itravel.R;
 import com.example.itravel.model.Model;
@@ -129,7 +131,20 @@ public class PostEditFragment extends Fragment {
     }
 
     private void savePost(Post post, String title,String description,String location,String difficulty, View v) {
-        saveData(post, title, description , location , difficulty,  v);
+        if(title.equals("") || location.equals(""))
+        {
+            Toast toast = new Toast(getContext());
+            View popupView = LayoutInflater.from(getContext()).inflate(R.layout.popup_window, null);
+            TextView toastText = popupView.findViewById(R.id.popup_text_tv);
+            toastText.setText("You didn't enter title/location! ");
+            toastText.setTextSize(20);
+            toast.setView(popupView);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
+        else
+            saveData(post, title, description , location , difficulty,  v);
     }
 
     private void saveData(Post post,String title,String description,String location,String difficulty, View v) {

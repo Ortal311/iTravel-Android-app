@@ -136,7 +136,19 @@ public class ProfileEditFragment extends Fragment {
     }
 
     private void saveImgAndUpdateUser(View v) {
-        if (imageBitmap != null) {
+        if(nickNameEt.getText().toString().equals("") || nameEt.getText().toString().equals(""))
+        {
+            Toast toast = new Toast(getContext());
+            View popupView = LayoutInflater.from(getContext()).inflate(R.layout.popup_window, null);
+            TextView toastText = popupView.findViewById(R.id.popup_text_tv);
+            toastText.setText("You didn't enter name/user name! ");
+            toastText.setTextSize(20);
+            toast.setView(popupView);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
+        else if (imageBitmap != null) {
             Model.instance.getUserById(id, new Model.GetUserById() {
                 @Override
                 public void onComplete(User user) {
