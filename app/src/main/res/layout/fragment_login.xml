@@ -18,7 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="172dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -98,12 +97,13 @@
 
         <ImageView
             android:id="@+id/login_logo"
-            android:layout_width="401dp"
-            android:layout_height="150dp"
-            android:layout_marginStart="15dp"
+            android:layout_width="370dp"
+            android:layout_height="180dp"
+            android:layout_marginStart="22dp"
             android:layout_marginTop="65dp"
             android:src="@drawable/logo"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -111,18 +111,19 @@
             android:id="@+id/view3"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/wave"
             app:layout_constraintBottom_toTopOf="@+id/login_logo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <View
             android:id="@+id/view"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:background="@color/colorPrimary"
             app:layout_constraintBottom_toTopOf="@+id/view3"
             app:layout_constraintEnd_toEndOf="parent"
