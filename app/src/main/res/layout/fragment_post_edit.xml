@@ -13,112 +13,149 @@
         android:layout_height="match_parent"
         tools:context=".post.PostEditFragment">
 
-    <TextView
-        android:id="@+id/editpost_title_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="30dp"
-        android:text="Title"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:id="@+id/view3"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/wave"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
-    <EditText
-        android:id="@+id/editpost_title_show"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editpost_title_tv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/editpost_title_tv" />
+        <View
+            android:id="@+id/view"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@+id/view3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
-    <TextView
-        android:id="@+id/editpost_location_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="32dp"
-        android:text="Location"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editpost_title_tv" />
+        <TextView
+            android:id="@+id/editpost_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="100dp"
+            android:text="Title"
+            android:textColor="@color/colorPrimary"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/editpost_location_show"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editpost_location_tv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/editpost_location_tv" />
+        <EditText
+            android:id="@+id/editpost_title_show"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/round_border"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:padding="5dp"
+            android:paddingStart="10dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/editpost_title_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/editpost_title_tv" />
 
-    <TextView
-        android:id="@+id/editpost_description_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="32dp"
-        android:text="Description"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editpost_location_tv"
-        />
+        <TextView
+            android:id="@+id/editpost_location_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="32dp"
+            android:text="Location"
+            android:textColor="@color/colorPrimary"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editpost_title_tv" />
+
+        <EditText
+            android:id="@+id/editpost_location_show"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/round_border"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:padding="5dp"
+            android:paddingStart="10dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/editpost_location_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/editpost_location_tv" />
+
+        <TextView
+            android:id="@+id/editpost_description_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="32dp"
+            android:text="Description"
+            android:textColor="@color/colorPrimary"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editpost_location_tv" />
 
 
-    <EditText
-        android:id="@+id/editpost_description_show"
-        android:layout_width="0dp"
-        android:layout_height="66dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:focusable="true"
-        android:gravity="start"
-        android:inputType="textMultiLine"
-        android:lines="5"
-        android:maxLines="10"
-        android:paddingTop="0dp"
-        android:scrollbars="vertical"
-        android:textColor="@android:color/black"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editpost_description_tv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.157"
-        app:layout_constraintStart_toEndOf="@+id/editpost_description_tv" />
+        <EditText
+            android:id="@+id/editpost_description_show"
+            android:layout_width="0dp"
+            android:layout_height="77dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/round_border2"
+            android:focusable="true"
+            android:gravity="start"
+            android:inputType="textMultiLine"
+            android:lines="5"
+            android:maxLines="10"
+            android:padding="5dp"
+            android:paddingStart="10dp"
+            android:paddingTop="0dp"
+            android:scrollbars="vertical"
+            android:textColor="@android:color/black"
+            app:layout_constraintBaseline_toBaselineOf="@+id/editpost_description_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.157"
+            app:layout_constraintStart_toEndOf="@+id/editpost_description_tv" />
 
-    <TextView
-        android:id="@+id/editpost_difficulty_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="62dp"
-        android:text="Difficulty"
-        android:textSize="24sp"
+        <TextView
+            android:id="@+id/editpost_difficulty_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="62dp"
+            android:text="Difficulty"
+            android:textColor="@color/colorPrimary"
 
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editpost_description_tv" />
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editpost_description_tv" />
 
-    <TextView
-        android:id="@+id/editpost_pictures_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="32dp"
-        android:text="Pictures"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editpost_difficulty_tv" />
+        <TextView
+            android:id="@+id/editpost_pictures_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="32dp"
+            android:text="Pictures"
+            android:textColor="@color/colorPrimary"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editpost_difficulty_tv" />
 
     <ImageButton
         android:id="@+id/editpost_camera_btn"
@@ -130,19 +167,19 @@
         app:layout_constraintStart_toEndOf="@+id/editpost_pictures_tv"
         app:layout_constraintTop_toBottomOf="@+id/editpost_difficulty_tv" />
 
-    <Spinner
-        android:id="@+id/editpost_dropdown"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/editpost_difficulty_tv"
-        app:layout_constraintTop_toBottomOf="@+id/editpost_description_show" />
+        <Spinner
+            android:id="@+id/editpost_dropdown"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="10dp"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/editpost_difficulty_tv"
+            app:layout_constraintTop_toBottomOf="@+id/editpost_description_show" />
 
         <Button
             android:id="@+id/editpost_save_btn"
@@ -150,10 +187,11 @@
             android:layout_height="45dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="12dp"
-            android:backgroundTint="#7b9abe"
+            android:backgroundTint="@color/colorPrimary"
             android:text="SAVE"
             android:textSize="16sp"
             app:icon="@drawable/save"
+            app:cornerRadius="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editpost_gallery_btn" />
 
@@ -162,7 +200,8 @@
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_marginEnd="10dp"
-        android:backgroundTint="#7b9abe"
+        app:cornerRadius="15dp"
+        android:backgroundTint="@color/colorPrimary"
         android:text="CANCEL"
         android:textSize="16sp"
         app:icon="@drawable/cancel"
@@ -182,13 +221,13 @@
             app:layout_constraintVertical_bias="0.397" />
 
         <ImageButton
-        android:id="@+id/editpost_gallery_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="29dp"
-        android:src="@android:drawable/ic_menu_gallery"
-        app:layout_constraintStart_toEndOf="@+id/editpost_camera_btn"
-        app:layout_constraintTop_toBottomOf="@+id/editpost_dropdown" />
+            android:id="@+id/editpost_gallery_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="16dp"
+            android:src="@android:drawable/ic_menu_gallery"
+            app:layout_constraintStart_toEndOf="@+id/editpost_camera_btn"
+            app:layout_constraintTop_toBottomOf="@+id/editpost_dropdown" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

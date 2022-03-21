@@ -6,14 +6,41 @@
     android:layout_height="match_parent"
     tools:context=".profile.ProfileEditFragment">
 
+    <View
+        android:id="@+id/view3"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/wave"
+        app:layout_constraintBottom_toTopOf="@+id/login_logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintBottom_toTopOf="@+id/view3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
     <TextView
         android:id="@+id/editProfile_nameTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="100dp"
         android:text="Name:"
-        android:textSize="25dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="24dp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,8 +50,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
+        android:background="@drawable/round_border"
         android:ems="10"
         android:inputType="textPersonName"
+        android:padding="5dp"
+        android:paddingStart="10dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/editProfile_nameTv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -37,7 +67,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:text="Profile Picture"
-        android:textSize="25dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="24dp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editProfile_usernameTv" />
 
@@ -58,6 +90,8 @@
         android:layout_marginEnd="10dp"
         android:text="CANCEL"
         app:icon="@drawable/cancel"
+        app:cornerRadius="15dp"
+        android:backgroundTint="@color/colorPrimary"
         app:layout_constraintBaseline_toBaselineOf="@+id/editProfile_save_btn"
         app:layout_constraintEnd_toStartOf="@+id/editProfile_save_btn" />
 
@@ -67,6 +101,8 @@
         android:layout_height="45dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="12dp"
+        app:cornerRadius="15dp"
+        android:backgroundTint="@color/colorPrimary"
         android:text="SAVE"
         app:icon="@drawable/save"
         app:layout_constraintEnd_toEndOf="parent"
@@ -99,7 +135,9 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="32dp"
         android:text="User name:"
-        android:textSize="25dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="24dp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editProfile_nameTv" />
 
@@ -109,8 +147,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
+        android:background="@drawable/round_border"
         android:ems="10"
         android:inputType="textPersonName"
+        android:padding="5dp"
+        android:paddingStart="10dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/editProfile_usernameTv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/editProfile_usernameTv" />

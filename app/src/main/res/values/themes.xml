@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.ITravel" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#7b9abe</item>
-        <item name="colorPrimaryVariant">#7b9abe</item>
+        <item name="colorPrimary">#029880</item>
+        <item name="colorPrimaryVariant">#029880</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>

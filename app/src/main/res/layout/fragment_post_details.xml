@@ -17,6 +17,45 @@
         android:layout_height="match_parent"
         tools:context=".post.PostDetailsFragment">
 
+        <View
+            android:id="@+id/view3"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/wave"
+            app:layout_constraintBottom_toTopOf="@+id/login_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/postDetails_post_img"
+            android:layout_width="0dp"
+            android:layout_height="174dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="90dp"
+            android:layout_marginEnd="12dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/nature"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize8Percent" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@+id/view3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
         <TextView
             android:id="@+id/postdetails_title_tv"
             android:layout_width="0dp"
@@ -24,6 +63,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="100dp"
+            android:textColor="@color/teal_700"
             android:textSize="38sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -50,9 +90,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="12dp"
-            android:background="@drawable/rounded_corners"
-            android:textColor="@color/white"
-            android:textSize="20sp"
+            android:background="@drawable/round_border2"
+            android:padding="7dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="21dp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/postdetails_title_tv" />
@@ -61,14 +102,19 @@
             android:id="@+id/postdetails_description_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_margin="15dp"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="12dp"
+            android:layout_marginBottom="25dp"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
 
-            app:layout_constraintTop_toBottomOf="@+id/postdetails_location_tv" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/postdetails_location_tv"
+            app:layout_constraintVertical_bias="0.013" />
 
         <Button
             android:id="@+id/postdetails_edit_btn"
@@ -76,7 +122,8 @@
             android:layout_height="40dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="12dp"
-            android:backgroundTint="#7b9abe"
+            android:backgroundTint="@color/colorPrimary"
+            app:cornerRadius="15dp"
             android:text="EDIT"
             android:textSize="16sp"
             android:visibility="gone"
@@ -89,11 +136,12 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginEnd="10dp"
-            android:backgroundTint="#7b9abe"
+            android:backgroundTint="@color/colorPrimary"
             android:text="DELETE"
             android:textSize="16sp"
             android:visibility="gone"
             app:icon="@drawable/delete"
+            app:cornerRadius="15dp"
             app:layout_constraintBaseline_toBaselineOf="@+id/postdetails_edit_btn"
             app:layout_constraintEnd_toStartOf="@+id/postdetails_edit_btn" />
 
@@ -112,26 +160,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:background="@drawable/rounded_corners"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
+            android:background="@drawable/round_border2"
+            android:padding="7dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="21dp"
             android:textStyle="bold"
             app:layout_constraintBaseline_toBaselineOf="@+id/postdetails_location_tv"
             app:layout_constraintStart_toEndOf="@+id/postdetails_location_tv" />
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/postDetails_post_img"
-            android:layout_width="0dp"
-            android:layout_height="174dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="12dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/nature"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize8Percent" />
 
         <ProgressBar
             android:id="@+id/postdetails_progressBar"

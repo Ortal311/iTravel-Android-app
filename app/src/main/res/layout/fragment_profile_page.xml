@@ -10,7 +10,7 @@
         android:id="@+id/profilePage_postlist_swiperefresh"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="170dp"
+        android:layout_marginTop="240dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,33 +26,59 @@
         android:id="@+id/profile_image"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginStart="16dp"
         android:scaleType="centerCrop"
         android:src="@drawable/avatar"
         app:layout_constraintBottom_toTopOf="@+id/profilePage_postlist_swiperefresh"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view3"
+        app:layout_constraintVertical_bias="0.242"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent" />
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/wave"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintBottom_toTopOf="@+id/view3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/profile_name_tv"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="13dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="10dp"
+        android:textColor="@color/colorPrimary"
         android:textSize="25dp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/profile_addPost_btn"
         app:layout_constraintStart_toEndOf="@+id/profile_image"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/view3" />
 
     <ImageButton
         android:id="@+id/profile_editProfile_btn"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_marginBottom="65dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="8dp"
         android:src="@drawable/edit"
         app:layout_constraintBottom_toTopOf="@+id/profilePage_postlist_swiperefresh"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -61,13 +87,10 @@
         android:id="@+id/profile_addPost_btn"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="65dp"
+        android:layout_marginBottom="8dp"
         android:src="@drawable/add"
         app:layout_constraintBottom_toTopOf="@+id/profilePage_postlist_swiperefresh"
-        app:layout_constraintEnd_toStartOf="@+id/profile_editProfile_btn"
-        app:layout_constraintHorizontal_bias="0.788"
-        app:layout_constraintStart_toEndOf="@+id/profile_name_tv" />
+        app:layout_constraintEnd_toStartOf="@+id/profile_editProfile_btn" />
 
     <ProgressBar
         android:id="@+id/profilepage_progressBar"
@@ -84,10 +107,20 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="7dp"
+        android:textColor="@color/colorPrimary"
         android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/profilePage_postlist_swiperefresh"
         app:layout_constraintEnd_toEndOf="@+id/profile_name_tv"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/profile_image"
-        app:layout_constraintTop_toBottomOf="@+id/profile_name_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_name_tv"
+        app:layout_constraintVertical_bias="0.074" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
