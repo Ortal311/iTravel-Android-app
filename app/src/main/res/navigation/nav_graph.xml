@@ -6,7 +6,7 @@
     app:startDestination="@id/homePageFragment">
     <fragment
         android:id="@+id/homePageFragment"
-        android:name="com.example.itravel.HomePageFragment"
+        android:name="com.example.itravel.home.HomePageFragment"
         android:label="home page"
         tools:layout="@layout/fragment_home_page">
         <action

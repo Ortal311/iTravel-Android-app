@@ -157,7 +157,7 @@ public class ModelFirebase {
                 });
     }
 
-    public void getPostByTitle(String postId, Model.GetPostByTitle listener) {
+    public void getPostById(String postId, Model.GetPostById listener) {
         db.collection(Post.collectionName)
                 .document(postId)
                 .get()
@@ -297,7 +297,7 @@ public class ModelFirebase {
         return (currentUser != null);
     }
 
-    public void createNewAccount(String fullName, String nickName, String email, String password, String photo, List<String> postList, Model.CreateNewAccount listener) {
+    public void createNewAccount(Context context, String fullName, String nickName, String email, String password, String photo, List<String> postList, Model.CreateNewAccount listener) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -317,6 +317,15 @@ public class ModelFirebase {
                         });
                     } else {
                         Log.d("TAG", "createUserWithEmail:failure");
+                        Toast toast = new Toast(context);
+                        View popupView = LayoutInflater.from(context).inflate(R.layout.popup_window, null);
+                        TextView toastText = popupView.findViewById(R.id.popup_text_tv);
+                        toastText.setText("Email Already taken!");
+                        toastText.setTextSize(20);
+                        toast.setView(popupView);
+                        toast.setDuration(Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
                     }
                 });
     }

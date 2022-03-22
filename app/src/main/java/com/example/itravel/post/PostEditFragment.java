@@ -85,7 +85,7 @@ public class PostEditFragment extends Fragment {
 
         postId = PostDetailsFragmentArgs.fromBundle(getArguments()).getPostId();
 
-        Model.instance.getPostByTitle(postId, new Model.GetPostByTitle() {
+        Model.instance.getPostById(postId, new Model.GetPostById() {
             @Override
             public void onComplete(Post post) {
                 displayPost(post.getTitle(), post.getLocation(), post.getDescription(),post.getDifficulty());
@@ -112,7 +112,7 @@ public class PostEditFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Model.instance.getPostByTitle(postId, new Model.GetPostByTitle() {
+                Model.instance.getPostById(postId, new Model.GetPostById() {
                     @Override
                     public void onComplete(Post post) {
                         String difficulty = dropdown.getSelectedItem().toString();

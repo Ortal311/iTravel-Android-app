@@ -17,7 +17,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.itravel.HomePageFragment;
 import com.example.itravel.R;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.Post;
@@ -71,7 +70,7 @@ public class PostDetailsFragment extends Fragment {
 
         postId = PostDetailsFragmentArgs.fromBundle(getArguments()).getPostId();
 
-        Model.instance.getPostByTitle(postId, new Model.GetPostByTitle() {
+        Model.instance.getPostById(postId, new Model.GetPostById() {
             @Override
             public void onComplete(Post post) {
 
