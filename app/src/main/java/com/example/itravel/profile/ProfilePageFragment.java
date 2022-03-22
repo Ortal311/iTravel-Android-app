@@ -143,6 +143,9 @@ public class ProfilePageFragment extends Fragment {
                                 }
                             });
                 }
+
+                progressBar.setVisibility(View.GONE);
+                updateUI(View.VISIBLE);
                 Model.instance.refreshPostListByUser(currUser.getNickName());
             }
 

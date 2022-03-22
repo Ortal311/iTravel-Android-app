@@ -72,7 +72,7 @@ public class Model {
         void onComplete();
     }
 
-    public interface GetPostByTitle {
+    public interface GetPostById {
         void onComplete(Post post);
     }
 
@@ -228,8 +228,8 @@ public class Model {
         modelFirebase.addPost(post,user, listener);
     }
 
-    public User getPostByTitle(String postId, GetPostByTitle listener) {
-        modelFirebase.getPostByTitle(postId, listener);
+    public User getPostById(String postId, GetPostById listener) {
+        modelFirebase.getPostById(postId, listener);
         return null;
     }
 
@@ -286,8 +286,8 @@ public class Model {
         return modelFirebase.isSignedIn();
     }
 
-    public void createNewAccount(String fullName,String nickName, String email, String password, String photo,List<String> postList, CreateNewAccount listener) {
-        modelFirebase.createNewAccount(fullName,nickName, email, password, photo,postList, listener);
+    public void createNewAccount(Context context,String fullName,String nickName, String email, String password, String photo,List<String> postList, CreateNewAccount listener) {
+        modelFirebase.createNewAccount(context,fullName,nickName, email, password, photo,postList, listener);
     }
 
     public void signOut(SignOut listener) {

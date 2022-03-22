@@ -1,4 +1,4 @@
-package com.example.itravel;
+package com.example.itravel.home;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.itravel.R;
 import com.example.itravel.login.LoginActivity;
 import com.example.itravel.model.AppLocalDb;
 import com.example.itravel.model.Model;

@@ -150,7 +150,6 @@ public class SignUpFragment extends Fragment {
 
         String fullName = FullNameEt.getText().toString();
         String nickName = NickNameEt.getText().toString();
-        ;
         String email = emailEt.getText().toString();
         String password = passwordEt.getText().toString();
         String verifyPassword = verifyPasswordEt.getText().toString();
@@ -187,15 +186,21 @@ public class SignUpFragment extends Fragment {
                                 public void onComplete(String url) {
                                     user.setPhoto(url);
                                     Log.d("TAG", "url - " + url);
-                                    Model.instance.createNewAccount(fullName, nickName, email, password, url, postList, () -> {
+                                    Model.instance.createNewAccount(getContext(),fullName, nickName, email, password, url, postList, () -> {
                                         toFeedActivity();
                                     });
+                                    saveBtn.setEnabled(true);
+                                    cancelBtn.setEnabled(true);
+                                    return;
                                 }
                             });
                 } else {
-                    Model.instance.createNewAccount(fullName, nickName, email, password, photo, postList, () -> {
+                    Model.instance.createNewAccount(getContext(),fullName, nickName, email, password, photo, postList, () -> {
                         toFeedActivity();
                     });
+                    saveBtn.setEnabled(true);
+                    cancelBtn.setEnabled(true);
+                    return;
                 }
             }
             @Override
