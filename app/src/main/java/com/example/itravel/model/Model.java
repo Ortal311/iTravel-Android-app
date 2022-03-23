@@ -92,10 +92,6 @@ public class Model {
         void onComplete();
     }
 
-    public interface GetAllPostsByUserListener{
-        void onComplete(List<Post> list);
-    }
-
     public interface IsNickNameExist {
         void  onComplete();
         void onFail();
@@ -128,40 +124,36 @@ public class Model {
             postsList.postValue(pList);
         });
         // firebase get all updates since lastLocalUpdateDate
-        modelFirebase.getAllPosts(lastUpdateDate, new ModelFirebase.GetAllPostsListener() {
-            @Override
-            public void onComplete(List<Post> list) {
-                // add all records to the local db
-                executor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Long lud = new Long(0);
-                        for (Post post : list) {
-                            AppLocalDb.db.postDao().insertAll(post);
-                            if (lud < post.getUpdateDate()) {
-                                lud = post.getUpdateDate();
-                            }
+        modelFirebase.getAllPosts(lastUpdateDate, list -> {
+            // add all records to the local db
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    Long lud = new Long(0);
+                    for (Post post : list) {
+                        AppLocalDb.db.postDao().insertAll(post);
+                        if (lud < post.getUpdateDate()) {
+                            lud = post.getUpdateDate();
                         }
-                        // update last local update date
-                        MyApplication.getContext()
-                                .getSharedPreferences("TAG", Context.MODE_PRIVATE)
-                                .edit()
-                                .putLong("PostsLastUpdateDate", lud)
-                                .commit();
-
-                        //return all data to caller
-                        List<Post> pList = AppLocalDb.db.postDao().getAll();
-                        Collections.reverse(pList);
-                        postsList.postValue(pList);
-                        postListLoadingState.postValue(PostListLoadingState.loaded);
                     }
-                });
-            }
+                    // update last local update date
+                    MyApplication.getContext()
+                            .getSharedPreferences("TAG", Context.MODE_PRIVATE)
+                            .edit()
+                            .putLong("PostsLastUpdateDate", lud)
+                            .commit();
+
+                    //return all data to caller
+                    List<Post> pList = AppLocalDb.db.postDao().getAll();
+                    Collections.reverse(pList);
+                    postsList.postValue(pList);
+                    postListLoadingState.postValue(PostListLoadingState.loaded);
+                }
+            });
         });
     }
 
     public void refreshPostListByUser(String name) {
-
         userPostListLoadingState.setValue(UserPostListLoadingState.loading);
         // get last local update date
         Long lastUpdateDate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("PostsLastUpdateDate", 0);
@@ -172,39 +164,32 @@ public class Model {
             currUserPostsList.postValue(pList);
         });
         // firebase get all updates since lastLocalUpdateDate
-        modelFirebase.getAllPosts(lastUpdateDate, new ModelFirebase.GetAllPostsListener() {
-            @Override
-            public void onComplete(List<Post> list) {
-                // add all records to the local db
-                executor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Long lud = new Long(0);
-                        for (Post post : list) {
-                            AppLocalDb.db.postDao().insertAll(post);
-                            if (lud < post.getUpdateDate()) {
-                                lud = post.getUpdateDate();
-                            }
-                        }
-                        // update last local update date
-                        MyApplication.getContext()
-                                .getSharedPreferences("TAG", Context.MODE_PRIVATE)
-                                .edit()
-                                .putLong("PostsLastUpdateDate", lud)
-                                .commit();
-
-                        //return all data to caller
-                        List<Post> pList = AppLocalDb.db.postDao().getAllPostsByUser(name);
-                        Log.d("TAG", "pList " + pList.size());
-                        Collections.reverse(pList);
-                        currUserPostsList.postValue(pList);
-                        userPostListLoadingState.postValue(UserPostListLoadingState.loaded);
+        modelFirebase.getAllPosts(lastUpdateDate, list -> {
+            // add all records to the local db
+            executor.execute(() -> {
+                Long lud = new Long(0);
+                for (Post post : list) {
+                    AppLocalDb.db.postDao().insertAll(post);
+                    if (lud < post.getUpdateDate()) {
+                        lud = post.getUpdateDate();
                     }
-                });
-            }
+                }
+                // update last local update date
+                MyApplication.getContext()
+                        .getSharedPreferences("TAG", Context.MODE_PRIVATE)
+                        .edit()
+                        .putLong("PostsLastUpdateDate", lud)
+                        .commit();
+
+                //return all data to caller
+                List<Post> pList = AppLocalDb.db.postDao().getAllPostsByUser(name);
+                Log.d("TAG", "pList " + pList.size());
+                Collections.reverse(pList);
+                currUserPostsList.postValue(pList);
+                userPostListLoadingState.postValue(UserPostListLoadingState.loaded);
+            });
         });
     }
-
 
     public void updatePost(Post post) {
         executor.execute(() -> AppLocalDb.db.postDao().update(post));
@@ -228,24 +213,23 @@ public class Model {
         modelFirebase.addPost(post,user, listener);
     }
 
-    public User getPostById(String postId, GetPostById listener) {
+    public void getPostById(String postId, GetPostById listener) {
         modelFirebase.getPostById(postId, listener);
-        return null;
     }
 
     public void deletePost(Post post, deletePost listener) {
-        executor.execute(() -> {
-            AppLocalDb.db.postDao().delete(post);
-        });
+        executor.execute(() -> AppLocalDb.db.postDao().delete(post));
         modelFirebase.deletePost(post, listener);
     }
 
     public LiveData<PostListLoadingState> getPostListLoadingState() {
         return postListLoadingState;
     }
+
     public LiveData<UserPostListLoadingState> getUserPostListLoadingState() {
         return userPostListLoadingState;
     }
+
     public void UpdatePost(Post post, UpdatePostListener listener) {
         modelFirebase.updatePost(post, listener);
     }
@@ -265,18 +249,6 @@ public class Model {
     public void getAllPostsByUser(User user, ModelFirebase.GetAllPostsByUserListener listener){
         modelFirebase.getAllPostsByUser(user,listener);
     }
-//
-//    public void refreshPostListByUser(User user) {
-//        postListLoadingState.setValue(PostListLoadingState.loading);
-//        Log.d("TAG", "222");
-//        modelFirebase.getAllPostsByUser(user.getName(), new ModelFirebase.GetAllPostsByUserListener() {
-//            @Override
-//            public void onComplete(List<Post> list) {
-//                currUserPostsList.setValue(list);
-//                postListLoadingState.setValue(PostListLoadingState.loaded);
-//            }
-//        });
-//    }
 
     /**
      * Authentication
@@ -309,6 +281,7 @@ public class Model {
     public interface AddPhotoToUser {
         void onComplete();
     }
+
     public void addPhotoToUser(String id, String url,AddPhotoToUser listener )
     {
         modelFirebase.addPhotoToUser(id,url,listener);

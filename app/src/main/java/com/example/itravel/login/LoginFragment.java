@@ -2,7 +2,6 @@ package com.example.itravel.login;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -32,8 +31,6 @@ public class LoginFragment extends Fragment {
 
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-//        SharedPreferences sp = context.getSharedPreferences("Login", 0);
-//        Ed = sp.edit();
     }
 
 
@@ -48,30 +45,27 @@ public class LoginFragment extends Fragment {
         signupBtn = view.findViewById(R.id.login_signup_btn);
 
 
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = emailEt.getText().toString();
-                String password = passwordEt.getText().toString();
-                if(email.equals("") || password.equals(""))
-                {
-                    Toast toast = new Toast(getContext());
-                    View popupView = LayoutInflater.from(getContext()).inflate(R.layout.popup_window, null);
-                    TextView toastText = popupView.findViewById(R.id.popup_text_tv);
-                    toastText.setText("You did not enter all values!");
-                    toastText.setTextSize(20);
-                    toast.setView(popupView);
-                    toast.setDuration(Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
-                    loginBtn.setEnabled(true);
-                }
-                else {
-                    Model.instance.isExist(getContext(), email, password, () -> {
-                        Log.d("TAG", "Connected!");
-                        toFeedActivity();
-                    });
-                }
+        loginBtn.setOnClickListener(v -> {
+            String email = emailEt.getText().toString();
+            String password = passwordEt.getText().toString();
+            if(email.equals("") || password.equals(""))
+            {
+                Toast toast = new Toast(getContext());
+                View popupView = LayoutInflater.from(getContext()).inflate(R.layout.popup_window, null);
+                TextView toastText = popupView.findViewById(R.id.popup_text_tv);
+                toastText.setText("You did not enter all values!");
+                toastText.setTextSize(20);
+                toast.setView(popupView);
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+                loginBtn.setEnabled(true);
+            }
+            else {
+                Model.instance.isExist(getContext(), email, password, () -> {
+                    Log.d("TAG", "Connected!");
+                    toFeedActivity();
+                });
             }
         });
         signupBtn.setOnClickListener(Navigation.createNavigateOnClickListener(LoginFragmentDirections.actionLoginFragment3ToSignUpFragment()));

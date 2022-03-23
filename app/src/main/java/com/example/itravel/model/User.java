@@ -77,7 +77,6 @@ public class User {
         this.postList = postList;
     }
 
-
     public Map<String, Object> toJson() {
         Map<String, Object> json = new HashMap<>();
         json.put("fullName", fullName );

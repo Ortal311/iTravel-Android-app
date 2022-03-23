@@ -56,8 +56,6 @@ public class PostAddFragment extends Fragment {
     Spinner dropdown;
     String difficulty;
 
-    User user;
-
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_IMAGE_GALLERY = 2;
 
@@ -88,18 +86,8 @@ public class PostAddFragment extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, itemsDropdown);
         dropdown.setAdapter(adapter);
 
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                save();
-            }
-        });
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigateUp();
-            }
-        });
+        saveBtn.setOnClickListener(v -> save());
+        cancelBtn.setOnClickListener(v -> Navigation.findNavController(v).navigateUp());
 
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -117,19 +105,9 @@ public class PostAddFragment extends Fragment {
             }
         });
 
-        cameraBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openCamera();
-            }
-        });
+        cameraBtn.setOnClickListener(v -> openCamera());
 
-        galleryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openGallery();
-            }
-        });
+        galleryBtn.setOnClickListener(v -> openGallery());
 
         return view;
     }
@@ -159,13 +137,10 @@ public class PostAddFragment extends Fragment {
             return;
         }
 
-        Model.instance.getUserById(Id, new Model.GetUserById() {
-            @Override
-            public void onComplete(User user) {
-                String nickName = user.getNickName();
-                String postId = savePost(nickName, title, description, photo, location, difficulty, user);
-                user.addNewPost(postId);
-            }
+        Model.instance.getUserById(Id, user -> {
+            String nickName = user.getNickName();
+            String postId = savePost(nickName, title, description, photo, location, difficulty, user);
+            user.addNewPost(postId);
         });
     }
 
@@ -195,11 +170,6 @@ public class PostAddFragment extends Fragment {
 
             });
         } else {
-//            Model.instance.addPost(post, user, (id) -> {
-//                post.setId(id);
-//                Model.instance.refreshPostList();
-//                Navigation.findNavController(view).navigate(PostAddFragmentDirections.actionPostAddFragmentToHomePageFragment2());
-//            });
             Toast toast = new Toast(getContext());
             View popupView = LayoutInflater.from(getContext()).inflate(R.layout.popup_window, null);
             TextView toastText = popupView.findViewById(R.id.popup_text_tv);
@@ -242,13 +212,9 @@ public class PostAddFragment extends Fragment {
                     final InputStream imageStream = getContext().getContentResolver().openInputStream(imageUri);
                     imageBitmap = BitmapFactory.decodeStream(imageStream);
                 } catch (FileNotFoundException e) {
-                    Log.d("TAG", "ERRORRRR");
                     e.printStackTrace();
-//                    Toast.makeText(PostImage.this, "Something went wrong", Toast.LENGTH_LONG).show();
                 }
             }
-
         }
     }
-
 }

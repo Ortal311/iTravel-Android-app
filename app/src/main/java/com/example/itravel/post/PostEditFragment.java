@@ -85,48 +85,24 @@ public class PostEditFragment extends Fragment {
 
         postId = PostDetailsFragmentArgs.fromBundle(getArguments()).getPostId();
 
-        Model.instance.getPostById(postId, new Model.GetPostById() {
+        Model.instance.getPostById(postId, post -> {
+            displayPost(post.getTitle(), post.getLocation(), post.getDescription(),post.getDifficulty());
+            progressBar.setVisibility(View.GONE);
+            updateUI(View.VISIBLE);
+        });
+
+        cameraBtn.setOnClickListener(v -> openCamera());
+
+        galleryBtn.setOnClickListener(v -> openGallery());
+
+        saveBtn.setOnClickListener(v -> Model.instance.getPostById(postId, new Model.GetPostById() {
             @Override
             public void onComplete(Post post) {
-                displayPost(post.getTitle(), post.getLocation(), post.getDescription(),post.getDifficulty());
-                progressBar.setVisibility(View.GONE);
-                updateUI(View.VISIBLE);
+                String difficulty = dropdown.getSelectedItem().toString();
+                savePost(post,titleEt.getText().toString(), descriptionEt.getText().toString(), locationEt.getText().toString(),difficulty, view);
             }
-        });
-
-        cameraBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openCamera();
-            }
-        });
-
-        galleryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openGallery();
-            }
-        });
-
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Model.instance.getPostById(postId, new Model.GetPostById() {
-                    @Override
-                    public void onComplete(Post post) {
-                        String difficulty = dropdown.getSelectedItem().toString();
-                        savePost(post,titleEt.getText().toString(), descriptionEt.getText().toString(), locationEt.getText().toString(),difficulty, view);
-                    }
-                });
-            }
-        });
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigateUp();
-            }
-        });
+        }));
+        cancelBtn.setOnClickListener(v -> Navigation.findNavController(v).navigateUp());
         return view;
     }
 
@@ -154,22 +130,15 @@ public class PostEditFragment extends Fragment {
         post.setDifficulty(difficulty);
 
         if (imageBitmap != null) {
-            Model.instance.savePostImage(imageBitmap, post.getId() + ".jpg", new Model.SaveImageListener() {
-                @Override
-                public void onComplete(String url) {
-                    post.setPhoto(url);
-                    Log.d("TAG", "url - " + url);
-                    Model.instance.updatePost(post);
-                    Model.instance.UpdatePost(post, () -> {});
-                    Model.instance.addPhotoToPost(post, new Model.AddPhotoToPost() {
-                        @Override
-                        public void onComplete() {
+            Model.instance.savePostImage(imageBitmap, post.getId() + ".jpg", url -> {
+                post.setPhoto(url);
+                Model.instance.updatePost(post);
+                Model.instance.UpdatePost(post, () -> {});
+                Model.instance.addPhotoToPost(post, () -> {
 
-                        }
-                    });
-                    Model.instance.refreshPostList();
-                    Navigation.findNavController(v).navigateUp();
-                }
+                });
+                Model.instance.refreshPostList();
+                Navigation.findNavController(v).navigateUp();
             });
         }else {
             Model.instance.updatePost(post);
@@ -232,7 +201,6 @@ public class PostEditFragment extends Fragment {
                 } catch (FileNotFoundException e) {
                     Log.d("TAG", "ERRORRRR");
                     e.printStackTrace();
-//                    Toast.makeText(PostImage.this, "Something went wrong", Toast.LENGTH_LONG).show();
                 }
             }
 

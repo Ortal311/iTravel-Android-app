@@ -79,13 +79,7 @@ public class ModelFirebase {
         db.collection(User.collectionName)
                 .document(id)
                 .update("postList", FieldValue.arrayUnion(postId))
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        user.addNewPost(postId);
-
-                    }
-                });
+                .addOnSuccessListener(unused -> user.addNewPost(postId));
     }
 
     public void removePostToUsersList(String postId) {
@@ -93,10 +87,7 @@ public class ModelFirebase {
         db.collection(User.collectionName)
                 .document(id)
                 .update("postList", FieldValue.arrayRemove(postId))
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                    }
+                .addOnSuccessListener(unused -> {
                 });
     }
 
@@ -120,22 +111,12 @@ public class ModelFirebase {
     public void deletePost(Post post, Model.deletePost listener) {
         db.collection(Post.collectionName).document(post.getId())
                 .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("TAG", "DocumentSnapshot successfully deleted!");
-                        removePostToUsersList(post.getId());
-                        listener.onComplete();
-                    }
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("TAG", "DocumentSnapshot successfully deleted!");
+                    removePostToUsersList(post.getId());
+                    listener.onComplete();
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("TAG", "Error deleting document", e);
-                    }
-                });
-
-
+                .addOnFailureListener(e -> Log.w("TAG", "Error deleting document", e));
     }
 
     public void getAllPosts(Long lastUpdateDate, GetAllPostsListener listener) {
@@ -161,18 +142,15 @@ public class ModelFirebase {
         db.collection(Post.collectionName)
                 .document(postId)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        Post post = new Post();
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot docSnapshot = task.getResult();
-                            if (docSnapshot.exists()) {
-                                post = Post.create(postId, task.getResult().getData());
-                            }
+                .addOnCompleteListener(task -> {
+                    Post post = new Post();
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot docSnapshot = task.getResult();
+                        if (docSnapshot.exists()) {
+                            post = Post.create(postId, task.getResult().getData());
                         }
-                        listener.onComplete(post);
                     }
+                    listener.onComplete(post);
                 });
     }
 
@@ -208,19 +186,15 @@ public class ModelFirebase {
         db.collection(User.collectionName)
                 .document(Id)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        User user = new User();
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                user = user.create(task.getResult().getData());
-//                                listener.onComplete(user);
-                            }
+                .addOnCompleteListener(task -> {
+                    User user = new User();
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            user = user.create(task.getResult().getData());
                         }
-                        listener.onComplete(user);
                     }
+                    listener.onComplete(user);
                 });
     }
 
@@ -228,66 +202,31 @@ public class ModelFirebase {
 
         Task<QuerySnapshot> res = db.collection(User.collectionName)
                 .whereEqualTo("nickName", nickName)
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.getResult().size() == 0) {
-                            listener.onComplete();
-                        } else {
-                            listener.onFail();
-                        }
+                .get().addOnCompleteListener(task -> {
+                    if (task.getResult().size() == 0) {
+                        listener.onComplete();
+                    } else {
+                        listener.onFail();
                     }
                 });
-
     }
 
     public void getAllPostsByUser(User user, GetAllPostsByUserListener listener) {
         db.collection(Post.collectionName)
                 .whereEqualTo("userName", user.getNickName())
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        List<Post> list = new LinkedList<Post>();
-                        if (task.isSuccessful()) {
-                            QuerySnapshot querySnapshot = task.getResult();
-                            for (QueryDocumentSnapshot doc : querySnapshot) {
-                                Post post = Post.create(doc.getId(),doc.getData());
-                                list.add(post);
-                            }
+                .addOnCompleteListener(task -> {
+                    List<Post> list = new LinkedList<Post>();
+                    if (task.isSuccessful()) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (QueryDocumentSnapshot doc : querySnapshot) {
+                            Post post = Post.create(doc.getId(),doc.getData());
+                            list.add(post);
                         }
-                        listener.onComplete(list);
                     }
+                    listener.onComplete(list);
                 });
     }
-
-//    public void getAllPostsByUser(User user, String userId, Model.GetAllPostsByUserListener listener) {
-////        Log.d("TAG", "Username: " + user.getName());
-//        if (user.getPostList().size() > 0) {
-//            db.collection(User.collectionName)
-//                    .whereEqualTo("nickName", user.getNickName())
-//                    .get()
-//                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                            List<Post> list = new LinkedList<Post>();
-//                            if (task.isSuccessful()) {
-//                                QuerySnapshot querySnapshot = task.getResult();
-//                                for (QueryDocumentSnapshot doc : querySnapshot) {
-//                                    Post post = Post.create(doc.getId(), doc.getData());
-//                                    if (post != null)
-//                                        if (user.getPostList().contains(post.getId())) {
-//                                            list.add(post);
-//                                        }
-//                                }
-//                            }
-//                            listener.onComplete(list);
-//                        }
-//                    });
-//        }
-//
-//    }
-
 
     /**
      * Authentication
@@ -332,26 +271,23 @@ public class ModelFirebase {
 
     public void isExist(Context context, String email, String password, Model.IsExist listener) {
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("TAG", "signInWithEmail:success");
-                            listener.onComplete();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("TAG", "signInWithEmail:failure", task.getException());
-                            Toast toast = new Toast(context);
-                            View popupView = LayoutInflater.from(context).inflate(R.layout.popup_window, null);
-                            TextView toastText = popupView.findViewById(R.id.popup_text_tv);
-                            toastText.setText("You need to register first!");
-                            toastText.setTextSize(20);
-                            toast.setView(popupView);
-                            toast.setDuration(Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.CENTER, 0, 0);
-                            toast.show();
-                        }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("TAG", "signInWithEmail:success");
+                        listener.onComplete();
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("TAG", "signInWithEmail:failure", task.getException());
+                        Toast toast = new Toast(context);
+                        View popupView = LayoutInflater.from(context).inflate(R.layout.popup_window, null);
+                        TextView toastText = popupView.findViewById(R.id.popup_text_tv);
+                        toastText.setText("You need to register first!");
+                        toastText.setTextSize(20);
+                        toast.setView(popupView);
+                        toast.setDuration(Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
                     }
                 });
     }
@@ -378,18 +314,10 @@ public class ModelFirebase {
         uploadTask.addOnFailureListener(exception -> {
             listener.onComplete(null);
         }).addOnSuccessListener(taskSnapshot -> {
-            imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    Uri downloadUrl = uri;
-                    listener.onComplete(downloadUrl.toString());
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d("TAG", "error here!");
-                }
-            });
+            imgRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                Uri downloadUrl = uri;
+                listener.onComplete(downloadUrl.toString());
+            }).addOnFailureListener(e -> Log.d("TAG", "error here!"));
         });
 
     }
@@ -406,21 +334,11 @@ public class ModelFirebase {
         uploadTask.addOnFailureListener(exception -> {
             listener.onComplete(null);
         }).addOnSuccessListener(taskSnapshot -> {
-            imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    Uri downloadUrl = uri;
-                    listener.onComplete(downloadUrl.toString());
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d("TAG", "error here!");
-                }
-            });
+            imgRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                Uri downloadUrl = uri;
+                listener.onComplete(downloadUrl.toString());
+            }).addOnFailureListener(e -> Log.d("TAG", "error here!"));
         });
 
     }
-
-
 }

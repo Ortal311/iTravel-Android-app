@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,16 +22,12 @@ import android.widget.TextView;
 
 import com.example.itravel.R;
 import com.example.itravel.model.Model;
-import com.example.itravel.model.ModelFirebase;
 import com.example.itravel.model.Post;
 import com.example.itravel.model.User;
 import com.example.itravel.post.PostListRvViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
-import java.util.Collections;
-import java.util.List;
 
 
 public class ProfilePageFragment extends Fragment {
@@ -44,7 +38,6 @@ public class ProfilePageFragment extends Fragment {
     ImageButton editBtn;
     ImageButton addPostBtn;
 
-//    ProfilePostListRvViewModel viewModel;
     RecyclerView list;
     MyAdapterProfile adapter;
     SwipeRefreshLayout swipeRefresh;
@@ -55,10 +48,7 @@ public class ProfilePageFragment extends Fragment {
 
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-//        viewModel = new ViewModelProvider(this).get(ProfilePostListRvViewModel.class);
         viewModel = new ViewModelProvider(this).get(PostListRvViewModel.class);
-        viewModel = new ViewModelProvider(this).get(PostListRvViewModel.class);
-
     }
 
     @Override
@@ -87,23 +77,16 @@ public class ProfilePageFragment extends Fragment {
         updateUI(View.INVISIBLE);
 
         swipeRefresh = view.findViewById(R.id.profilePage_postlist_swiperefresh);
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-//                viewModel.getDataByUser(currUser.getNickName()).observe(getViewLifecycleOwner(), list1 -> refresh());
-                Model.instance.refreshPostListByUser(currUser.getNickName());//return the right number of posts
-            }
+        swipeRefresh.setOnRefreshListener(() -> {
+            Model.instance.refreshPostListByUser(currUser.getNickName());//return the right number of posts
         });
 
         adapter = new MyAdapterProfile();
         list.setAdapter(adapter);
 
-        adapter.setOnItemClickListener(new OnItemClickListenerProfile() {
-            @Override
-            public void onItemClick(View v, int position) {
-                String postId = viewModel.getData().getValue().get(position).getId();
-                Navigation.findNavController(v).navigate(ProfilePageFragmentDirections.actionProfilePageFragmentToPostDetailsFragment(postId));
-            }
+        adapter.setOnItemClickListener((v, position) -> {
+            String postId = viewModel.getData().getValue().get(position).getId();
+            Navigation.findNavController(v).navigate(ProfilePageFragmentDirections.actionProfilePageFragmentToPostDetailsFragment(postId));
         });
 
         viewModel.getDataByUser().observe(getViewLifecycleOwner(), list1 -> refresh());
@@ -121,41 +104,33 @@ public class ProfilePageFragment extends Fragment {
     }
 
     public User getUserDetails() {
-        Model.instance.getUserById(ID, new Model.GetUserById() {
-            @Override
-            public void onComplete(User user) {
-                currUser = user;
-                nameTv.setText(user.getFullName());
-                nickNameTv.setText(user.getNickName());
-                if (currUser.getPhoto() != "") {
-                    Picasso.get()
-                            .load(currUser.getPhoto())
-                            .into(image, new Callback() {
-                                @Override
-                                public void onSuccess() {
-                                    progressBar.setVisibility(View.GONE);
-                                    updateUI(View.VISIBLE);
-                                }
-
-                                @Override
-                                public void onError(Exception e) {
-
-                                }
-                            });
-                }
-
-                progressBar.setVisibility(View.GONE);
-                updateUI(View.VISIBLE);
-                Model.instance.refreshPostListByUser(currUser.getNickName());
+        Model.instance.getUserById(ID, user -> {
+            currUser = user;
+            nameTv.setText(user.getFullName());
+            nickNameTv.setText(user.getNickName());
+            if (currUser.getPhoto() != "") {
+                Picasso.get()
+                        .load(currUser.getPhoto())
+                        .into(image, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                progressBar.setVisibility(View.GONE);
+                                updateUI(View.VISIBLE);
+                            }
+                            @Override
+                            public void onError(Exception e) {
+                            }
+                        });
             }
-
+            progressBar.setVisibility(View.GONE);
+            updateUI(View.VISIBLE);
+            Model.instance.refreshPostListByUser(currUser.getNickName());
         });
 
         return currUser;
     }
 
     private void refresh() {
-//        Collections.reverse(viewModel.getDataByUser().getValue());
         adapter.notifyDataSetChanged();
         swipeRefresh.setRefreshing(false);
     }
@@ -172,12 +147,9 @@ public class ProfilePageFragment extends Fragment {
             locationTv = itemView.findViewById(R.id.listrow_location_tv);
             userName = itemView.findViewById(R.id.listrow_username_tv);
             img = itemView.findViewById(R.id.listrow_post_img);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    listener.onItemClick(v, pos);
-                }
+            itemView.setOnClickListener(v -> {
+                int pos = getAdapterPosition();
+                listener.onItemClick(v, pos);
             });
         }
     }
@@ -219,7 +191,6 @@ public class ProfilePageFragment extends Fragment {
             if (viewModel.getDataByUser().getValue() == null) {
                 return 0;
             }
-            Log.d("TAG", "get Item Count:::" + viewModel.getDataByUser().getValue().size());
             return viewModel.getDataByUser().getValue().size();
         }
     }

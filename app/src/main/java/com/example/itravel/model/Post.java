@@ -1,11 +1,7 @@
 package com.example.itravel.model;
 
-import android.widget.Button;
-import android.widget.Spinner;
-
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.google.firebase.Timestamp;
@@ -27,7 +23,6 @@ public class Post {
     String difficulty="";
     Long updateDate = new Long(0);
     String photo="";
-
 
     public Post(){}
 
@@ -121,8 +116,6 @@ public class Post {
         this.photo = photo;
     }
 
-
-
     public Map<String, Object> toJson() {
         Map<String, Object> json = new HashMap<>();
         json.put("userName", userName);
@@ -132,9 +125,6 @@ public class Post {
         json.put("difficulty", difficulty);
         json.put("updateDate", FieldValue.serverTimestamp());
         json.put("photo",photo);
-
-
         return json;
     }
-
 }

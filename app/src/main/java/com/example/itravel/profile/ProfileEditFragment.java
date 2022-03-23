@@ -32,7 +32,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.List;
 
 
 public class ProfileEditFragment extends Fragment {
@@ -73,64 +72,44 @@ public class ProfileEditFragment extends Fragment {
 
         updateUI(View.INVISIBLE);
 
-
-        Model.instance.getUserById(id, new Model.GetUserById() {
-            @Override
-            public void onComplete(User user) {
-                usr = user;
-                nameEt.setText(usr.getFullName());
-                nickNameEt.setText(usr.getNickName());
-                lastUserName = usr.getNickName();
-                progressBar.setVisibility(View.GONE);
-                updateUI(View.VISIBLE);
-            }
+        Model.instance.getUserById(id, user -> {
+            usr = user;
+            nameEt.setText(usr.getFullName());
+            nickNameEt.setText(usr.getNickName());
+            lastUserName = usr.getNickName();
+            progressBar.setVisibility(View.GONE);
+            updateUI(View.VISIBLE);
         });
-//        String name = ProfilePageFragmentArgs.fromBundle(getArguments()).getName();
 
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // if he changed the userName- we will check if the new one is not taken
-                if (!nickNameEt.getText().toString().equals(lastUserName)) {
-                    Model.instance.isNickNameExist(getContext(), nickNameEt.getText().toString(), new Model.IsNickNameExist() {
-                        @Override
-                        public void onComplete() {
-                            saveImgAndUpdateUser(v);
-                        }
-                        @Override
-                        public void onFail() {
-                            Toast toast = new Toast(getContext());
-                            View popupView = LayoutInflater.from(getContext()).inflate(R.layout.popup_window, null);
-                            TextView toastText = popupView.findViewById(R.id.popup_text_tv);
-                            toastText.setText("Nick name already taken!");
-                            toastText.setTextSize(20);
-                            toast.setView(popupView);
-                            toast.setDuration(Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.CENTER, 0, 0);
-                            toast.show();
-                        }
-                    });
-                } else {
-                    saveImgAndUpdateUser(v);
-                }
+        saveBtn.setOnClickListener(v -> {
+            // if he changed the userName- we will check if the new one is not taken
+            if (!nickNameEt.getText().toString().equals(lastUserName)) {
+                Model.instance.isNickNameExist(getContext(), nickNameEt.getText().toString(), new Model.IsNickNameExist() {
+                    @Override
+                    public void onComplete() {
+                        saveImgAndUpdateUser(v);
+                    }
+                    @Override
+                    public void onFail() {
+                        Toast toast = new Toast(getContext());
+                        View popupView = LayoutInflater.from(getContext()).inflate(R.layout.popup_window, null);
+                        TextView toastText = popupView.findViewById(R.id.popup_text_tv);
+                        toastText.setText("Nick name already taken!");
+                        toastText.setTextSize(20);
+                        toast.setView(popupView);
+                        toast.setDuration(Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+                    }
+                });
+            } else {
+                saveImgAndUpdateUser(v);
             }
         });
 
         cancelBtn.setOnClickListener(v -> Navigation.findNavController(v).navigateUp());
-
-        cameraBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openCamera();
-            }
-        });
-
-        galleryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openGallery();
-            }
-        });
+        cameraBtn.setOnClickListener(v -> openCamera());
+        galleryBtn.setOnClickListener(v -> openGallery());
 
         return view;
     }
@@ -149,55 +128,42 @@ public class ProfileEditFragment extends Fragment {
             toast.show();
         }
         else if (imageBitmap != null) {
-            Model.instance.getUserById(id, new Model.GetUserById() {
-                @Override
-                public void onComplete(User user) {
-                    usr = user;
-                    Model.instance.getAllPostsByUser(usr, list -> {
-                        for (Post post : list) {
-                            post.setUserName(nickNameEt.getText().toString());
-                            Model.instance.updatePost(post);
-                            Model.instance.UpdatePost(post, new Model.UpdatePostListener() {
-                                @Override
-                                public void onComplete() {
-                                }
-                            });
-                        }
-                    });
-                    Model.instance.saveUserImage(imageBitmap, user.getNickName() + ".jpg", new Model.SaveImageListener() {
-                        @Override
-                        public void onComplete(String url) {
-                            user.setPhoto(url);
-                            Log.d("TAG", "url - " + url);
-                            Model.instance.updateUser(id, nameEt.getText().toString(), nickNameEt.getText().toString(), url, () -> {
-                                Navigation.findNavController(v).navigateUp();
-                                Model.instance.refreshPostList();
-                            });
-                        }
-                    });
-                }
+            Model.instance.getUserById(id, user -> {
+                usr = user;
+                Model.instance.getAllPostsByUser(usr, list -> {
+                    for (Post post : list) {
+                        post.setUserName(nickNameEt.getText().toString());
+                        Model.instance.updatePost(post);
+                        Model.instance.UpdatePost(post, () -> {
+                        });
+                    }
+                });
+                Model.instance.saveUserImage(imageBitmap, user.getNickName() + ".jpg", new Model.SaveImageListener() {
+                    @Override
+                    public void onComplete(String url) {
+                        user.setPhoto(url);
+                        Model.instance.updateUser(id, nameEt.getText().toString(), nickNameEt.getText().toString(), url, () -> {
+                            Navigation.findNavController(v).navigateUp();
+                            Model.instance.refreshPostList();
+                        });
+                    }
+                });
             });
         } else {
-            Model.instance.getUserById(id, new Model.GetUserById() {
-                @Override
-                public void onComplete(User user) {
-                    Model.instance.getAllPostsByUser(usr, list -> {
-                        for (Post post : list) {
-                            post.setUserName(nickNameEt.getText().toString());
-                            Model.instance.updatePost(post);
-                            Model.instance.UpdatePost(post, new Model.UpdatePostListener() {
-                                @Override
-                                public void onComplete() {
+            Model.instance.getUserById(id, user -> {
+                Model.instance.getAllPostsByUser(usr, list -> {
+                    for (Post post : list) {
+                        post.setUserName(nickNameEt.getText().toString());
+                        Model.instance.updatePost(post);
+                        Model.instance.UpdatePost(post, () -> {
 
-                                }
-                            });
-                        }
-                    });
-                    Model.instance.updateUser(id, nameEt.getText().toString(), nickNameEt.getText().toString(), user.getPhoto(), () -> {
-                        Navigation.findNavController(v).navigateUp();
-                        Model.instance.refreshPostList();
-                    });
-                }
+                        });
+                    }
+                });
+                Model.instance.updateUser(id, nameEt.getText().toString(), nickNameEt.getText().toString(), user.getPhoto(), () -> {
+                    Navigation.findNavController(v).navigateUp();
+                    Model.instance.refreshPostList();
+                });
             });
 
         }
@@ -232,7 +198,6 @@ public class ProfileEditFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-
         }
     }
 

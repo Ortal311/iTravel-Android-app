@@ -74,7 +74,6 @@ public class HomePageFragment extends Fragment {
             }
         });
 
-       // setHasOptionsMenu(true);
         viewModel.getData().observe(getViewLifecycleOwner(), list1 -> refresh());
         swipeRefresh.setRefreshing(Model.instance.getPostListLoadingState().getValue() == Model.PostListLoadingState.loading);
         Model.instance.getPostListLoadingState().observe(getViewLifecycleOwner(), postListLoadingState -> {
@@ -152,16 +151,8 @@ public class HomePageFragment extends Fragment {
             if(viewModel.getData().getValue() == null){
                 return 0;
             }
-//            Collections.reverse(viewModel.getData().getValue());
             return viewModel.getData().getValue().size();
         }
 
     }
-
-    public void toLoginActivity() {
-        Intent intent = new Intent(getContext(), LoginActivity.class);
-        startActivity(intent);
-        getActivity().finish();
-    }
-
 }

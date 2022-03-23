@@ -70,71 +70,48 @@ public class PostDetailsFragment extends Fragment {
 
         postId = PostDetailsFragmentArgs.fromBundle(getArguments()).getPostId();
 
-        Model.instance.getPostById(postId, new Model.GetPostById() {
-            @Override
-            public void onComplete(Post post) {
+        Model.instance.getPostById(postId, post -> {
 
-                savePost(post.getTitle(), post.getLocation(), post.getDescription(),post.getDifficulty(), post.getUserName(), post);
-                p=post;
+            savePost(post.getTitle(), post.getLocation(), post.getDescription(),post.getDifficulty(), post.getUserName(), post);
+            p=post;
 
-            }
         });
 
 
         String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Model.instance.getUserById(id, new Model.GetUserById() {
-            @Override
-            public void onComplete(User user) {
-                usr = user;
-                Log.d("TAG", "length of list  -  " + user.getPostList().size());
-                for (String id :user.getPostList()) {
-                    if(id.equals(postId))
-                    {
-                        editBtn.setVisibility(View.VISIBLE);
-                        deleteBtn.setVisibility(View.VISIBLE);
-                    }
+        Model.instance.getUserById(id, user -> {
+            usr = user;
+            for (String id1 :user.getPostList()) {
+                if(id1.equals(postId))
+                {
+                    editBtn.setVisibility(View.VISIBLE);
+                    deleteBtn.setVisibility(View.VISIBLE);
                 }
-                progressBar.setVisibility(View.GONE);
             }
+            progressBar.setVisibility(View.GONE);
         });
 
-        editBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                  Navigation.findNavController(v).navigate(PostDetailsFragmentDirections.actionPostDetailsFragmentToPostEditFragment(postId));
-            }
-        });
+        editBtn.setOnClickListener(v -> Navigation.findNavController(v).navigate(PostDetailsFragmentDirections.actionPostDetailsFragmentToPostEditFragment(postId)));
 
-        deleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Model.instance.deletePost(p, new Model.deletePost() {
-                    @Override
-                    public void onComplete() {
-                        Toast toast = new Toast(getContext());
-                        View popupView = LayoutInflater.from(getContext()).inflate(R.layout.popup_window, null);
-                        TextView toastText = popupView.findViewById(R.id.popup_text_tv);
-                        toastText.setText("Post deleted!");
-                        toastText.setTextSize(20);
-                        toast.setView(popupView);
-                        toast.setDuration(Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
-                        Model.instance.refreshPostList();
-                        Navigation.findNavController(v).navigateUp();
-                    }
-                });
-            }
-        });
+        deleteBtn.setOnClickListener(v -> Model.instance.deletePost(p, () -> {
+            Toast toast = new Toast(getContext());
+            View popupView = LayoutInflater.from(getContext()).inflate(R.layout.popup_window, null);
+            TextView toastText = popupView.findViewById(R.id.popup_text_tv);
+            toastText.setText("Post deleted!");
+            toastText.setTextSize(20);
+            toast.setView(popupView);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+            Model.instance.refreshPostList();
+            Navigation.findNavController(v).navigateUp();
+        }));
 
         return view;
     }
 
     public void savePost(String title, String location, String description,String difficulty, String userName,Post post)
     {
-//
-//        editBtn.setEnabled(false);
-//        deleteBtn.setEnabled(false);
         titleEt.setText(title);
         locationEt.setText(location);
         authorEt.setText(userName);
@@ -153,5 +130,4 @@ public class PostDetailsFragment extends Fragment {
         difficultyEt.setVisibility(View.VISIBLE);
         line.setVisibility(View.VISIBLE);
     }
-
 }
