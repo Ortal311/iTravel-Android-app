@@ -55,7 +55,7 @@ public class HomePageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home_page,container,false);
         progressBar = view.findViewById(R.id.postlist_progressbar);
         progressBar.setVisibility(View.VISIBLE);
-//        Model.instance.deleteAllPostsDao();
+        Model.instance.deleteAllPostsDao();
         swipeRefresh = view.findViewById(R.id.postlist_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshPostList());
 

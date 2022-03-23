@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         NavHost navHost = (NavHost)getSupportFragmentManager().findFragmentById(R.id.main_navhost);
         navCtl = navHost.getNavController();
 
@@ -50,20 +49,17 @@ public class MainActivity extends AppCompatActivity {
                     navCtl.navigate(R.id.action_global_profilePageFragment);
                     break;
                 case R.id.menu_homepage:
-//                    navCtl.navigate(R.id.action_global_homePageFragment);
                     toFeedActivity();
-
                     break;
                 case R.id.menu_signout:
                     Model.instance.signOut(() -> {
                         toLoginActivity();
                     });
                     break;
-               case  android.R.id.home: //back button on the action bar
+               case  android.R.id.home:     //back button on the action bar
                    Model.instance.refreshPostList();
                      navCtl.navigateUp();
                      break;
-
             }
         }else
         {
@@ -83,5 +79,4 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
 }

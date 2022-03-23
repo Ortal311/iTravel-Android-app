@@ -30,7 +30,6 @@ import com.example.itravel.MainActivity;
 import com.example.itravel.R;
 import com.example.itravel.model.Model;
 import com.example.itravel.model.User;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -54,7 +53,6 @@ public class SignUpFragment extends Fragment {
     TextView popup;
     View popupView;
 
-    FirebaseAuth mAuth = FirebaseAuth.getInstance();
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_IMAGE_GALLERY = 2;
 
@@ -74,34 +72,10 @@ public class SignUpFragment extends Fragment {
         saveBtn = view.findViewById(R.id.signup_save_btn);
         cancelBtn = view.findViewById(R.id.signup_cancel_btn);
 
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                save(inflater);
-            }
-        });
-
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigateUp();
-            }
-        });
-
-        cameraBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                openCamera();
-            }
-        });
-
-        galleryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openGallery();
-            }
-        });
+        saveBtn.setOnClickListener(v -> save(inflater));
+        cancelBtn.setOnClickListener(v -> Navigation.findNavController(v).navigateUp());
+        cameraBtn.setOnClickListener(v -> openCamera());
+        galleryBtn.setOnClickListener(v -> openGallery());
 
         return view;
     }
@@ -181,18 +155,14 @@ public class SignUpFragment extends Fragment {
             public void onComplete() {
                 if (imageBitmap != null) {
                     Model.instance.saveUserImage(imageBitmap, nickName + ".jpg",
-                            new Model.SaveImageListener() {
-                                @Override
-                                public void onComplete(String url) {
-                                    user.setPhoto(url);
-                                    Log.d("TAG", "url - " + url);
-                                    Model.instance.createNewAccount(getContext(),fullName, nickName, email, password, url, postList, () -> {
-                                        toFeedActivity();
-                                    });
-                                    saveBtn.setEnabled(true);
-                                    cancelBtn.setEnabled(true);
-                                    return;
-                                }
+                            url -> {
+                                user.setPhoto(url);
+                                Model.instance.createNewAccount(getContext(),fullName, nickName, email, password, url, postList, () -> {
+                                    toFeedActivity();
+                                });
+                                saveBtn.setEnabled(true);
+                                cancelBtn.setEnabled(true);
+                                return;
                             });
                 } else {
                     Model.instance.createNewAccount(getContext(),fullName, nickName, email, password, photo, postList, () -> {
@@ -227,12 +197,9 @@ public class SignUpFragment extends Fragment {
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
         // dismiss the popup window when touched
-        popupView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                popupWindow.dismiss();
-                return true;
-            }
+        popupView.setOnTouchListener((v, event) -> {
+            popupWindow.dismiss();
+            return true;
         });
     }
 
